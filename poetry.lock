@@ -380,23 +380,20 @@ dash = ">=2"
 dev = ["black", "build", "dash[ci,dev,testing] (>=2)", "pytest (<8.1.0)", "pyyaml (>=5.0)", "selenium (<4.3.0)", "wheel"]
 
 [[package]]
-name = "dash-router"
-version = "0.1.0b2"
+name = "flash-router"
+version = "0.1.0b3"
 description = "File-system based router for Dash and Flash applications."
 optional = false
-python-versions = ">=3.12,<4.0"
+python-versions = "<4.0,>=3.12"
 files = [
-    {file = "dash_router-0.1.0b2.tar.gz", hash = "sha256:b94a29bee40aa3f1f4960049e87006ba5221d70b7aae3550b6eb05f8381a43ff"},
+    {file = "flash_router-0.1.0b3-py3-none-any.whl", hash = "sha256:ea6040405bd5ffe4267093b5e829ecde37414bf939ad4b23997780317826a623"},
+    {file = "flash_router-0.1.0b3.tar.gz", hash = "sha256:9252492c12e92701f090244001a92d29f372e4571c30f38c8d1d4917ebc3236e"},
 ]
 
 [package.dependencies]
 dash = "3.0.0rc1"
 dash-flash = "0.1.2rc1"
 pydantic = ">=2.10.4,<3.0.0"
-
-[package.source]
-type = "file"
-url = "../dash-router/dist/dash_router-0.1.0b2.tar.gz"
 
 [[package]]
 name = "flask"
@@ -1035,4 +1032,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "0eed35976347b127c5609ec387105597287ab73b5e42c36525c140a00a0fa7d4"
+content-hash = "978bc4231c798e44f0f4e17fe8d01109ce3f4cd900bdcf568bebd5abe5bbbdd9"
