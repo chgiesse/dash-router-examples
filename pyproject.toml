@@ -10,7 +10,7 @@ readme = "README.md"
 python = "^3.12"
 dash-mantine-components = "1.0.0rc1"
 dash-iconify = "^0.1.2"
-dash-router = {path = "/Users/cgiessel/Documents/projects/dash-projects/dash-router/dist/dash_router-0.1.0b1.tar.gz"}
+dash-router = {path = "/Users/cgiessel/Documents/projects/dash-projects/dash-router/dist/dash_router-0.1.0b2.tar.gz"}
 
 
 [build-system]

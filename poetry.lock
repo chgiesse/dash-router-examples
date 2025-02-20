@@ -381,12 +381,12 @@ dev = ["black", "build", "dash[ci,dev,testing] (>=2)", "pytest (<8.1.0)", "pyyam
 
 [[package]]
 name = "dash-router"
-version = "0.1.0b1"
+version = "0.1.0b2"
 description = "File-system based router for Dash and Flash applications."
 optional = false
 python-versions = ">=3.12,<4.0"
 files = [
-    {file = "dash_router-0.1.0b1.tar.gz", hash = "sha256:ffd2f1cedb080815c5c4de9a65f31c75b1025a0e851d1e61261204cd507c0953"},
+    {file = "dash_router-0.1.0b2.tar.gz", hash = "sha256:b94a29bee40aa3f1f4960049e87006ba5221d70b7aae3550b6eb05f8381a43ff"},
 ]
 
 [package.dependencies]
@@ -396,7 +396,7 @@ pydantic = ">=2.10.4,<3.0.0"
 
 [package.source]
 type = "file"
-url = "../dash-router/dist/dash_router-0.1.0b1.tar.gz"
+url = "../dash-router/dist/dash_router-0.1.0b2.tar.gz"
 
 [[package]]
 name = "flask"
@@ -1035,4 +1035,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "34e73fc3d09a7eddcd84deafbab6a06e24795e36fe68f1d588f9d834d1043096"
+content-hash = "0eed35976347b127c5609ec387105597287ab73b5e42c36525c140a00a0fa7d4"
