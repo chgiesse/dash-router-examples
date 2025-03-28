@@ -1,0 +1,40 @@
+.ag-theme-quartz-auto-dark {
+  --ag-background-color: var(--mantine-color-body) !important;
+  --ag-header-background-color: var(--mantine-color-body) !important;
+  --ag-border-color: var(--mantine-color-body) !important;
+}
+
+.ag-theme-quartz {
+  --ag-background-color: var(--light-color-body) !important;
+  --ag-header-background-color: var(--light-color-body) !important;
+  --ag-border-color: var(--light-color-body) !important;
+}
+
+.custom-ag-header {
+  font-size: 12px !important;
+}
+
+.ag-theme-quartz-auto-dark.small-fs-grid {
+  --ag-font-size: 11px;
+  --ag-grid-size: 3px;
+  --ag-odd-row-background-color: var(--mantine-color-dark-6);
+}
+
+.ag-theme-quartz.small-fs-grid {
+  --ag-font-size: 12px;
+  --ag-grid-size: 3px!important;
+  --ag-odd-row-background-color: rgb(235, 240, 243);
+}
+
+
+.react-resizable-handle-s
+.react-resizable-handle-w
+.react-resizable-handle-e
+.react-resizable-handle-n
+.react-resizable-handle-sw
+.react-resizable-handle-nw
+.react-resizable-handle-se
+.react-resizable-handle-ne 
+.react-resizable-handle::after{
+  background-color: var(--mantine-color-dark-6);
+}

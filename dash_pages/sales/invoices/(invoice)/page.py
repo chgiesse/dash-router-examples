@@ -13,7 +13,7 @@ def layout(children: ChildContainer, invoice_id: int = None, **kwargs):
     if not invoice_id:
         return dmc.Stack(
             [
-                get_icon("carbon:select-01", height=60),
+                get_icon("line-md:file-document-plus", height=60),
                 dmc.Title("No invoice selected", order=3),
             ],
             align="center",

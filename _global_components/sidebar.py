@@ -8,10 +8,10 @@ from helpers import get_icon
 theme_toggle = dmc.Switch(
     mt="auto",
     offLabel=DashIconify(
-        icon="radix-icons:sun", width=15, color=dmc.DEFAULT_THEME["colors"]["yellow"][8]
+        icon="line-md:sun-rising-loop", width=15, color=dmc.DEFAULT_THEME["colors"]["yellow"][8]
     ),
     onLabel=DashIconify(
-        icon="radix-icons:moon",
+        icon="line-md:moon-rising-alt-loop",
         width=15,
         color=dmc.DEFAULT_THEME["colors"]["yellow"][6],
     ),
@@ -36,42 +36,53 @@ def create_navlink(href: str, icon: str, *args, **kwargs):
     return dmc.Anchor(
         dmc.ActionIcon(get_icon(icon, height=25), size="xl", variant="subtle"),
         href=href,
-        underline=False,
         *args,
         **kwargs,
     )
 
 
-navbar = dmc.AppShellNavbar(
+navbar = dmc.AppShellNavbar([
     dmc.Stack(
         align="center",
-        gap="xs",
+        gap="sm",
         mt="lg",
+        pb='lg',
+        mb='auto',
         children=[
-            Div(get_icon("carbon:logo-python", height=35)),
+            get_icon("mingcute:flash-circle-line", height=35),
             create_navlink(
                 href="/",
-                icon="majesticons:home-line",
+                icon="material-symbols:home-outline-rounded",
             ),
             create_navlink(href="/sales", icon="icon-park-outline:sales-report"),
-            create_navlink(href="/page-2", icon="majesticons:file-line", mt="auto"),
-            dmc.Menu(
-                [
-                    dmc.MenuTarget(
-                        dmc.ActionIcon(
-                            get_icon(
-                                "material-symbols:settings-outline-rounded", height=30
-                            ),
-                            size="lg",
-                            radius="xl",
-                            variant="subtle",
-                        )
-                    ),
-                    dmc.MenuDropdown([dmc.Group(["Theme", theme_toggle], m="sm")]),
-                ],
-                trigger="hover",
-                position="right",
+            create_navlink(href="/page-2", icon="majesticons:file-line"),
+            create_navlink(
+                href="/nested-route",
+                icon="material-symbols:route-outline",
+            ),
+            create_navlink(
+                href="/streaming",
+                icon="material-symbols:stream-rounded",
             ),
         ],
-    )
-)
+    ),
+    dmc.Box(
+        mx='auto',
+        mb="lg",
+        children=dmc.Menu([
+            dmc.MenuTarget(
+                dmc.ActionIcon(
+                    get_icon(
+                        "material-symbols:settings-outline-rounded", height=30
+                    ),
+                    size="xl",
+                    # radius="xl",
+                    variant="subtle",
+                )
+            ),
+            dmc.MenuDropdown([dmc.Group(["Theme", theme_toggle], m="sm")]),
+        ],
+        trigger="hover",
+        position="right",
+    )),
+])

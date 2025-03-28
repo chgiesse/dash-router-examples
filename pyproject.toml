@@ -8,9 +8,20 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-dash-mantine-components = "1.0.0rc1"
+dash-mantine-components = "1.1.0"
 dash-iconify = "^0.1.2"
-flash-router = "^0.1.0b3"
+orjson = "^3.10.15"
+dash = "3.0.0"
+dash-flash = {path = "/Users/cgiessel/Documents/projects/flash/flash-package/dist/dash_flash-0.1.2rc2.tar.gz"}
+pandas = "^2.2.3"
+dash-ag-grid = "v31.3.1rc1"
+dash-aggrid-scales = "^0.2.1"
+flash-router = {path = "/Users/cgiessel/Documents/projects/dash-projects/dash-router/dist/flash_router-0.2.0b1.tar.gz"}
+dash-dynamic-grid-layout = "^0.1.2"
+dash-extensions = "^1.0.20"
+aiocache = "^0.12.3"
+plotly = "6.0.1"
+nbformat = "^5.10.4"
 
 
 [build-system]

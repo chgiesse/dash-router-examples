@@ -1,6 +1,7 @@
 import dash_mantine_components as dmc
 
 from _global_components.sidebar import navbar
+from _global_components.notifications import NotificationsContainer
 
 shadcn_gray = [
     "#030712",
@@ -48,21 +49,27 @@ def create_appshell(content):
         forceColorScheme="light",
         theme={
             "primaryColor": "violet",
+            "primareShade": "3",
             "defaultRadius": "md",
             "components": {"Card": {"defaultProps": {"shadow": "sm"}}},
-            "focusRing": "auto",
+            "focusRing": "never",
             "colors": {
                 "dark": mantine_dark,
                 "slate": list(reversed(shadcn_slate)),
             },
-            # "primarShade": 1,
         },
         children=dmc.AppShell(
             [
                 # dmc.AppShellHeader("", h=45),
                 navbar,
+                NotificationsContainer(),
                 dmc.AppShellMain(
-                    children=content,
+                    # children=dmc.ScrollArea(
+                        content, 
+                    #     type="auto", 
+                    #     offsetScrollbars=True,
+                    #     h='calc(100vh - var(--mantine-spacing-sm))'
+                    # )
                 ),
             ],
             padding="md",

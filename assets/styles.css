@@ -1,8 +1,42 @@
-page-container {
-    border: 5px solid #cfecff; /* Set the border color */
-    border-radius: 15px; /* Rounds the corners */
+:root {
+  overscroll-behavior: none;
+  overflow-x: hidden; 
 }
 
+
+.modebar { display: none !important; }
+
+
+._dash-loading {
+  display: none;
+  background-color: var(--mantine-color-body);
+}
+
+
+.badge-btn:hover{
+  cursor: pointer;
+}
+
+.mantine-NavLink-root{
+  border-radius: var(--mantine-radius-xl)!important;
+}
+
+.search-card {
+  transition: scale 0.3s;
+  scale: 1;
+}
+
+.search-card:hover {
+  background-color: var(--mantine-color-light-5);
+  cursor: pointer;
+  scale: 1.01;
+  transition: scale 0.3s;
+}
+
+.nav-group-container {
+  display: flex;
+  flex-direction: row;
+}
 
 @keyframes fade-in {
   0% {
@@ -38,41 +72,80 @@ page-container {
 
 :root[data-mantine-color-scheme="light"]{ 
         
-    body {
-        background-color: var(--light-color-body);
-    }
+  body {
+      background-color: var(--light-color-body);
+  }
+  .mantine-RichTextEditor-content,
+  .mantine-RichTextEditor-toolbar,
+  .mantine-RichTextEditor-root,
+  .mantine-RichTextEditor-control,
+  .mantine-RichTextEditor-controlsGroup {
+    background-color: var(--light-color-body);
+  }
+  
+  .mantine-RichTextEditor-controlIcon:hover,
+  .mantine-RichTextEditor-control:hover{
+    background-color: var(--light-color-card);
+  }
 }
 
 :root{
   --light-color-body: rgb(245, 247, 248);
   --light-color-card: rgb(235, 240, 243);
+  --nprogress-color-good: var(--mantine-color-blue-5);
 }
+
 .banner {
-      background-color: #fa5252; /* Material Red 50 */
-      padding: 40px 24px;
-      text-align: center;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Subtle elevation */
-      border-radius: 6px;
-    }
+  background-color: #fa5252; /* Material Red 50 */
+  padding: 40px 24px;
+  text-align: center;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Subtle elevation */
+  border-radius: 6px;
+}
 
-    .banner h1 {
-      margin: 0;
-      font-size: 2rem;
-      font-weight: 500;
-      color: rgba(0, 0, 0, 0.87);
-    }
+.banner h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
 
-    .banner p {
-      margin: 8px 0 0;
-      font-size: 1rem;
-      font-weight: 400;
-      color: rgba(0, 0, 0, 0.6);
-    }
-/*.mantine-Tabs-tab {*/
-/*  padding-bottom: var(--mantine-spacing-sm);*/
-/*}*/
-/*.mantine-Tabs-tab:hover {*/
-/*  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));*/
-/*  border-radius: var(--mantine-radius-md);*/
-/*  padding-bottom: var(--mantine-spacing-sm);*/
-/*}*/
+.banner p {
+  margin: 8px 0 0;
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+
+.first-level-slots-container {
+  max-width: 100%;
+  container-type: inline-size;
+}
+
+.slots-container {
+  --container-padding: var(--mantine-spacing-md, 1rem);
+  --slots-gap: var(--mantine-spacing-md, 1rem);
+  gap: var(--slots-gap);
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
+  @container (max-width: 900px) {
+    flex-direction: column;   
+  }
+} 
+
+.slots-container > * {
+  flex-grow: 1;
+  flex-basis: 0;
+  min-width: 0;
+}
+
+.text-input-button:hover {
+  cursor: pointer;
+}
+
+.mantine-TextInput-input {
+  cursor: pointer;
+}
