@@ -1,0 +1,52 @@
+.dash-graph {
+    flex-grow: 1;
+    height: 100%;
+}
+
+:root[data-mantine-color-scheme="light"]{
+    .hovertext path {
+        fill: var(--mantine-color-gray-4)!important;
+        stroke:var(--mantine-color-gray-4)!important;
+        stroke-width: 8px !important;
+    }
+    .hovertext path, .hovertext text {
+        transform: translate(10px,0px);
+    }
+
+    /* Plotly hover rounded border */
+    .hoverlayer .bg {
+        rx: 3!important;
+        shape-rendering: auto!important;
+        fill: var(--mantine-color-gray-3) !important;
+        stroke: var(--mantine-color-gray-3) !important;
+        stroke-width: 12px !important;
+    }
+    .hoverlayer .bg,
+    .hoverlayer .scrollbox{
+        transform: translate(16px, 0px);
+    }
+}
+
+:root[data-mantine-color-scheme="dark"]{
+    .hovertext path {
+        fill: var(--mantine-color-dark-6)!important;
+        stroke:var(--mantine-color-dark-6)!important;
+        stroke-width: 8px !important;
+    }
+    .hovertext path, .hovertext text {
+        transform: translate(10px,0px);
+    }
+
+    /* Plotly hover rounded border */
+    .hoverlayer .bg {
+        rx: 3!important;
+        shape-rendering: auto!important;
+        fill: var(--mantine-color-dark-6) !important;
+        stroke: var(--mantine-color-dark-6) !important;
+        stroke-width: 12px !important;
+    }
+    .hoverlayer .bg,
+    .hoverlayer .scrollbox{
+        transform: translate(16px, 0px);
+    }
+}

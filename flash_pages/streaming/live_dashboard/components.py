@@ -4,6 +4,7 @@ from dash_extensions import SSE
 from dash_extensions.streaming import sse_options
 import dash_mantine_components as dmc 
 import plotly.graph_objects as go
+import plotly.io as pio
 import pandas as pd
 from dash import dcc
 from flash import (
@@ -12,24 +13,44 @@ from flash import (
     Input, 
     Output, 
     State,
-    MATCH
+    MATCH,
+    callback,
+    ALL,
+    Patch
 )
+
 
 class SSEGraph(html.Div):
     
     class ids:
         sse = lambda idx: {'type': 'test-sse', 'index': idx}
         graph = lambda idx: {'type': 'sse-graph', 'index': idx}
+
+    @callback(
+        Output(ids.graph(ALL), "figure"),
+        Input("color-scheme-toggle", "checked"),
+        State(ids.graph(ALL), "id"),
+        prevent_initial_call=True
+    )
+    def update_figure(theme, ids):
+        # template must be template object rather than just the template string name
+        template = pio.templates["mantine_light"] if not theme else pio.templates["mantine_dark"]
+        patched_figures = []
+        for _ in ids:
+            patched_fig = Patch()
+            patched_fig["layout"]["template"] = template
+            patched_figures.append(patched_fig)
+
+        return patched_figures
     
     clientside_callback(
         '''
         //js
         function(message, figure) {
             if (!message) return window.dash_clientside.no_update;
-            
+
             const MAX_POINTS = 50;
             const data = JSON.parse(message);
-            
             const newFigure = JSON.parse(JSON.stringify(figure));
             newFigure.data[0].x.push(data.x);
             newFigure.data[0].y.push(data.y1);
@@ -45,16 +66,17 @@ class SSEGraph(html.Div):
                 newFigure.data[1].y = newFigure.data[1].y.slice(-MAX_POINTS);
             }
         
-            return newFigure;
+            return {data: newFigure.data, layout: newFigure.layout};
         }
         ;//
         ''',
-        Output(ids.graph(MATCH), 'figure'),
+        Output(ids.graph(MATCH), 'figure', allow_duplicate=True),
         Input(ids.sse(MATCH), 'value'),
         State(ids.graph(MATCH), 'figure'),
+        prevent_initial_call=True
     )
     
-    def __init__(self, chart_type: str):
+    def __init__(self, chart_type: str, template: str):
 
         fig = go.Figure()
 
@@ -63,7 +85,7 @@ class SSEGraph(html.Div):
                 x=pd.Series(dtype=object), 
                 y=pd.Series(dtype=object), 
                 mode="lines+markers",
-                name='trace-1'
+                name='trace-1',
             )
         )
         
@@ -72,22 +94,17 @@ class SSEGraph(html.Div):
                 x=pd.Series(dtype=object), 
                 y=pd.Series(dtype=object), 
                 mode="lines+markers",
-                name='trace-2'
+                name='trace-2',
             )
         )
+        fig.update_layout(hovermode="x unified")
 
         fig.update_layout(
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)",
+            template=template,
             xaxis_title=None,
-            template="plotly_dark",
             title=dict(
                 text=chart_type
             ),
-            modebar={
-                "orientation": "v",
-                "bgcolor": "rgba(0,0,0,0)",
-            },
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
@@ -103,7 +120,7 @@ class SSEGraph(html.Div):
                     id=self.ids.sse(chart_type), 
                     url=endpoint_url, 
                     options=sse_options(SSEContent(content='please send data')),
-                    concat=False
+                    concat=False,
                 ),
                 dcc.Graph(
                     id=self.ids.graph(chart_type),
@@ -128,11 +145,8 @@ class MantineSSEGraph(html.Div):
             
             const MAX_POINTS = 50;
             const newData = JSON.parse(message);
-            
             data.push(newData);
-            console.log(data);
             data = data.slice(-MAX_POINTS)
-
             return data
         }   
         ;//
@@ -170,7 +184,6 @@ class MantineSSEGraph(html.Div):
                         "animationDuration": 500,
                         "animationEasing": "ease-in-out",
                     },
-
                 )
 
             ]

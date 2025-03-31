@@ -25,8 +25,6 @@ async def layout(
             dmc.Tabs(
                 [
                     dmc.TabsList(
-                        pos='sticky', 
-                        top=0,
                         children=[
                             dmc.TabsTab("Slot 3", value="gallery"),
                             dmc.TabsTab("Slot 4", value="messages"),

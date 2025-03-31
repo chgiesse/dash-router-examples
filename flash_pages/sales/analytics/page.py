@@ -16,6 +16,7 @@ async def layout(
         children=[
             dmc.GridCol(
                 span=9,
+                p=0,
                 children=dmc.SimpleGrid(
                     m=0, p=0, spacing='xs',
                     cols=2,

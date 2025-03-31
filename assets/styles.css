@@ -3,15 +3,12 @@
   overflow-x: hidden; 
 }
 
-
 .modebar { display: none !important; }
-
 
 ._dash-loading {
   display: none;
   background-color: var(--mantine-color-body);
 }
-
 
 .badge-btn:hover{
   cursor: pointer;
@@ -69,12 +66,11 @@
   animation: fade-in-right 0.4s ease-in;
 }
 
-
 :root[data-mantine-color-scheme="light"]{ 
-        
-  body {
+  
+  /* body {
       background-color: var(--light-color-body);
-  }
+  } */
   .mantine-RichTextEditor-content,
   .mantine-RichTextEditor-toolbar,
   .mantine-RichTextEditor-root,
@@ -87,6 +83,8 @@
   .mantine-RichTextEditor-control:hover{
     background-color: var(--light-color-card);
   }
+
+  --mantine-color-body: rgb(245, 247, 248) !important;
 }
 
 :root{

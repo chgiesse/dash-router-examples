@@ -10,12 +10,22 @@ class NotificationsContainer(html.Div):
 
     @classmethod
     async def push_notification(cls, **kwargs):
-        return await flash_props(cls.ids.container, {'children': dmc.Notification(**kwargs)})
+        return await flash_props(
+            cls.ids.container, 
+            {'children': dmc.Notification(**kwargs)}
+        )
+    
+    @classmethod
+    async def clean_notifications(cls, **kwargs):
+        return await flash_props(
+            cls.ids.container, 
+            {'children': dmc.Notification(action='cleanQueue', message="", **kwargs)}
+        )
 
     def __init__(self):
         super().__init__(
             children=[
-                dmc.NotificationProvider(position='top-right', limit=2),
+                dmc.NotificationProvider(position='top-right', limit=5),
                 html.Div(id=self.ids.container)
             ]
         )

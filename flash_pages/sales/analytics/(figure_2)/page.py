@@ -8,8 +8,10 @@ from helpers import create_theme_callback
 create_theme_callback('fig2')
 
 async def layout(data: DataFrame, *args, **kwargs):
+    theme = kwargs.get('theme')
+    template="mantine_dark" if theme else 'mantine_light'
     x=['Winter', 'Spring', 'Summer', 'Fall']
-
+    
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=x, y=[40, 60, 40, 10],
@@ -34,16 +36,11 @@ async def layout(data: DataFrame, *args, **kwargs):
     ))
 
     fig.update_layout(yaxis_range=(0, 100))
+    fig.update_layout(hovermode="x unified")
 
     fig.update_layout(
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
         xaxis_title=None,
-        template="plotly_dark",
-        modebar={
-            "orientation": "v",
-            "bgcolor": "rgba(0,0,0,0)",
-        },
+        template=template,
         legend=dict(
             orientation="h",
             yanchor="bottom",
@@ -56,6 +53,5 @@ async def layout(data: DataFrame, *args, **kwargs):
     return dcc.Graph(
         figure=fig,
         responsive=True,
-        animate=True,
         id='fig2'
     )

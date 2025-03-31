@@ -1,5 +1,5 @@
 from appshell import create_appshell
-
+from theme import add_figure_templates
 import dash_mantine_components as dmc
 from aiocache import Cache
 from dash._utils import inputs_to_vals
@@ -15,15 +15,20 @@ import orjson
 app = Flash(
     __name__,
     suppress_callback_exceptions=True,
-    external_stylesheets=[dmc.styles.CHARTS, dmc.styles.DATES, dmc.styles.RICH_TEXT_EDITOR, dmc.styles.NOTIFICATIONS],
+    external_stylesheets=[dmc.styles.CHARTS, dmc.styles.DATES, dmc.styles.NOTIFICATIONS, dmc.styles.RICH_TEXT_EDITOR], 
     external_scripts=["https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"],
     pages_folder="flash_pages",
     use_pages=False,
-    update_title=None
+    update_title=None,
+    routing_callback_inputs={
+        "theme": State("color-scheme-toggle", "checked")
+    }
 )
 router = Router(app)
 app.layout = create_appshell([RootContainer()])
 cache = Cache()
+
+add_figure_templates(default="mantine_dark")
 
 @callback(
     Output(LacyContainer.ids.container(MATCH), "children"),
@@ -81,4 +86,4 @@ async def load_lacy_component(
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=8031)
+    app.run(debug=True, port=8031)

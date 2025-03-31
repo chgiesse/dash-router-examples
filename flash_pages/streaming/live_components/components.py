@@ -6,7 +6,7 @@ from dash import html, dcc
 import dash_mantine_components as dmc
 from dash_extensions import SSE
 from dash_extensions.streaming import sse_options
-from flash import clientside_callback, Input, Output, callback, no_update, State
+from flash import clientside_callback, Input, Output, callback, no_update, State, set_props
 from dash_router._utils import recursive_to_plotly_json
 from dash._utils import to_json
 from dash_iconify import DashIconify
@@ -65,39 +65,43 @@ class TestComponentStream(dmc.Stack):
     )
 
     clientside_callback(
-        """( theme ) => theme === false ? 'ag-theme-quartz' : 'ag-theme-quartz-auto-dark';""",
+        "( theme ) => theme === false ? 'ag-theme-quartz' : 'ag-theme-quartz-auto-dark';",
         Output(ids.table, "className"),
         Input("color-scheme-toggle", "checked"),
     )
 
-    clientside_callback(
-        '''
-        //js
-        function ( n_clicks ) {
-            console.log('n clcks', n_clicks)
-            if ( !n_clicks || n_clicks < 1 ) { return window.dash_clientside.no_update}
-            const sse_options = {
-                payload: {content: n_clicks },
-                header: {"Content-Type": "application/json"}    
-            }
-            return JSON.stringify(sse_options)
-        }
-        ;//
-        ''',
-        # Output(ids.sse, 'options'),
-        Input(ids.button, 'n_clicks'),
-        prevent_initial_call=True
-    )
-
     # @callback(
-    #     Output(ids.sse, 'options', allow_duplicate=True),
-    #     Input(ids.button, 'n_clicks'),
-    #     prevent_initial_call=True
+    #     Output(ids.sse, 'options'),
+    #     Input(ids.button, 'n_clicks')
     # )
-    # def start_component_stream(n_clicks):
+    # def trigger_sse(n_clicks):
     #     if not n_clicks:
     #         return no_update
     #     return sse_options(SSEContent(content=json.dumps({'n_clicks': n_clicks})))
+
+
+    clientside_callback(
+        f'''
+        function ( n_clicks ) {{
+            console.log('n clcks', n_clicks)
+            if ( !n_clicks ) {{ return window.dash_clientside.no_update }}
+            const sse_options = {{
+                payload: JSON.stringify({{ content: n_clicks }}),
+                headers: {{ "Content-Type": "application/json" }},
+                method: "POST"
+            }}
+            window.dash_clientside.set_props(
+                "{ids.sse}",
+                {{
+                    options: sse_options,
+                    url: '/component-sse-stream',
+                }}
+            )
+        }}
+        ''',
+        Input(ids.button, 'n_clicks'),
+        prevent_initial_call=True
+    )
     
     def __init__(self):
         super().__init__(
@@ -106,8 +110,7 @@ class TestComponentStream(dmc.Stack):
             children=[
                 SSE(
                     id=self.ids.sse, 
-                    url=self.endpoint_url, 
-                    concat=True
+                    concat=True,
                 ),
                 dcc.Store(id=self.ids.store, data=0),
                 dmc.Button(
@@ -137,7 +140,9 @@ from quart import request, abort, make_response
 app = get_app()
 
 async def callback_test():
+
     yield await flash_props(TestComponentStream.ids.button, {'loading': True})
+    
     df: pd.DataFrame = data.gapminder()
     columnDefs = [{"field": col} for col in df.columns]
     rows_per_step = 500
@@ -158,7 +163,7 @@ async def callback_test():
     progress = 0
     while total_rows > 0:
 
-        await asyncio.sleep(1.5)
+        await asyncio.sleep(2)
 
         end = len(df) - total_rows + rows_per_step
         total_rows -= rows_per_step
@@ -177,13 +182,6 @@ async def callback_test():
         
         progress += 1
         
-    yield await NotificationsContainer.push_notification(
-        title="Finished Callback!",
-        action="show",
-        message="Notifications in Dash, Awesome!",
-        icon=DashIconify(icon="akar-icons:circle-check"),
-        color='lime'
-    )
     
     yield await flash_props(
         TestComponentStream.ids.button, 
@@ -194,17 +192,20 @@ async def callback_test():
         }
     )
 
+    yield await NotificationsContainer.push_notification(
+        title="Finished Callback!",
+        action="show",
+        message="Notifications in Dash, Awesome!",
+        icon=DashIconify(icon="akar-icons:circle-check"),
+        color='lime',
+    )
 
-@app.server.route('/component-sse-stream')
+@app.server.post('/component-sse-stream')
 async def sse_callback():
     if "text/event-stream" not in request.accept_mimetypes:
         abort(400)
 
     load_data = await request.get_json()
-    print('DATA: ', load_data, flush=True)
-    # content = load_data.get('content')
-    # print(content, flush=True)
-    
     async def callback_generator():
         # Instead of yielding the generator, iterate through it
         async for item in callback_test():

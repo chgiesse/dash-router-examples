@@ -352,13 +352,13 @@ files = [
 
 [[package]]
 name = "dash"
-version = "3.0.0"
+version = "3.0.1"
 description = "A Python framework for building reactive web-apps. Developed by Plotly."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "dash-3.0.0-py3-none-any.whl", hash = "sha256:684de3765bdb24f2c5a7b5d9d4dffb02bb122586b08784a394769004af444f03"},
-    {file = "dash-3.0.0.tar.gz", hash = "sha256:2cbb071836b3ca546dbe38655083908b8be543f3bea9c4bf660b96490d3d4953"},
+    {file = "dash-3.0.1-py3-none-any.whl", hash = "sha256:b5355580d16d75713e32d3609792ac39f840c0341699c0fec62771fb24b59a59"},
+    {file = "dash-3.0.1.tar.gz", hash = "sha256:8cfa02f8a3bd0905af1e721614dc6b23bbf00bf78fd3110ec2423cf74c6c9564"},
 ]
 
 [package.dependencies]
@@ -369,7 +369,6 @@ plotly = ">=5.0.0"
 requests = "*"
 retrying = "*"
 setuptools = "*"
-stringcase = ">=1.2.0"
 typing-extensions = ">=4.1.1"
 Werkzeug = "<3.1"
 
@@ -383,13 +382,13 @@ testing = ["beautifulsoup4 (>=4.8.2)", "cryptography", "dash-testing-stub (>=0.0
 
 [[package]]
 name = "dash-ag-grid"
-version = "31.3.1rc1"
+version = "31.3.1"
 description = "Dash wrapper around AG Grid, the best interactive data grid for the web."
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "dash_ag_grid-31.3.1rc1-py3-none-any.whl", hash = "sha256:ef17552413c6ac872f81869bd9432473536aab4c266b75732b68c8cac6d1e1ba"},
-    {file = "dash_ag_grid-31.3.1rc1.tar.gz", hash = "sha256:78ceada6c9bc77bb15df87b63fe3d4fc4d5925c2009e29d99987cfa887e02d54"},
+    {file = "dash_ag_grid-31.3.1-py3-none-any.whl", hash = "sha256:2bce8e2a99c2d08800f6c119e4723c838789a093eea29b121aabdb541e1da156"},
+    {file = "dash_ag_grid-31.3.1.tar.gz", hash = "sha256:90069c340d893841d4e405fd3759794260946428c9cefcf70a356431e68c5020"},
 ]
 
 [package.dependencies]
@@ -449,12 +448,12 @@ mantine = ["dash-mantine-components (>=0.14.11)"]
 
 [[package]]
 name = "dash-flash"
-version = "0.1.2rc2"
+version = "0.1.2rc3"
 description = "Flash - async port of the Dash framework"
 optional = false
 python-versions = ">=3.12,<4.0"
 files = [
-    {file = "dash_flash-0.1.2rc2.tar.gz", hash = "sha256:8fb6042c28e190d39b2dee805e76bb7b550dab3b9919303fb452c0970a0d52d3"},
+    {file = "dash_flash-0.1.2rc3.tar.gz", hash = "sha256:cc8cb5080433281d6d6f1bad81c944afb60bfaa3b2b1a2d58d0d41b90b156969"},
 ]
 
 [package.dependencies]
@@ -464,7 +463,7 @@ quart-compress = ">=0.2.1,<0.3.0"
 
 [package.source]
 type = "file"
-url = "../../flash/flash-package/dist/dash_flash-0.1.2rc2.tar.gz"
+url = "../../flash/flash-package/dist/dash_flash-0.1.2rc3.tar.gz"
 
 [[package]]
 name = "dash-iconify"
@@ -479,13 +478,13 @@ files = [
 
 [[package]]
 name = "dash-mantine-components"
-version = "1.1.0"
+version = "1.1.1"
 description = "Plotly Dash Components based on Mantine"
 optional = false
 python-versions = "*"
 files = [
-    {file = "dash_mantine_components-1.1.0-py3-none-any.whl", hash = "sha256:76915f16274a4fbbdfa4da007c0b122a9eb7d00a46ec7bd73e7e9749df42b5ce"},
-    {file = "dash_mantine_components-1.1.0.tar.gz", hash = "sha256:2f49697b2742e272c7d5a331732478ebd2c65f73aae48f2bff01dd28a1ef0330"},
+    {file = "dash_mantine_components-1.1.1-py3-none-any.whl", hash = "sha256:1b8be14cebcde61d03619584bee7fa6dfcae3152149b5843faf2649ed274a237"},
+    {file = "dash_mantine_components-1.1.1.tar.gz", hash = "sha256:34a37cbac9f756048af50495f4655ba2b6bd2e73d1248aff258382a5986b6f96"},
 ]
 
 [package.dependencies]
@@ -543,17 +542,17 @@ description = "File-system based router for Dash and Flash applications."
 optional = false
 python-versions = ">=3.12,<4.0"
 files = [
-    {file = "flash_router-0.2.0b1.tar.gz", hash = "sha256:1fb14841518851348cfa7883e729615d5892c35743ff233052244f2dc11aed10"},
+    {file = "flash_router-0.2.0b1-py3-none-any.whl", hash = "sha256:f5619441f26b067fba99b6126e9f119d8f46d9872979d1e1d078f638edb2688a"},
 ]
 
 [package.dependencies]
 dash = ">=3.0.0rc1,<4.0.0"
-dash-flash = {path = "/Users/cgiessel/Documents/projects/flash/flash-package/dist/dash_flash-0.1.2rc2.tar.gz"}
+dash-flash = "<=1.0.0"
 pydantic = ">=2.10.4,<3.0.0"
 
 [package.source]
 type = "file"
-url = "../dash-router/dist/flash_router-0.2.0b1.tar.gz"
+url = "../dash-router/dist/flash_router-0.2.0b1-py3-none-any.whl"
 
 [[package]]
 name = "flask"
@@ -1658,16 +1657,6 @@ files = [
 ]
 
 [[package]]
-name = "stringcase"
-version = "1.2.0"
-description = "String case converter."
-optional = false
-python-versions = "*"
-files = [
-    {file = "stringcase-1.2.0.tar.gz", hash = "sha256:48a06980661908efe8d9d34eab2b6c13aefa2163b3ced26972902e3bdfd87008"},
-]
-
-[[package]]
 name = "traitlets"
 version = "5.14.3"
 description = "Traitlets Python configuration system"
@@ -1774,4 +1763,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "91deda20125faaea84fcc8486bff3e8458b4392448076f529c63f57064d6419b"
+content-hash = "af34ffda0c6e4aa8b52b3cb61d60b695f3ea8ac62a182664df95ed64bd26d3dd"

@@ -16,7 +16,6 @@ async def sse():
     if "text/event-stream" not in request.accept_mimetypes:
         abort(400)
     
-    print('SSE KWARGS: ', await request.data, flush=True)
     async def send_events():
         while True:
             await asyncio.sleep(1)

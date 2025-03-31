@@ -76,7 +76,6 @@ navbar = dmc.AppShellNavbar([
                         "material-symbols:settings-outline-rounded", height=30
                     ),
                     size="xl",
-                    # radius="xl",
                     variant="subtle",
                 )
             ),

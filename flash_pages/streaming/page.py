@@ -5,11 +5,11 @@ from dash_router import ChildContainer, RouteConfig
 config = RouteConfig(default_child='live-dashboard')
 
 async def layout(children: ChildContainer, **kwargs):
-
+    print('KWARGS IN STREAMINL ', kwargs)
     create_navlink = lambda href, icon, label: dmc.NavLink(
             label=label,
             href=href,
-            active="partial",
+            active="exact",
             variant='filled',
             leftSection=DashIconify(icon=icon, height=20).to_plotly_json(),
             fw=700,
@@ -23,7 +23,6 @@ async def layout(children: ChildContainer, **kwargs):
             radius='xl',
             withBorder=True,
             p=5,
-            shadow='md',
             w='fit-content',
             children=dmc.Group(
                 [

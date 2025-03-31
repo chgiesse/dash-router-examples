@@ -1,6 +1,6 @@
 from dash_iconify import DashIconify
 from dataclasses import dataclass
-from flash import callback, Input, Output, Patch
+from flash import callback, Input, Output, Patch, ctx
 from dash_router._utils import recursive_to_plotly_json
 import plotly.io as pio
 import asyncio
@@ -13,16 +13,16 @@ def get_icon(icon: str, height: int = 20, *args, **kwargs):
 
 def create_theme_callback(figure_id):
     @callback(
-        Output(figure_id, 'figure', allow_duplicate=True),
+        Output(figure_id, 'figure'),
         Input('color-scheme-toggle', 'checked'),
         prevent_initial_call=True
     )
 
     def apply_theme(theme):
-        template = pio.templates['plotly_dark'] if theme is True else pio.templates['plotly']
-        patch = Patch()
-        patch.layout.template = template
-        return patch
+        template = pio.templates['mantine_dark'] if theme is True else pio.templates['mantine_light']
+        patched_fig = Patch()
+        patched_fig["layout"]["template"] = template
+        return patched_fig
 
 @dataclass
 class ServerSentEvent:
