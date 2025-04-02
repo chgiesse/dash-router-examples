@@ -9,6 +9,7 @@ from quart.helpers import stream_with_context
 from flash import clientside_callback, html
 from dataclasses import dataclass
 from uuid import uuid4
+import warnings
 import inspect
 import json
 
@@ -53,13 +54,16 @@ class SSECallbackComponent(html.Div):
 
 class Streamer:
 
-    callback_id_key = 'sse_callback_id'
-
     def __init__(self, app: Flash):
         self.app = app
         self.server = app.server
         self.setup_component_stream()
         self.setup_processing_callback()
+
+        warnings.warn("""
+            This is only for fun purpose! This is not meant
+            to be used in any serious sitouation or environment
+        """)
 
     def setup_component_stream(self):
 
