@@ -1,10 +1,9 @@
 from aiocache import cached
 import asyncio
 
-@cached(ttl=120)
+# @cached(ttl=120)
 async def endpoint(*args, **kwargs):
-    print('Execute API Sales Overview', flush=True)
-    await asyncio.sleep(1.5)
+    await asyncio.sleep(1.1)
     elements = [
         {
             "invoice_id": 1,

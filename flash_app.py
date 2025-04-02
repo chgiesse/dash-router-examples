@@ -1,4 +1,5 @@
 from appshell import create_appshell
+from streaming.stream import Streamer, SSECallbackComponent
 from theme import add_figure_templates
 import dash_mantine_components as dmc
 from aiocache import Cache
@@ -9,7 +10,7 @@ from flash import MATCH, Flash, Input, Output, State, callback
 from flash._pages import _parse_query_string
 from quart import request
 from uuid import UUID
-import orjson
+import json
 
 
 app = Flash(
@@ -25,7 +26,8 @@ app = Flash(
     }
 )
 router = Router(app)
-app.layout = create_appshell([RootContainer()])
+streamer = Streamer(app)
+app.layout = create_appshell([RootContainer(), SSECallbackComponent()])
 cache = Cache()
 
 add_figure_templates(default="mantine_dark")
@@ -45,7 +47,7 @@ async def load_lacy_component(
     if not request_data:
         return
 
-    body = orjson.loads(request_data)
+    body = json.loads(request_data)
     component_id = body.get("outputs").get("id")
     if not isinstance(component_id, dict):
         return
@@ -60,7 +62,7 @@ async def load_lacy_component(
     args = inputs_to_vals(inputs + state)
     _, variables, pathname_, search_, loading_state_ = args
     query_parameters = _parse_query_string(search_)
-    node_variables = orjson.loads(variables)
+    node_variables = json.loads(variables)
     
     lacy_node: PageNode = router.route_table.get(node_id)
     path = router.strip_relative_path(pathname_)
@@ -86,4 +88,4 @@ async def load_lacy_component(
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8031)
+    app.run(debug=False, port=8031)

@@ -1,4 +1,4 @@
-from .models import ServerSentEvent
+from ..models import ServerSentEvent
 from quart import make_response, abort, request
 from dash._utils import to_json
 from flash import get_app

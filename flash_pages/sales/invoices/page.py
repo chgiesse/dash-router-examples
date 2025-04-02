@@ -30,14 +30,16 @@ async def layout(invoice: SlotContainer, overview: SlotContainer, **kwargs):
                 dmc.Title("Invoice list", order=3), 
                 overview
             ]),
-            dmc.Stack(
-                [
-                    invoice,
-                    dmc.Alert(
-                        "This is still the invoices section",
-                        title="Invoices section!",
-                    ),
-                ]
-            ),
+            invoice
+            # dmc.Stack(
+            #     [
+            #         invoice,
+            #         dmc.Alert(
+            #             "This is still the invoices section",
+            #             title="Invoices section!",
+            #             mt='auto'
+            #         ),
+            #     ]
+            # ),
         ]
     )

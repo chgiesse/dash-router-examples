@@ -1,11 +1,6 @@
 from dash_iconify import DashIconify
-from dataclasses import dataclass
-from flash import callback, Input, Output, Patch, ctx
-from dash_router._utils import recursive_to_plotly_json
+from flash import callback, Input, Output, Patch
 import plotly.io as pio
-import asyncio
-import json
-
 
 
 def get_icon(icon: str, height: int = 20, *args, **kwargs):
@@ -24,28 +19,44 @@ def create_theme_callback(figure_id):
         patched_fig["layout"]["template"] = template
         return patched_fig
 
-@dataclass
-class ServerSentEvent:
-    data: str
-    event: str | None = None
-    id: int | None = None
-    retry: int | None = None
 
-    def encode(self) -> bytes:
-        message = f"data: {self.data}"
-        if self.event is not None:
-            message = f"{message}\nevent: {self.event}"
-        if self.id is not None:
-            message = f"{message}\nid: {self.id}"
-        if self.retry is not None:
-            message = f"{message}\nretry: {self.retry}"
-        message = f"{message}\n\n"
-        return message.encode('utf-8')
+def generate_clientside_callback(input_ids, sse_callback_id):
+    sse_component_id = 'component-stream-sse'
+    args_str = ", ".join(input_ids)
+    
+    property_assignments = [f'    "sse_callback_id": "{sse_callback_id}"']
+    for input_id in input_ids:
+        property_assignments.append(f'    "{input_id}": {input_id}')
+    
+    payload_obj = "{\n" + ",\n".join(property_assignments) + "\n}"
 
-
-async def flash_props(component_id: str, props):
-    """Generate notification props for the specified component ID."""
-    # await asyncio.sleep(.1)
-    response = [component_id, recursive_to_plotly_json(props)]
-    event = ServerSentEvent(json.dumps(response) + '__concatsep__')
-    return event.encode()
+    js_code = f'''
+        function({args_str}) {{    
+            // If no clicks on primary trigger (first argument), return no update
+            if ( !window.dash_clientside.callback_context.triggered_id ) {{ 
+                return window.dash_clientside.no_update;
+            }}
+            console.log('Received inputs:', {{{args_str}}});
+            
+            // Create payload object with all inputs
+            const payload = {payload_obj};
+            
+            // Prepare SSE options with the payload
+            const sse_options = {{
+                payload: JSON.stringify({{ content: payload }}),
+                headers: {{ "Content-Type": "application/json" }},
+                method: "POST"
+            }};
+            
+            // Set props for the SSE component
+            window.dash_clientside.set_props(
+                "{sse_component_id}",
+                {{
+                    options: sse_options,
+                    url: '/component-sse-stream',
+                }}
+            );
+        }}
+    '''   
+    
+    return js_code

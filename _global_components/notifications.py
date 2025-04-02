@@ -1,6 +1,6 @@
 from dash import html
 import dash_mantine_components as dmc 
-from helpers import flash_props
+from streaming.stream import flash_props
 
 
 class NotificationsContainer(html.Div):
@@ -25,7 +25,7 @@ class NotificationsContainer(html.Div):
     def __init__(self):
         super().__init__(
             children=[
-                dmc.NotificationProvider(position='top-right', limit=5),
+                dmc.NotificationProvider(position='top-right', limit=2),
                 html.Div(id=self.ids.container)
             ]
         )

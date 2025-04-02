@@ -2,13 +2,12 @@ from aiocache import cached
 import asyncio
 import random
 
-@cached(ttl=30)
+# @cached(ttl=30)
 async def endpoint(**kwargs):
-    print('Execute API Items', flush=True)
     invoice_id = kwargs.get("invoice_id")
     if invoice_id == str(1):
         1 / 0
-    await asyncio.sleep(.4)
+    await asyncio.sleep(.7)
     water_data = [
     
         {

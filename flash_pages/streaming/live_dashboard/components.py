@@ -1,5 +1,5 @@
 from ..models import SSEContent
-from ..sse_endpoint import endpoint_url, mantine_endpoint_url
+from .sse_endpoint import endpoint_url, mantine_endpoint_url
 from dash_extensions import SSE
 from dash_extensions.streaming import sse_options
 import dash_mantine_components as dmc 
@@ -66,7 +66,7 @@ class SSEGraph(html.Div):
                 newFigure.data[1].y = newFigure.data[1].y.slice(-MAX_POINTS);
             }
         
-            return {data: newFigure.data, layout: newFigure.layout};
+            return newFigure;
         }
         ;//
         ''',

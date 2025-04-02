@@ -4,12 +4,12 @@ import asyncio
 import random
 
 
-@cached(ttl=30)
+# @cached(ttl=30)
 async def endpoint(invoice_id = None, **kwargs):
     if not invoice_id:
         return None
-    print('Execute API Invoice', flush=True)
-    await asyncio.sleep(.6)
+
+    await asyncio.sleep(.9)
 
     data_comp = [
         {
