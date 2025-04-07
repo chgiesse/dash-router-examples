@@ -29,12 +29,12 @@ async def layout(children: ChildContainer, **kwargs):
                     create_navlink(
                         label="Live Dashboard",
                         href="/streaming/live-dashboard",
-                        icon='material-symbols:campaign-outline-rounded',
+                        icon='fluent:stream-20-filled',
                     ),
                     create_navlink(
                         label="Components",
                         href="/streaming/live-components",
-                        icon='material-symbols:encrypted-outline-rounded',
+                        icon='lucide:component',
                     )
                 ], 
                 justify='center', 

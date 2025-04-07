@@ -10,9 +10,10 @@ class NotificationsContainer(html.Div):
 
     @classmethod
     async def push_notification(cls, **kwargs):
+        timer = kwargs.pop('autoClose', None) or 3000
         return await flash_props(
             cls.ids.container, 
-            {'children': dmc.Notification(**kwargs)}
+            {'children': dmc.Notification(**kwargs, autoClose=timer)}
         )
     
     @classmethod

@@ -10,7 +10,7 @@ create_theme_callback('fig5')
 
 async def layout(data: DataFrame = None, *args, **kwargs):
     theme = kwargs.get('theme')
-    template="mantine_dark" if theme else 'mantine_light'
+    template="plotly_dark" if theme else 'plotly'
     fig = go.Figure(go.Sunburst(
         labels=data.get('labels'),
         parents=data.get('parents'),

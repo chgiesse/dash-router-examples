@@ -17,15 +17,18 @@ async def layout(invoice: SlotContainer, overview: SlotContainer, **kwargs):
         children=[
             dmc.Stack([
                 dmc.Title("Top Vendors", order=3), 
-                dmc.BarChart(
+                dmc.Box(
                     h=300,
-                    dataKey="month",
-                    data=bar_data,
-                    orientation="vertical",
-                    yAxisProps={"width": 80},
-                    series=[{"name": "Smartphones", "color": "violet.6"}],
-                    barProps={"isAnimationActive": True, "radius": 50},
-                    gridAxis="none",
+                    children=dmc.BarChart(
+                        h=300,
+                        dataKey="month",
+                        data=bar_data,
+                        orientation="vertical",
+                        yAxisProps={"width": 80},
+                        series=[{"name": "Smartphones", "color": "violet.4"}],
+                        barProps={"isAnimationActive": True, "radius": 50},
+                        gridAxis="none",
+                    )
                 ),
                 dmc.Title("Invoice list", order=3), 
                 overview

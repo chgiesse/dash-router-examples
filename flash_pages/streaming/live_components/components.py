@@ -5,7 +5,7 @@ from streaming.stream import flash_props, sse_callback
 from dash import dcc
 import dash_mantine_components as dmc
 from dash_extensions import SSE
-from flash import clientside_callback, Input, Output, State
+from flash import clientside_callback, Input, Output
 from dash_iconify import DashIconify
 import dash_ag_grid as dag
 
@@ -28,15 +28,15 @@ class TestComponentStream(dmc.Stack):
         yield await flash_props(TestComponentStream.ids.button, {'loading': True})
 
         yield await NotificationsContainer.push_notification(
-            title="Started Download!",
+            title="Starting Download!",
             action="show",
             message="Notifications in Dash, Awesome!",
-            color='violet'
+            color='lime'
         )
 
         progress = 0
         chunck_size = 500
-        async for data_chunk, colnames in get_data():
+        async for data_chunk, colnames in get_data(chunck_size):
             update = {"rowTransaction": {"add": data_chunk}}
             if progress == 0:
                 update = {"rowData": data_chunk}
@@ -47,7 +47,6 @@ class TestComponentStream(dmc.Stack):
                 )
             
             yield await flash_props(TestComponentStream.ids.table, update)
-            progress += 1
             
             if len(data_chunk) == chunck_size:
                 yield await NotificationsContainer.push_notification(
@@ -57,12 +56,13 @@ class TestComponentStream(dmc.Stack):
                     color='violet',
                 )
             
-
+            progress += 1
+            
         yield await flash_props(
             TestComponentStream.ids.button,
             {
                 'loading': False, 
-                'leftSection': DashIconify(icon='famicons:reload-circle', height=20),
+                # 'leftSection': DashIconify(icon='famicons:reload-circle', height=20),
                 'children': 'Reload',
             }
         )
@@ -75,6 +75,7 @@ class TestComponentStream(dmc.Stack):
             color='lime',
         )
     
+
     def __init__(self):
         super().__init__(
             justify='flex-start',
@@ -85,7 +86,7 @@ class TestComponentStream(dmc.Stack):
                     id=self.ids.button, 
                     variant="gradient", 
                     gradient={"from": "grape", "to": "violet", "deg": 35},
-                    leftSection=DashIconify(icon='line-md:downloading-loop', height=20),
+                    leftSection=DashIconify(icon='material-symbols:download-rounded', height=20),
                     fullWidth=False,
                     styles={'section': {'marginRight': 'var(--mantine-spacing-md)'}}
                 ),

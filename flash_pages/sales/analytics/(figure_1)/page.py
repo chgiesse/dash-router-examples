@@ -8,7 +8,7 @@ create_theme_callback('fig1')
 
 async def layout(data: DataFrame = None, *args, **kwargs):
     theme = kwargs.get('theme')
-    template="mantine_dark" if theme else 'mantine_light'
+    template="plotly_dark" if theme else 'plotly'
     fig = px.box(
         data, 
         x="day", 
@@ -18,8 +18,8 @@ async def layout(data: DataFrame = None, *args, **kwargs):
     )
     fig.update_layout(hovermode="x unified")
     fig.update_layout(
-        plot_bgcolor="rgba(0,0,0,0)",
         xaxis_title=None,
+        plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         template=template,
         legend=dict(

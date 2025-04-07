@@ -9,7 +9,7 @@ create_theme_callback('fig2')
 
 async def layout(data: DataFrame, *args, **kwargs):
     theme = kwargs.get('theme')
-    template="mantine_dark" if theme else 'mantine_light'
+    template="plotly_dark" if theme else 'plotly'
     x=['Winter', 'Spring', 'Summer', 'Fall']
     
     fig = go.Figure()

@@ -1,36 +1,41 @@
-from appshell import create_appshell
-from streaming.stream import Streamer, SSECallbackComponent
-from theme import add_figure_templates
+import json
+from uuid import UUID
+
 import dash_mantine_components as dmc
 from aiocache import Cache
 from dash._utils import inputs_to_vals
-from dash_router import RootContainer, Router, PageNode
+from dash_router import PageNode, RootContainer, Router
 from dash_router.components import LacyContainer
 from flash import MATCH, Flash, Input, Output, State, callback
 from flash._pages import _parse_query_string
 from quart import request
-from uuid import UUID
-import json
 
+from appshell import create_appshell
+from streaming.stream import SSECallbackComponent, Streamer
+from theme import apply_vizro_theme
 
 app = Flash(
     __name__,
     suppress_callback_exceptions=True,
-    external_stylesheets=[dmc.styles.CHARTS, dmc.styles.DATES, dmc.styles.NOTIFICATIONS, dmc.styles.RICH_TEXT_EDITOR], 
+    external_stylesheets=[
+        dmc.styles.CHARTS,
+        dmc.styles.DATES,
+        dmc.styles.NOTIFICATIONS,
+        dmc.styles.RICH_TEXT_EDITOR,
+    ],
     external_scripts=["https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"],
     pages_folder="flash_pages",
     use_pages=False,
     update_title=None,
-    routing_callback_inputs={
-        "theme": State("color-scheme-toggle", "checked")
-    }
+    routing_callback_inputs={"theme": State("color-scheme-toggle", "checked")},
 )
 router = Router(app)
 streamer = Streamer(app)
 app.layout = create_appshell([RootContainer(), SSECallbackComponent()])
 cache = Cache()
 
-add_figure_templates(default="mantine_dark")
+apply_vizro_theme()
+
 
 @callback(
     Output(LacyContainer.ids.container(MATCH), "children"),
@@ -55,7 +60,7 @@ async def load_lacy_component(
 
     if not component_type == LacyContainer.ids.container("none").get("type"):
         return
-    
+
     node_id = UUID(component_id.get("index"))
     inputs = body.get("inputs", [])
     state = body.get("state", [])
@@ -63,13 +68,15 @@ async def load_lacy_component(
     _, variables, pathname_, search_, loading_state_ = args
     query_parameters = _parse_query_string(search_)
     node_variables = json.loads(variables)
-    
+
     lacy_node: PageNode = router.route_table.get(node_id)
     path = router.strip_relative_path(pathname_)
-    segments = path.split('/')
-    node_segments = [segment.strip('()') for segment in lacy_node.module.split('.')[1:-1]]
+    segments = path.split("/")
+    node_segments = [
+        segment.strip("()") for segment in lacy_node.module.split(".")[1:-1]
+    ]
     current_index = node_segments.index(lacy_node.segment)
-    remaining_segments = segments[current_index: ]
+    remaining_segments = segments[current_index:]
 
     exec_tree, endpoints = router.build_execution_tree(
         current_node=lacy_node,
@@ -88,4 +95,4 @@ async def load_lacy_component(
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=8031)
+    app.run(debug=True, port=8031)

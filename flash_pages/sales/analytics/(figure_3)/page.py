@@ -8,7 +8,7 @@ create_theme_callback('fig3')
 
 async def layout(data: DataFrame, *args, **kwargs):
     theme = kwargs.get('theme')
-    template="mantine_dark" if theme else 'mantine_light'
+    template="plotly_dark" if theme else 'plotly'
     fig = px.histogram(data, x="total_bill", y="tip", color="sex", marginal="rug", hover_data=data.columns)
     fig.update_layout(
             plot_bgcolor="rgba(0,0,0,0)",

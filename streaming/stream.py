@@ -1,23 +1,29 @@
 from helpers import generate_clientside_callback
 from dash_router._utils import recursive_to_plotly_json
+from dash_router import RootContainer
 from flash import Flash, Input, Output, State, clientside_callback
 from dash_extensions import SSE
 from dash import dcc
 
-from quart import request, abort, make_response
+from quart import request, abort, make_response, websocket
 from quart.helpers import stream_with_context
 from flash import clientside_callback, html
 from dataclasses import dataclass
 from uuid import uuid4
+import asyncio
 import warnings
 import inspect
 import json
 
 
 SSE_CALLBACK_MAP = {}
+WS_CALLBACK_MAP = {}
+
+WS_CALLBACK_ENDPOINT = '/stream_dash_update_component'
 SSE_CALLBACK_ENDPOINT = '/dash_update_component_sse'
+
 STEAM_SEPERATOR = '__concatsep__'
-CALLBACK_ID_KEY = 'sse_callback_id'
+SSE_CALLBACK_ID_KEY = 'sse_callback_id'
 
 
 @dataclass
@@ -47,7 +53,7 @@ class SSECallbackComponent(html.Div):
 
     def __init__(self):
         super().__init__([
-            SSE(id=self.ids.sse, concat=True),
+            SSE(id=self.ids.sse, concat=True, url=SSE_CALLBACK_ENDPOINT),
             dcc.Store(id=self.ids.store, data={})
         ])
 
@@ -57,15 +63,14 @@ class Streamer:
     def __init__(self, app: Flash):
         self.app = app
         self.server = app.server
-        self.setup_component_stream()
+        self.setup_event_callback()
         self.setup_processing_callback()
-
         warnings.warn("""
             This is only for fun purpose! This is not meant
             to be used in any serious sitouation or environment
         """)
 
-    def setup_component_stream(self):
+    def setup_event_callback(self):
 
         @self.server.post(SSE_CALLBACK_ENDPOINT)
         async def sse_component_callback():
@@ -73,18 +78,25 @@ class Streamer:
                 abort(400)
 
             async def send_done_signal(callback_id):
+                await asyncio.sleep(.1)
                 response = ["[DONE]", {}, callback_id]
+                event = ServerSentEvent(json.dumps(response) + STEAM_SEPERATOR)
+                return event.encode()
+            
+            async def send_init_signal(callback_id):
+                response = ["[INIT]", {}, callback_id]
                 event = ServerSentEvent(json.dumps(response) + STEAM_SEPERATOR)
                 return event.encode()
 
             data = await request.get_json()
             content = data['content'].copy()
-            callback_id = content.pop(CALLBACK_ID_KEY)
+            callback_id = content.pop(SSE_CALLBACK_ID_KEY)
             callback_func = SSE_CALLBACK_MAP.get(callback_id)
 
             @stream_with_context
             async def callback_generator():
-                
+                yield await send_init_signal(callback_id)
+                await asyncio.sleep(.1)
                 async for item in callback_func(**content):
                     yield item
                 
@@ -101,6 +113,22 @@ class Streamer:
             
             response.timeout = None
             return response
+        
+    def setup_stream_callback(self):
+        
+        @self.server.websocket(WS_CALLBACK_MAP)
+        async def stream_callback():
+            await websocket.accept()
+
+            while True:
+                message = await websocket.receive()
+                data = json.loads(message)
+                content = data['content'].copy() 
+                callback_id = content.pop(SSE_CALLBACK_ID_KEY)
+                callback_func = WS_CALLBACK_MAP.get(callback_id)
+                async for item in callback_func(**content):
+                    await websocket.send(item)
+                
 
     def setup_processing_callback(self):
 
@@ -111,6 +139,7 @@ class Streamer:
             if (!message) { return processedData || {} };
             
             const DONE_TOKEN = "[DONE]";
+            const INIT_TOKEN = "[INIT]";
             processedData = processedData || {};
             const setProps = window.dash_clientside.set_props;
             const messageList = message.split('__concatsep__');
@@ -124,29 +153,29 @@ class Streamer:
             const cbId = JSON.parse(messageList[0])[2]
             const startIdx = processedData[cbId] || 0;
             const newMessages = messageList.slice(startIdx);
-            
             newMessages.forEach(messageStr => {
                 try {
                     const [componentId, props, callbackId] = JSON.parse(messageStr);
-
-                    if (componentId !== DONE_TOKEN) {
+                    if ( componentId !== DONE_TOKEN && componentId !== INIT_TOKEN ) {
                         // Set properties on the component
                         setProps(componentId, props);
-                        
-                        // Track progress for this specific callback ID
-                        if (!processedData[callbackId]) {
-                            processedData[callbackId] = 0;
-                        }
                         processedData[callbackId]++;
+                    } 
 
-                    } else {
+                    if ( componentId == INIT_TOKEN ) {
+                        processedData[callbackId] = 1
+                    } 
+                    
+                    if ( componentId == DONE_TOKEN) {
                         processedData[callbackId] = 0
+                        console.log('finished sse ', callbackId)
                     }
+
                 } catch (e) {
                     console.error("Error processing message:", e, messageStr);
                 }
             });
-            console.log(processedData)
+
             return processedData;
         }
         ;//
@@ -156,12 +185,23 @@ class Streamer:
         State(SSECallbackComponent.ids.store, 'data'),
         prevent_initial_call=True
     )
+        
+    clientside_callback(
+        f'''function ( pathChange ) {{
+            window.dash_clientside.set_props('{SSECallbackComponent.ids.sse}', {{done: true, url: null}});
+            window.dash_clientside.set_props('{SSECallbackComponent.ids.store}', {{data: {{}}}});
+            console.log('pathchange', pathChange)
+        }}''',
+        # Output(SSECallbackComponent.ids.sse, 'done'),
+        Input(RootContainer.ids.location, 'pathname'),
+        prevent_initial_call=True
+    )
 
 
 def generate_clientside_callback(input_ids, sse_callback_id):
     args_str = ", ".join(input_ids)
     
-    property_assignments = [f'    "{CALLBACK_ID_KEY}": "{sse_callback_id}"']
+    property_assignments = [f'    "{SSE_CALLBACK_ID_KEY}": "{sse_callback_id}"']
     for input_id in input_ids:
         property_assignments.append(f'    "{input_id}": {input_id}')
     
@@ -176,7 +216,7 @@ def generate_clientside_callback(input_ids, sse_callback_id):
             
             // Create payload object with all inputs
             const payload = {payload_obj};
-            
+            console.log('payload: ', payload)
             // Prepare SSE options with the payload
             const sse_options = {{
                 payload: JSON.stringify({{ content: payload }}),
@@ -194,7 +234,7 @@ def generate_clientside_callback(input_ids, sse_callback_id):
             );
         }}
     '''   
-    
+
     return js_code
         
 
@@ -221,11 +261,14 @@ def sse_callback(*dependencies, prevent_initital_call=True):
     
     return decorator
 
+def stream_callback(*dependencies, prevent_initital_call=True):
+    pass
+
 
 async def flash_props(component_id: str, props):
     """Generate notification props for the specified component ID."""
     r = await request.get_json()
-    r_id = r['content'].get(CALLBACK_ID_KEY)
+    r_id = r['content'].get(SSE_CALLBACK_ID_KEY)
     response = [component_id, recursive_to_plotly_json(props), r_id]
     event = ServerSentEvent(json.dumps(response) + STEAM_SEPERATOR)
     return event.encode()

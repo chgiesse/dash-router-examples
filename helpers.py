@@ -14,7 +14,7 @@ def create_theme_callback(figure_id):
     )
 
     def apply_theme(theme):
-        template = pio.templates['mantine_dark'] if theme is True else pio.templates['mantine_light']
+        template = pio.templates['plotly_dark'] if theme is True else pio.templates['plotly']
         patched_fig = Patch()
         patched_fig["layout"]["template"] = template
         return patched_fig

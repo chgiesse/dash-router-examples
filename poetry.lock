@@ -426,25 +426,22 @@ files = [
 
 [[package]]
 name = "dash-extensions"
-version = "1.0.20"
+version = "2.0.0"
 description = "Extensions for Plotly Dash."
 optional = false
-python-versions = "<4,>=3.9"
+python-versions = ">=3.12"
 files = [
-    {file = "dash_extensions-1.0.20-py3-none-any.whl", hash = "sha256:e4e6a2c103ef8ca629e3f3b91703e587c38ecdc3aedb9fc3793182bbb2d64c23"},
-    {file = "dash_extensions-1.0.20.tar.gz", hash = "sha256:e32d1ac779ef04f3362a0183e993a25f61caab75e1a828a328a8dad83f6bbe0c"},
+    {file = "dash_extensions-2.0.0-py3-none-any.whl", hash = "sha256:9923dc2776b75387dc0763a67a2591a5f315c86bcada0b32018fb34d1b337a48"},
+    {file = "dash_extensions-2.0.0.tar.gz", hash = "sha256:feaa5b6cdb56507162fc8cc103456412af51bcddbcf789cc35386b57d71567e9"},
 ]
 
 [package.dependencies]
-dash = ">=2.18.2"
-dataclass-wizard = ">=0.30.1,<0.31.0"
-Flask-Caching = ">=2.1.0,<3.0.0"
-jsbeautifier = ">=1.14.3,<2.0.0"
-more-itertools = ">=10.2.0,<11.0.0"
-pydantic = ">=2.10.1,<3.0.0"
-
-[package.extras]
-mantine = ["dash-mantine-components (>=0.14.11)"]
+dash = ">=3.0.0"
+dataclass-wizard = ">=0.35.0"
+Flask-Caching = ">=2.3.1"
+jsbeautifier = ">=1.15.4"
+more-itertools = ">=10.6.0"
+pydantic = ">=2.10.6"
 
 [[package]]
 name = "dash-flash"
@@ -495,17 +492,21 @@ dev = ["black", "build", "dash-iconify", "dash[ci,dev,testing] (>=2)", "pytest (
 
 [[package]]
 name = "dataclass-wizard"
-version = "0.30.1"
-description = "Effortlessly marshal dataclasses to/from JSON. Leverage field properties with default values. Generate dataclass schemas from JSON input."
+version = "0.35.0"
+description = "Lightning-fast JSON wizardry for Python dataclasses — effortless serialization right out of the box!"
 optional = false
 python-versions = "*"
 files = [
-    {file = "dataclass-wizard-0.30.1.tar.gz", hash = "sha256:f382daab1c9aca258fe47fed089a495b69da736bde2dc7ff61c5440de2233f38"},
-    {file = "dataclass_wizard-0.30.1-py2.py3-none-any.whl", hash = "sha256:bf4af012d4fc04511efcc2be52024589faec150795bec5517b56d4ab131e2d1d"},
+    {file = "dataclass-wizard-0.35.0.tar.gz", hash = "sha256:8e4b254991bf93416a48e2911bb985e3787cff11f00270c3d1165d2523cb3fb6"},
+    {file = "dataclass_wizard-0.35.0-py2.py3-none-any.whl", hash = "sha256:3bb19292477f0bebb12e9cc9178f1a6b93d133af4ae065abf14b713142b32edf"},
 ]
 
+[package.dependencies]
+typing-extensions = {version = ">=4.9.0", markers = "python_version <= \"3.12\""}
+
 [package.extras]
-dev = ["Sphinx (==7.4.7)", "Sphinx (==8.1.3)", "bump2version (==1.0.1)", "coverage (>=6.2)", "dataclass-factory (==2.16)", "dataclass-wizard[toml]", "dataclasses-json (==0.6.7)", "flake8 (>=3)", "jsons (==1.6.3)", "pip (>=21.3.1)", "pytest (==8.3.3)", "pytest-cov (==6.0.0)", "pytest-mock (>=3.6.1)", "pytimeparse (==1.1.8)", "sphinx-issues (==5.0.0)", "tomli (>=2,<3)", "tomli (>=2,<3)", "tomli-w (>=1,<2)", "tox (==4.23.2)", "twine (==5.1.1)", "watchdog[watchmedo] (==6.0.0)", "wheel (==0.45.1)"]
+dev = ["Sphinx (==7.4.7)", "Sphinx (==8.1.3)", "attrs (==24.3.0)", "bump2version (==1.0.1)", "coverage (>=6.2)", "dacite (==1.8.1)", "dataclass-factory (==2.16)", "dataclass-wizard[toml]", "dataclasses-json (==0.6.7)", "flake8 (>=3)", "jsons (==1.6.3)", "mashumaro (==3.15)", "matplotlib", "pip (>=21.3.1)", "pydantic (==2.10.3)", "pytest (==8.3.4)", "pytest-benchmark[histogram]", "pytest-cov (==6.0.0)", "pytest-mock (>=3.6.1)", "python-dotenv (>=1,<2)", "pytimeparse (==1.1.8)", "sphinx-autodoc-typehints (==2.5.0)", "sphinx-copybutton (==0.5.2)", "sphinx-issues (==5.0.0)", "tomli (>=2,<3)", "tomli (>=2,<3)", "tomli-w (>=1,<2)", "tox (==4.23.2)", "twine (==6.0.1)", "typing-extensions (>=4.9.0)", "watchdog[watchmedo] (==6.0.0)", "wheel (==0.45.1)"]
+dotenv = ["python-dotenv (>=1,<2)"]
 timedelta = ["pytimeparse (>=1.1.7)"]
 toml = ["tomli (>=2,<3)", "tomli (>=2,<3)", "tomli-w (>=1,<2)"]
 yaml = ["PyYAML (>=6,<7)"]
@@ -1763,4 +1764,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "8561a2f60113751c83878df1a92321b8cdd50634a93d1b41695f242b46f1e8f3"
+content-hash = "bdbcae53c0d7cb8f473d6d10f491b3fb6b890f5170a9a3781e8bf00e4d02359f"

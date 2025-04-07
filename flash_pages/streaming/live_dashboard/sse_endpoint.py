@@ -5,6 +5,7 @@ from flash import get_app
 from datetime import datetime
 import asyncio
 import random
+import time
 
 app = get_app()
 
@@ -17,15 +18,30 @@ async def sse():
         abort(400)
     
     async def send_events():
+        start_time = time.time()
+        multiplicator = 1
+        rounds = 0
+        
         while True:
-            await asyncio.sleep(1)
-            y1 = random.random()
-            y2 = random.random()
+            await asyncio.sleep(.5)
+            
+            # Calculate elapsed time in seconds
+            elapsed_time = time.time() - start_time
+            print('Elapsed time: ', round(elapsed_time, 0), flush=True)
+            # Generate random values
+            y1 = random.random() * multiplicator
+            y2 = random.random() * multiplicator
+            
+            # Add 1 to values after 10 seconds
+            if int(elapsed_time) % 10 == 0:
+                multiplicator = random.randint(-1, 1) * rounds + 1
+                rounds += 1
+            
             x = datetime.now()
             data = dict(x=x, y1=y1, y2=y2)
             event = ServerSentEvent(to_json(data))
             yield event.encode()
-    
+
     response = await make_response(
         send_events(),
         {
