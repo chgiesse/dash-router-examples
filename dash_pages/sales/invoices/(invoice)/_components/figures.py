@@ -15,11 +15,11 @@ donut_chart = dmc.DonutChart(
     thickness=30,
     m="auto",
     tooltipDataSource="segment",
-    pieProps={
-        "isAnimationActive": True,
-        "animationDuration": 500,
-        "animationEasing": "ease-in-out",
-    },
+    # pieProps={
+    #     "isAnimationActive": True,
+    #     "animationDuration": 500,
+    #     "animationEasing": "ease-in-out",
+    # },
     withLabels=True,
 )
 
@@ -65,21 +65,21 @@ def create_comp_chart():
         withLegend=True,
         maxBarWidth=30,
         gridAxis="none",
-        lineProps={
-            "isAnimationActive": True,
-            "animationDuration": 500,
-            "animationEasing": "ease-in-out",
-        },
-        barProps={
-            "isAnimationActive": True,
-            "animationDuration": 500,
-            "animationEasing": "ease-in-out",
-        },
-        areaProps={
-            "isAnimationActive": True,
-            "animationDuration": 500,
-            "animationEasing": "ease-in-out",
-        },
+        # lineProps={
+        #     "isAnimationActive": True,
+        #     "animationDuration": 500,
+        #     "animationEasing": "ease-in-out",
+        # },
+        # barProps={
+        #     "isAnimationActive": True,
+        #     "animationDuration": 500,
+        #     "animationEasing": "ease-in-out",
+        # },
+        # areaProps={
+        #     "isAnimationActive": True,
+        #     "animationDuration": 500,
+        #     "animationEasing": "ease-in-out",
+        # },
         series=[
             {"name": "Tomatoes", "color": "rgba(18, 120, 255, 0.2)", "type": "bar"},
             {"name": "Apples", "color": "red.8", "type": "line"},
@@ -128,7 +128,7 @@ def create_water_chart():
         type="waterfall",
         series=[{"name": "Effective tax rate in %", "color": "blue"}],
         withLegend=True,
-        barProps={"isAnimationActive": True},
+        # barProps={"isAnimationActive": True},
         gridAxis="none",
     )
 
@@ -176,11 +176,11 @@ def create_line_chart():
             {"name": "Oranges", "color": "blue.6"},
             {"name": "Tomatoes", "color": "teal.6"},
         ],
-        lineProps={
-            "isAnimationActive": True,
-            "animationDuration": 500,
-            "animationEasing": "ease-in-out",
-        },
+        # lineProps={
+        #     "isAnimationActive": True,
+        #     "animationDuration": 500,
+        #     "animationEasing": "ease-in-out",
+        # },
     )
 
 
@@ -198,7 +198,7 @@ def create_rel_barchart():
         dataKey="month",
         data=data,
         type="percent",
-        barProps={"isAnimationActive": True, "radius": 50},
+        # barProps={"isAnimationActive": True, "radius": 50},
         gridAxis="none",
         series=[
             {"name": "Smartphones", "color": "violet.6"},
@@ -253,7 +253,7 @@ def create_sales_bar():
         dataKey="month",
         data=data,
         type="stacked",
-        barProps={"isAnimationActive": True, "radius": 50},
+        # barProps={"isAnimationActive": True, "radius": 50},
         gridAxis="none",
         series=[
             {"name": "Smartphones", "label": "Smartphones sales", "color": "violet.6"},

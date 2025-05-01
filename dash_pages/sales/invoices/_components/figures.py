@@ -16,6 +16,6 @@ bar_chart = dmc.BarChart(
     orientation="vertical",
     yAxisProps={"width": 80},
     series=[{"name": "Smartphones", "color": "violet.6"}],
-    barProps={"isAnimationActive": True, "radius": 50},
+    # barProps={"isAnimationActive": True, "radius": 50},
     gridAxis="none",
 )

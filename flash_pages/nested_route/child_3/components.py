@@ -4,7 +4,7 @@ import dash_dynamic_grid_layout as dgl
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
 from dash_router import RootContainer, SlotContainer
-from dash_router._utils import recursive_to_plotly_json
+from dash_router.utils.helper_functions import recursive_to_plotly_json
 from flash import Input, Output, State, clientside_callback
 
 from .models import QueryParams
@@ -246,5 +246,5 @@ class ResizeGrid(dgl.DashGridLayout):
             ],
             rowHeight=75,
             cols={"lg": 12, "md": 10, "sm": 6, "xs": 4, "xxs": 2},
-            showRemoveButton=False,
+            showRemoveButton=False
         )

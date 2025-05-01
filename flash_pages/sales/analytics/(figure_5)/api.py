@@ -2,9 +2,9 @@ import plotly.express as px
 from aiocache import cached
 import asyncio 
 
-@cached(ttl=30)
+# @cached(ttl=30)
 async def endpoint(*args, **kwargs):
-    await asyncio.sleep(.5)
+    await asyncio.sleep(1)
     return dict(
         labels=["Eve", "Cain", "Seth", "Enos", "Noam", "Abel", "Awan", "Enoch", "Azura"],
         parents=["", "Eve", "Eve", "Seth", "Seth", "Eve", "Eve", "Awan", "Eve" ],

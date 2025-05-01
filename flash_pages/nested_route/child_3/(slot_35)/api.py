@@ -3,8 +3,7 @@ import asyncio
 from ..models import QueryParams
 
 
-async def endpoint(**kwargs):
-    filters = QueryParams(**kwargs)
+async def endpoint(veggie: str = None, **kwargs):
     await asyncio.sleep(5)
     data = [
         {
@@ -39,9 +38,9 @@ async def endpoint(**kwargs):
         },
     ]
 
-    if filters.veggie:
+    if veggie:
         data = [
-            {k: v for k, v in row.items() if k != filters.veggie.title()}
+            {k: v for k, v in row.items() if k != veggie.title()}
             for row in data
         ]
 

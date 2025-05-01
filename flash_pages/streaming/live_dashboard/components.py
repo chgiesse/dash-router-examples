@@ -62,18 +62,20 @@ class SSEGraph(html.Div):
         start_time = time.time()
         multiplicator = 1
         rounds = 0
+
         yield await NotificationsContainer.push_notification(
             title="Starting stream!",
             action="show",
             message=component_id["index"],
             color="lime",
         )
+        
         yield await flash_props(
             "start-stream-button", {"disabled": True, "children": "Running"}
         )
 
         while True:
-            await asyncio.sleep(1.5)
+            await asyncio.sleep(.5)
             elapsed_time = time.time() - start_time
             y1 = random.random() * multiplicator
             y2 = random.random() * multiplicator

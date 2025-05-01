@@ -1,7 +1,7 @@
 import asyncio
 
 
-async def endpoint(**kwargs):
+async def endpoint(veggie: str = None, **kwargs):
     await asyncio.sleep(3)
     data = [
         {

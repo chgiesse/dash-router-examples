@@ -9,7 +9,7 @@ from ._components.tabs import InvoiceTabs
 config = RouteConfig(path_template="<invoice_id>", default_child="items")
 
 
-def layout(children: ChildContainer, invoice_id: int = None, **kwargs):
+def layout(children: ChildContainer = None, invoice_id: int = None, **kwargs):
     if not invoice_id:
         return dmc.Stack(
             [

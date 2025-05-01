@@ -1,5 +1,5 @@
 from helpers import generate_clientside_callback
-from dash_router._utils import recursive_to_plotly_json
+from dash_router.utils.helper_functions import recursive_to_plotly_json
 from dash_router import RootContainer
 from flash import Flash, Input, Output, State, clientside_callback
 from dash_extensions import SSE
@@ -54,7 +54,7 @@ class SSECallbackComponent(html.Div):
     def __init__(self):
         super().__init__([
             SSE(id=self.ids.sse, concat=True, url=SSE_CALLBACK_ENDPOINT),
-            dcc.Store(id=self.ids.store, data={})
+            dcc.Store(id=self.ids.store, data={}, storage_type='memory')
         ])
 
 
@@ -217,6 +217,7 @@ def generate_clientside_callback(input_ids, sse_callback_id):
             // Create payload object with all inputs
             const payload = {payload_obj};
             console.log('payload: ', payload)
+            
             // Prepare SSE options with the payload
             const sse_options = {{
                 payload: JSON.stringify({{ content: payload }}),

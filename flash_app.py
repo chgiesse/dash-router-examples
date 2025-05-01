@@ -1,18 +1,14 @@
-import json
-from uuid import UUID
-
 import dash_mantine_components as dmc
 from aiocache import Cache
-from dash._utils import inputs_to_vals
-from dash_router import PageNode, RootContainer, Router
-from dash_router.components import LacyContainer
-from flash import MATCH, Flash, Input, Output, State, callback
-from flash._pages import _parse_query_string
-from quart import request
+from dash_router import RootContainer, Router
+from flash import Flash, State, Input, callback, no_update, Output
+from flash._pages import _parse_path_variables, _parse_query_string
 
+import importlib
 from appshell import create_appshell
 from streaming.stream import SSECallbackComponent, Streamer
 from theme import apply_vizro_theme
+
 
 app = Flash(
     __name__,
@@ -29,69 +25,30 @@ app = Flash(
     update_title=None,
     routing_callback_inputs={"theme": State("color-scheme-toggle", "checked")},
 )
+
+print(importlib.import_module('flash_pages.nested_route.child_3.page'))
+
+
+app.layout = create_appshell([RootContainer(), SSECallbackComponent()])
+
 router = Router(app)
 streamer = Streamer(app)
-app.layout = create_appshell([RootContainer(), SSECallbackComponent()])
 cache = Cache()
 
 apply_vizro_theme()
 
+# @callback(
+#     # Output(RootContainer.ids.dummy, 'children', allow_duplicate=True),
+#     Input(RootContainer.ids.location, 'search'),
+#     State(RootContainer.ids.location, 'pathname'),
+#     State(RootContainer.ids.state_store, 'data'),
+#     prevent_initial_call=True
+# )   
+# async def query_params(_search, _pathname, _loading_state):
+#     query_parameters = _parse_query_string(_search)
+#     print('Search: ', query_parameters, flush=True)
+#     # return no_update
 
-@callback(
-    Output(LacyContainer.ids.container(MATCH), "children"),
-    Input(LacyContainer.ids.container(MATCH), "id"),
-    Input(LacyContainer.ids.container(MATCH), "data-path"),
-    State(RootContainer.ids.location, "pathname"),
-    State(RootContainer.ids.location, "search"),
-    State(RootContainer.ids.state_store, "data"),
-)
-async def load_lacy_component(
-    lacy_segment_id, variables, pathname, search, loading_state
-):
-    request_data = await request.get_data()
-    if not request_data:
-        return
-
-    body = json.loads(request_data)
-    component_id = body.get("outputs").get("id")
-    if not isinstance(component_id, dict):
-        return
-    component_type = component_id.get("type")
-
-    if not component_type == LacyContainer.ids.container("none").get("type"):
-        return
-
-    node_id = UUID(component_id.get("index"))
-    inputs = body.get("inputs", [])
-    state = body.get("state", [])
-    args = inputs_to_vals(inputs + state)
-    _, variables, pathname_, search_, loading_state_ = args
-    query_parameters = _parse_query_string(search_)
-    node_variables = json.loads(variables)
-
-    lacy_node: PageNode = router.route_table.get(node_id)
-    path = router.strip_relative_path(pathname_)
-    segments = path.split("/")
-    node_segments = [
-        segment.strip("()") for segment in lacy_node.module.split(".")[1:-1]
-    ]
-    current_index = node_segments.index(lacy_node.segment)
-    remaining_segments = segments[current_index:]
-
-    exec_tree, endpoints = router.build_execution_tree(
-        current_node=lacy_node,
-        segments=remaining_segments,
-        parent_variables=node_variables,
-        query_params=query_parameters,
-        loading_state=loading_state_,
-        request_pathname=path,
-        endpoints={},
-        is_init=False,
-    )
-
-    endpoint_results = await router.gather_endpoints(endpoints)
-    layout = await exec_tree.execute(is_init=False, endpoints=endpoint_results)
-    return layout
 
 
 if __name__ == "__main__":

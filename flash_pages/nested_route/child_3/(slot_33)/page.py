@@ -32,7 +32,7 @@ async def layout(data: List[Dict[str, str | int]], *args, **kwargs):
                             {"name": "Tomatoes", "color": "violet.3", "type": "bar"}
                         ],
                         composedChartProps={"syncId": "groceries"},
-                        barProps={"isAnimationActive": True},
+                        # barProps={"isAnimationActive": True},
                     ),
                 ]
             ),

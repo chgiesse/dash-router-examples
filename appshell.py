@@ -34,7 +34,6 @@ mantine_dark = [
     "#7a7e83",
     "#383e46",
     "#4a5d79",
-    # '#d3d4d6',
     "#222831",
     "#1f242c",
     "#181c22",
@@ -60,16 +59,10 @@ def create_appshell(content):
         },
         children=dmc.AppShell(
             [
-                # dmc.AppShellHeader("", h=45),
                 navbar,
                 NotificationsContainer(),
                 dmc.AppShellMain(
-                    # children=dmc.ScrollArea(
-                        content, 
-                    #     type="auto", 
-                    #     offsetScrollbars=True,
-                    #     h='calc(100vh - var(--mantine-spacing-sm))'
-                    # )
+                        content,
                 ),
             ],
             padding="md",

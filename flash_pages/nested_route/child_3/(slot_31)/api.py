@@ -3,7 +3,7 @@ import asyncio
 from ..models import QueryParams
 
 
-async def endpoint(**kwargs):
+async def endpoint(country: str = None, **kwargs):
     filters = QueryParams(**kwargs)
     await asyncio.sleep(1.3)
     data = [
@@ -13,10 +13,10 @@ async def endpoint(**kwargs):
         {"name": "Other", "value": 200, "color": "violet.3"},
     ]
 
-    if filters.country:
+    if country:
         data = list(
             filter(
-                lambda row: row if row.get("name") != filters.country.title() else None,
+                lambda row: row if row.get("name") != country.title() else None,
                 data,
             )
         )

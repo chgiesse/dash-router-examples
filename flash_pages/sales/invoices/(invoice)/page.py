@@ -6,11 +6,11 @@ from helpers import get_icon
 config = RouteConfig(path_template="<invoice_id>", default_child="items")
 
 
-async def layout(children: ChildContainer, data: any, invoice_id: int = None, **kwargs):
+async def layout(children: ChildContainer = None, data: any = None, invoice_id: int = None, **kwargs):
     if not data:
         return dmc.Stack(
             [
-                get_icon("line-md:file-document-plus", height=60),
+                get_icon("material-symbols:select-window-2-outline", height=60),
                 dmc.Title("No invoice selected", order=3),
             ],
             align="center",
