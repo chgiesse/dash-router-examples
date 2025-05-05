@@ -24,6 +24,6 @@ async def layout(data: List[Dict[str, str | int]], *args, **kwargs):
                 size=220,
             ),
         ],
-        h=300,
+        # h=300,
         className="fade-in",
     )

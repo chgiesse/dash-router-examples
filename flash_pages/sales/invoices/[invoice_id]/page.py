@@ -3,7 +3,7 @@ from dash_router import RouteConfig, ChildContainer
 
 from helpers import get_icon
 
-config = RouteConfig(path_template="<invoice_id>", default_child="items")
+config = RouteConfig(default_child="items")
 
 
 async def layout(children: ChildContainer = None, data: any = None, invoice_id: int = None, **kwargs):

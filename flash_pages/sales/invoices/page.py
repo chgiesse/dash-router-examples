@@ -1,8 +1,8 @@
 import dash_mantine_components as dmc
-from dash_router import SlotContainer
+from dash_router import SlotContainer, ChildContainer
 from dash import dcc
 
-async def layout(invoice: SlotContainer, overview: SlotContainer, **kwargs):
+async def layout(children: ChildContainer, overview: SlotContainer, **kwargs):
     bar_data = [
         {"month": "Amazon", "Smartphones": 1200, "Laptops": 900, "Tablets": 200},
         {"month": "Apple", "Smartphones": 1900, "Laptops": 1200, "Tablets": 400},
@@ -33,7 +33,7 @@ async def layout(invoice: SlotContainer, overview: SlotContainer, **kwargs):
                 dmc.Title("Invoice list", order=3), 
                 overview
             ]),
-            invoice
+            children
             # dmc.Stack(
             #     [
             #         invoice,

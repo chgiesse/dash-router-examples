@@ -26,8 +26,6 @@ app = Flash(
     routing_callback_inputs={"theme": State("color-scheme-toggle", "checked")},
 )
 
-print(importlib.import_module('flash_pages.nested_route.child_3.page'))
-
 
 app.layout = create_appshell([RootContainer(), SSECallbackComponent()])
 

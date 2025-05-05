@@ -591,7 +591,7 @@ optional = false
 python-versions = ">=3.12,<4.0"
 groups = ["main"]
 files = [
-    {file = "flash_router-0.3.0b1.tar.gz", hash = "sha256:dbfb65145f76a30bfe8ed0cf4e7157cb636f0e6a7033cd4a741d207309e40c27"},
+    {file = "flash_router-0.3.0b1.tar.gz", hash = "sha256:5513403b2aafd961a7b19e2c89e2155d754920a30c1cac10889e4404d113bb1e"},
 ]
 
 [package.dependencies]

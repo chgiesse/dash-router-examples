@@ -21,7 +21,11 @@ async def layout(
         miw='45vw',
         children=[
             ActionBar(params),
-            ResizeGrid(slot_31, slot_32),
+            dmc.Group(
+                [slot_31, slot_32],
+                grow=True
+            ),
+            # ResizeGrid(slot_31, slot_32),
             dmc.Tabs(
                 [
                     dmc.TabsList(
