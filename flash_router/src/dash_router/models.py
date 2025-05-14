@@ -169,11 +169,11 @@ class ExecNode:
         segment_key = create_segment_key(self, self.variables)
         segment_loading_state = self.loading_state.get(segment_key, False)
         data = endpoint_results.get(self.node_id)
-        print(
-            segment_key, 
-            segment_loading_state, 
-            flush=True
-        )
+        # print(
+        #     segment_key, 
+        #     segment_loading_state, 
+        #     flush=True
+        # )
         
         if self.loading and segment_loading_state != 'lacy' and f'[{DEFAULT_LAYOUT_TOKEN}]' not in segment_key:
             self.loading_state[segment_key] = 'lacy'
