@@ -1,6 +1,6 @@
 # from dash import Dash, Input, Output, State  # , _dash_renderer, Dash
 import dash_mantine_components as dmc
-from appshell import create_appshell
+from global_components.appshell import create_appshell
 from dash import Dash
 
 from dash_router import RootContainer, SyncRouter
@@ -13,12 +13,12 @@ app = Dash(
     __name__,
     suppress_callback_exceptions=True,
     external_stylesheets=[dmc.styles.CHARTS],
-    pages_folder='dash_pages'
+    pages_folder="dash_pages",
 )
 # app = Dash(__name__)
 router = SyncRouter(app)
 
 app.layout = create_appshell([RootContainer()])
 
-if __name__ == "__main__":  
+if __name__ == "__main__":
     app.run(debug=True, port=8032)

@@ -1,4 +1,4 @@
-from helpers import generate_clientside_callback
+from utils.helpers import generate_clientside_callback
 from dash_router.utils.helper_functions import recursive_to_plotly_json
 from dash_router import RootContainer
 from flash import Flash, Input, Output, State, clientside_callback

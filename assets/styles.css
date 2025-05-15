@@ -3,6 +3,15 @@
   overflow-x: hidden; 
 }
 
+.amazon-total-sales-table[data-hidden="true"] {
+  display: none;
+}
+
+.amazon-total-sales-graph[data-hidden="true"] {
+  display: none;
+}
+
+
 .modebar { display: none !important; }
 
 ._dash-loading {
