@@ -6,7 +6,9 @@ async def layout(data: List[Dict[str, any]] = [], **kwargs):
     return dmc.Stack(
         [
             dmc.Title(
-                f"All positions for invoice id: {kwargs.get('invoice_id')}", order=3
+                f"All positions for invoice id: {kwargs.get('invoice_id')}",
+                order=3,
+                className="fade-in-chart",
             ),
             dmc.DonutChart(
                 data=data,

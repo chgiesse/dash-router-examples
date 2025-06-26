@@ -4,18 +4,13 @@ from dash import dcc
 from utils.helpers import create_theme_callback
 
 
-create_theme_callback('fig1')
+create_theme_callback("fig1")
+
 
 async def layout(data: DataFrame = None, *args, **kwargs):
-    theme = kwargs.get('theme')
-    template="plotly_dark" if theme else 'plotly'
-    fig = px.box(
-        data, 
-        x="day", 
-        y="total_bill", 
-        color="smoker",
-        notched=True
-    )
+    theme = kwargs.get("theme")
+    template = "plotly_dark" if theme else "plotly"
+    fig = px.box(data, x="day", y="total_bill", color="smoker", notched=True)
     fig.update_layout(hovermode="x unified")
     fig.update_layout(
         xaxis_title=None,
@@ -33,5 +28,5 @@ async def layout(data: DataFrame = None, *args, **kwargs):
     return dcc.Graph(
         figure=fig,
         responsive=True,
-        id='fig1',
+        id="fig1",
     )

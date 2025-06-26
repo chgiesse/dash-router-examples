@@ -80,6 +80,9 @@ class ActionBar(dmc.Stack):
             value=filters.categories,
             label="Select Category",
             id=self.ids.category_select,
+            comboboxProps={
+                "transitionProps": {"transition": "fade-down", "duration": 200}
+            },
         )
 
         sale_date_picker = dmc.DatePickerInput(
@@ -155,6 +158,7 @@ class ActionBar(dmc.Stack):
         super().__init__(
             m="md",
             gap="lg",
+            className='fade-in-right',
             children=[
                 cat_select,
                 sale_date_picker,

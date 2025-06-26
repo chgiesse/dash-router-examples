@@ -11,7 +11,9 @@ async def layout(
     figure_5: SlotContainer,
     **kwargs
 ):
-    basic_container = lambda children: dmc.Box(children, h=450, p="md")
+    basic_container = lambda children: dmc.Box(
+        children, h=450, p="md", className="fade-in-chart"
+    )
 
     return html.Div(
         children=[
@@ -24,6 +26,6 @@ async def layout(
                     basic_container(figure_4),
                 ],
             ),
-            figure_2,
+            basic_container(figure_2),
         ]
     )

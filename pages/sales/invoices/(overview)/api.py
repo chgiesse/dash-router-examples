@@ -2,44 +2,45 @@ from aiocache import cached
 import asyncio
 
 
-@cached(ttl=120)
-async def endpoint(*args, **kwargs):
+# @cached(ttl=120)
+async def endpoint(page: int = 1, *args, **kwargs):
     await asyncio.sleep(1.1)
+    page = int(page)
     elements = [
         {
-            "invoice_id": 1,
+            "invoice_id": 1 * page,
             "mass": "Amazon",
             "symbol": "2025-01-01",
             "amount": 600,
-            "action": "/sales/invoices/1",
+            "action": f"/sales/invoices/{1 * page}",
         },
         {
-            "invoice_id": 2,
+            "invoice_id": 2 * page,
             "mass": "Apple",
             "symbol": "2025-01-01",
             "amount": 430,
-            "action": "/sales/invoices/2",
+            "action": f"/sales/invoices/{2 * page}",
         },
         {
-            "invoice_id": 3,
+            "invoice_id": 3 * page,
             "mass": "Nvidia",
             "symbol": "2025-01-01",
             "amount": 130,
-            "action": "/sales/invoices/3",
+            "action": f"/sales/invoices/{3 * page}",
         },
         {
-            "invoice_id": 4,
+            "invoice_id": 4 * page,
             "mass": "AMD",
             "symbol": "2025-01-01",
             "amount": 275,
-            "action": "/sales/invoices/4",
+            "action": f"/sales/invoices/{4 * page}",
         },
         {
-            "invoice_id": 5,
+            "invoice_id": 5 * page,
             "mass": "Microsoft",
             "symbol": "2025-01-01",
             "amount": 400,
-            "action": "/sales/invoices/5",
+            "action": f"/sales/invoices/{5 * page}",
         },
     ]
 

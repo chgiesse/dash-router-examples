@@ -14,14 +14,14 @@ class AmazonQueryParams(BaseModel):
         Literal[
             "Computers&Accessories",
             "Electronics",
-            "MusicalInstruments",
+            # "MusicalInstruments",
             "OfficeProducts",
             "Home&Kitchen",
-            "HomeImprovement",
-            "Toys&Games",
-            "Car&Motorbike",
-            "Health&PersonalCare",
-            "Sports",
+            # "HomeImprovement",
+            # "Toys&Games",
+            # "Car&Motorbike",
+            # "Health&PersonalCare",
+            # "Sports",
         ]
         | None
     ] = []

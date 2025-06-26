@@ -1,12 +1,12 @@
 from global_components.notifications import NotificationsContainer
 from global_components.theme import ThemeComponent
-from global_components.location import Url
-from utils.helpers import parse_qs, get_theme_template
-from utils.constants import common_figure_config
+from utils.helpers import parse_qs
 from .api import endpoint
 from ..models import SalesCallbackParams, sales_variant_type
+from ..components.menu import GraphMenu
 
 from dash_router import RootContainer
+import dash_mantine_components as dmc
 from flash import callback, Input, Output, State, no_update, ctx, clientside_callback
 from dash_ag_grid import AgGrid
 from dash import dcc
@@ -14,7 +14,8 @@ import plotly.express as px
 import pandas as pd
 
 
-class TotalSalesGraph(dcc.Graph):
+class TotalSalesGraph(dmc.AreaChart):
+    """Total Sales Graph implemented with Dash Mantine Components."""
 
     title = "Total Sales over Time"
 
@@ -26,8 +27,6 @@ class TotalSalesGraph(dcc.Graph):
         running_switch = "amazon-total-sales-run-switch"
         variant_select = "amazon-total-sales-var-select"
 
-    # GraphMenu.download_callback(ids.graph)
-    # ThemeComponent.graph_theme_callback(ids.graph)
     clientside_callback(
         f"""( hideTable ) => {{
             document.querySelector('.{ids.table}').setAttribute('data-hidden', !hideTable);
@@ -37,13 +36,16 @@ class TotalSalesGraph(dcc.Graph):
     )
 
     @callback(
-        Output(ids.graph, "figure"),
+        Output(ids.graph, "data"),
         Output(ids.table, "rowData"),
         Input(ids.relative_switch, "checked"),
         Input(ids.running_switch, "checked"),
         Input(ids.variant_select, "value"),
         State(RootContainer.ids.location, "search"),
         State(ThemeComponent.ids.toggle, "checked"),
+        running=[
+            (Output(GraphMenu.ids.trigger_button(ids.graph), "loading"), True, False)
+        ],
         prevent_initial_call=True,
     )
     async def update(
@@ -62,11 +64,11 @@ class TotalSalesGraph(dcc.Graph):
 
         except Exception as e:
             NotificationsContainer.send_notification(
-                title="Data fetching errror",
+                title="Data fetching error",
                 message=str(e),
                 color="red",
             )
-            return no_update
+            return no_update, no_update
 
         triggered_id = ctx.triggered_id
         if is_relative and triggered_id == TotalSalesGraph.ids.relative_switch:
@@ -75,22 +77,49 @@ class TotalSalesGraph(dcc.Graph):
         if is_running and triggered_id == TotalSalesGraph.ids.running_switch:
             data = data.cumsum()
 
-        fig = TotalSalesGraph.figure(data, is_darkmode)
+        chart_data = TotalSalesGraph.prepare_chart_data(data)
         row_data = data.T.reset_index(names="Category").to_dict(orient="records")
 
-        return fig, row_data
+        return chart_data, row_data
 
     @staticmethod
-    def figure(data: pd.DataFrame, is_darkmode: bool):
-        fig = px.bar(data, text_auto=True)
-        template = get_theme_template(is_darkmode)
-        fig.update_layout(
-            **common_figure_config,
-            margin=dict(l=0, r=0, t=0, b=0),
-            uirevision=True,
-            template=template,
-        )
-        return fig
+    def prepare_chart_data(data: pd.DataFrame):
+        chart_data = data.reset_index(names="dataKey").to_dict(orient="records")
+        return chart_data
+
+    @staticmethod
+    def figure(data: pd.DataFrame):
+        series = []
+        colors = ["violet.6", "blue.6", "teal.6", "red.6", "green.6", "orange.6"]
+        
+        for i, col in enumerate(data.columns):
+            series.append({
+                "name": col, 
+                "color": colors[i % len(colors)],
+                "stackId": "stack1"  # Add stackId for stacking
+            })
+        
+        data = data.fillna(0)
+        chart_data = data.reset_index(names="date").to_dict(orient="records")
+        
+        for record in chart_data:
+            for key in record:
+                if record[key] is None or pd.isna(record[key]):
+                    record[key] = 0
+        
+        chart_config = {
+            "data": chart_data,
+            "dataKey": "date",
+            "series": series,
+            "withLegend": True,
+            "legendProps": {"verticalAlign": "bottom"},
+            "withXAxis": True,
+            "withYAxis": True,
+            "yAxisProps": {"width": 50},
+            "areaProps": {"isAnimationActive": True}  # Changed from barProps to areaProps
+        }
+        
+        return chart_config
 
     @classmethod
     def table(cls, data: pd.DataFrame):
@@ -112,9 +141,15 @@ class TotalSalesGraph(dcc.Graph):
         )
         return table
 
-    def __init__(self, data: pd.DataFrame, is_darkmode: bool):
-        fig = self.figure(data, is_darkmode)
-
+    def __init__(self, data: pd.DataFrame):
+        chart_config = self.figure(data)
+        
         super().__init__(
-            figure=fig, config={"displayModeBar": False}, id=self.ids.graph
+            id=self.ids.graph,
+            h=500,
+            # type="area",  # Set chart type to area
+            # highlightHover=False,
+            # className="fade-in-chart",
+            # className="fade-in-bottom",
+            **chart_config,
         )

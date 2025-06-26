@@ -9,7 +9,7 @@ package-mode=false
 
 [tool.poetry.dependencies]
 python = "^3.12"
-dash-mantine-components = "1.2.0"
+dash-mantine-components = "2.0.0"
 dash-iconify = "^0.1.2"
 orjson = "^3.10.15"
 dash = "3.0.4"
@@ -28,10 +28,11 @@ redis = "^6.1.0"
 python-dotenv = "^1.1.0"
 asyncpg = "^0.30.0"
 uvicorn = "^0.34.2"
-flash-router = "^0.3.0b2"
 dash-flash = "^1.0.0"
 greenlet = "^3.2.2"
 kaleido = "0.2.1"
+quart-compress = "^0.2.1"
+flash-router = {path = "/Users/cgiessel/Documents/projects/dash-projects/dash-router/dist/flash_router-0.3.0b2.tar.gz"}
 
 
 [build-system]

@@ -6,10 +6,8 @@ import pandas as pd
 
 async def layout(data: pd.DataFrame, **kwargs):
     filters = AmazonQueryParams(**kwargs)
-    is_darkmode = bool(kwargs.pop("theme", True))
-
     return (
         create_total_sales_card(data=data, category=filters.categories[0])
         if filters.is_single_view
-        else CategoryRankGraph(data, is_darkmode)
+        else CategoryRankGraph(data)
     )

@@ -58,7 +58,7 @@ navbar = dmc.AppShellNavbar(
                     icon="material-symbols:home-outline-rounded",
                 ),
                 create_navlink(href="/sales", icon="icon-park-outline:sales-report"),
-                create_navlink(href="/page-2", icon="majesticons:file-line"),
+                create_navlink(href="/files/1/2/3/4", icon="majesticons:file-line"),
                 create_navlink(
                     href="/nested-route",
                     icon="material-symbols:route-outline",

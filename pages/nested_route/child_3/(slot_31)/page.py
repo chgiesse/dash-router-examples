@@ -6,7 +6,6 @@ from ..models import QueryParams
 
 
 async def layout(data: List[Dict[str, str | int]], *args, **kwargs):
-    params = QueryParams(**kwargs)
     return dmc.Box(
         children=[
             dmc.Title("Slot 1 - Child 3", order=3),
@@ -24,6 +23,5 @@ async def layout(data: List[Dict[str, str | int]], *args, **kwargs):
                 size=220,
             ),
         ],
-        # h=300,
         className="fade-in",
     )

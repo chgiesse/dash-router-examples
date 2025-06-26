@@ -4,8 +4,8 @@ import asyncio
 import random
 
 
-@cached(ttl=120)
-async def endpoint(invoice_id=None, **kwargs):
+# @cached(ttl=120)
+async def endpoint(invoice_id: int, **kwargs):
     if not invoice_id:
         return None
 

@@ -20,7 +20,7 @@ if ENVIRONMENT == "dev":
     REDIS_HOST = os.environ.get("REDIS_DEV_HOST")
     REDIS_PASSWORD = os.environ.get("REDIS_DEV_PASSWORD")
 else:
-    REDIS_HOST = os.environ.get("REDIS_HOST", "redis")
+    REDIS_HOST = os.environ.get("REDIS_HOST")
     REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD")
 
 

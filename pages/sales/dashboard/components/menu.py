@@ -22,6 +22,7 @@ class GraphMenu(dmc.Menu):
 
     class ids:
         dl_button = lambda idx: {"type": "cr-dl-graph-button", "index": idx}
+        trigger_button = lambda idx: {"type": "cr-dl-dd-button", "index": idx}
 
     # @classmethod
     # def download_callback(cls, graph_id: str):
@@ -65,14 +66,16 @@ class GraphMenu(dmc.Menu):
     ):
         super().__init__(
             position="left-start",
-            trigger="hover",
-            radius="md",
+            trigger="click",
+            # radius="md",
             children=[
                 dmc.MenuTarget(
                     dmc.ActionIcon(
                         children=get_icon("charm:menu-kebab"),
                         variant="transparent",
+                        id=self.ids.trigger_button(graph_id),
                     ),
+                    # boxWrapperProps={"m": 0, "p": 0}
                 ),
                 dmc.MenuDropdown(
                     children=[

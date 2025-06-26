@@ -6,7 +6,9 @@ from utils.helpers import get_icon
 config = RouteConfig(default_child="items")
 
 
-async def layout(children: ChildContainer = None, data: any = None, invoice_id: int = None, **kwargs):
+async def layout(
+    children: ChildContainer = None, data: any = None, invoice_id: int = None, **kwargs
+):
     if not data:
         return dmc.Stack(
             [
@@ -14,13 +16,21 @@ async def layout(children: ChildContainer = None, data: any = None, invoice_id: 
                 dmc.Title("No invoice selected", order=3),
             ],
             align="center",
+            className="fade-in-chart",
         )
-    
+
+    qs = "?" + "page=" + str(kwargs.get("page", 1))
+
     return dmc.Stack(
-        justify='flex-start',
-        gap='lg',
+        justify="flex-start",
+        gap="lg",
         children=[
-            dmc.Title("All sales of vendor with ID " + str(invoice_id), order=3, mb="md"),
+            dmc.Title(
+                "All sales of vendor with ID " + str(invoice_id),
+                order=3,
+                mb="md",
+                className="fade-in-chart",
+            ),
             dmc.CompositeChart(
                 h=250,
                 data=data,
@@ -55,23 +65,23 @@ async def layout(children: ChildContainer = None, data: any = None, invoice_id: 
                     [
                         dmc.Anchor(
                             dmc.TabsTab("Items", value="items"),
-                            href=f"/sales/invoices/{str(invoice_id)}/items",
+                            href=f"/sales/invoices/{str(invoice_id)}/items" + qs,
                             underline=False,
                         ),
                         dmc.Anchor(
                             dmc.TabsTab("Positions", value="positions"),
-                            href=f"/sales/invoices/{str(invoice_id)}/positions",
+                            href=f"/sales/invoices/{str(invoice_id)}/positions" + qs,
                             underline=False,
                         ),
                         dmc.Anchor(
                             dmc.TabsTab("Conversation", value="conversation"),
-                            href=f"/sales/invoices/{str(invoice_id)}/conversation",
+                            href=f"/sales/invoices/{str(invoice_id)}/conversation" + qs,
                             underline=False,
-                            ml="auto"
+                            ml="auto",
                         ),
                     ]
-                )
+                ),
             ),
-            children
-        ]
-    ) 
+            children,
+        ],
+    )

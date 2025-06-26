@@ -1,31 +1,30 @@
-from .components import CategoryRankGraph
-from ..models import SalesCallbackParams
+from utils.helpers import get_icon
+from .components import CategoryRankGraph, create_loading_cards
+from ..models import AmazonQueryParams
 from ..components.graph_card import create_graph_card_wrapper
-from ..components.menu import GraphMenu
+from ..components.select import create_sale_type_select
 import dash_mantine_components as dmc
-from dash_router import RootContainer
-from dash import dcc
 
-layout = create_graph_card_wrapper(
-    graph=dmc.Center(dmc.Loader(type="oval"), h=500),
-    title=CategoryRankGraph.title,
-    menu=dmc.Group(
-        [
-            dmc.Select(
-                data=[
-                    {"value": val, "label": val.title()}
-                    for val in SalesCallbackParams.get_variants()
-                ],
-                placeholder="variant",
-                size="sm",
-                w=120,
-                id=CategoryRankGraph.ids.variant_select,
-                value=SalesCallbackParams.get_default_variant(),
-                clearable=False,
-                allowDeselect=False,
-                disabled=True
-            ),
-            GraphMenu(graph_id=CategoryRankGraph.ids.graph),
-        ]
-    ),
-)
+
+async def layout(**kwargs):
+
+    filters = AmazonQueryParams(**kwargs)
+
+    if filters.is_single_view:
+        return create_loading_cards()
+
+    return create_graph_card_wrapper(
+        graph=dmc.Center(dmc.Loader(type="oval"), h=500),
+        title=CategoryRankGraph.title,
+        menu=dmc.Group(
+            [
+                create_sale_type_select(),
+                dmc.ActionIcon(
+                    children=get_icon("charm:menu-kebab"),
+                    variant="transparent",
+                    # disabled=True,
+                    size="lg",
+                ),
+            ]
+        ),
+    )

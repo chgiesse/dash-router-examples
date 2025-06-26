@@ -8,7 +8,9 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, desc, func
 import pandas as pd
+from aiocache import cached
 import asyncio
+
 
 NAMESPACE = "example-dashboard"
 TTL = 60 * 5
@@ -24,14 +26,14 @@ async def endpoint(**kwargs) -> pd.DataFrame:
     )
     return await source
 
+
+# @cached(ttl=30)
 @db_operator(timeout=0.5, max_retries=3, verbose=True)
-# @redis_lru_cache.cache(namespace=NAMESPACE, ttl=TTL)
 async def get_category_ranks(
     db: AsyncSession,
     filters: AmazonQueryParams,
     variant: sales_variant_type,
 ) -> pd.DataFrame:
-    await asyncio.sleep(0.6)
     agg_col = get_agg_variant_column(variant)
     query = select(AmazonProduct.MainCategory, agg_col.label("ProductCount"))
 
@@ -39,12 +41,14 @@ async def get_category_ranks(
     query = query.group_by(AmazonProduct.MainCategory)
     query = query.order_by(desc("ProductCount"))
     result = await db.execute(query)
+    await asyncio.sleep(1.2)
     return pd.DataFrame(result)
 
 
+# @cached(ttl=30)
 @db_operator(verbose=True)
-# @redis_lru_cache.cache(namespace=NAMESPACE, ttl=TTL)
 async def get_product_metrics(db: AsyncSession, filters: AmazonQueryParams):
+    await asyncio.sleep(1.5)
     query = select(
         AmazonProduct.MainCategory,
         func.count(AmazonProduct.ProductId).label("ProductCount"),

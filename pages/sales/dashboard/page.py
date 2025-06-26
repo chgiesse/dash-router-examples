@@ -7,7 +7,11 @@ import dash_mantine_components as dmc
 
 
 async def layout(
-    ranks: SlotContainer, revenue: SlotContainer, sentiment: SlotContainer, **kwargs
+    ranks: SlotContainer, 
+    revenue: SlotContainer, 
+    sentiment: SlotContainer, 
+    filters: AmazonQueryParams = None, 
+    **kwargs
 ):
 
     filters = AmazonQueryParams(**kwargs)

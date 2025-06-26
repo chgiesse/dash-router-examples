@@ -6,6 +6,9 @@ from sqlalchemy.orm import Query
 
 
 def apply_amazon_filters(query: Query, filters: AmazonQueryParams):
+
+    query = query.filter(AmazonProduct.MainCategory.in_(filters.get_categroies()))
+
     if len(filters.categories) > 0:
         query = query.filter(AmazonProduct.MainCategory.in_(filters.categories))
 

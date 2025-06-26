@@ -18,6 +18,7 @@ async def layout(children: ChildContainer = None, **kwargs):
                 p=5,
                 w="fit-content",
                 mx="auto",
+                className='fade-in-top',
             ),
             children,
         ],

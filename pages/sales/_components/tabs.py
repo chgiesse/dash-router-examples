@@ -7,11 +7,10 @@ class SalesTabs(dmc.Tabs):
     class ids:
         tabs = "sales-tabs"
 
-    def __init__(self, active_tab: str = None):
+    def __init__(self, active_tab: str = None, **kwargs):
         super().__init__(
             id=self.ids.tabs,
             variant="pills",
-            # color='dark',
             value=active_tab,
             radius="xl",
             children=dmc.TabsList(

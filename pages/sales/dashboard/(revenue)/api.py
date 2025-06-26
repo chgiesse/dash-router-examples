@@ -11,20 +11,19 @@ from ..api import (
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, desc
 import pandas as pd
+from aiocache import cached
 import asyncio
 
 NAMESPACE = "example-dashboard"
 TTL = 60 * 5
 
 
+# @cached(ttl=TTL)
 @db_operator(verbose=True)
-# @redis_lru_cache.cache(namespace=NAMESPACE, ttl=TTL)
 async def endpoint(db: AsyncSession, **kwargs):
-
+    await asyncio.sleep(1.2)
     variant = kwargs.pop("variant", SalesCallbackParams.get_default_variant())
     filters = AmazonQueryParams(**kwargs)
-
-    await asyncio.sleep(0.6)
     agg_col = get_agg_variant_column(variant)
     date_col, _ = get_date_granularity_column(
         filters.granularity, AmazonProduct.SaleDate
