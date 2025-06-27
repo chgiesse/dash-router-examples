@@ -9,7 +9,7 @@ import dash_mantine_components as dmc
 import pandas as pd
 
 
-async def layout(data: pd.DataFrame, **kwargs):
+def layout(data: pd.DataFrame, **kwargs):
     graph = TotalSalesGraph(data)
     table = graph.table(data)
 

@@ -1,7 +1,8 @@
 import dash_mantine_components as dmc
 from dash.html import Div
 from dash_iconify import DashIconify
-from flash import Input, Output, clientside_callback
+# from flash import Input, Output, clientside_callback
+from dash import Input, Output, clientside_callback
 
 from utils.helpers import get_icon
 

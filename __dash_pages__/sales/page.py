@@ -1,13 +1,11 @@
 import dash_mantine_components as dmc
-from dash_router import RouteConfig, ChildContainer
+from dash import html
 
 from ._components.tabs import SalesTabs
 
-config = RouteConfig(default_child="overview")
 
-
-def layout(children: ChildContainer = None, **kwargs):
-    tab = children.props.active
+def layout(children=None, **kwargs):
+    tab = kwargs.get('active', 'overview')
     return dmc.Stack(
         m=0,
         p=0,

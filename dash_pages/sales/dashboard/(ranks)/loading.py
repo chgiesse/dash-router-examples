@@ -6,7 +6,7 @@ from ..components.select import create_sale_type_select
 import dash_mantine_components as dmc
 
 
-async def layout(**kwargs):
+def layout(**kwargs):
 
     filters = AmazonQueryParams(**kwargs)
 

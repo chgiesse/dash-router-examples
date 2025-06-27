@@ -28,11 +28,10 @@ redis = "^6.1.0"
 python-dotenv = "^1.1.0"
 asyncpg = "^0.30.0"
 uvicorn = "^0.34.2"
-dash-flash = "^1.0.0"
 greenlet = "^3.2.2"
 kaleido = "0.2.1"
 quart-compress = "^0.2.1"
-flash-router = {path = "/Users/cgiessel/Documents/projects/dash-projects/dash-router/dist/flash_router-0.3.0b2.tar.gz"}
+flash-router = {path = "/Users/cgiessel/Documents/projects/dash-projects/dash-router/dist/flash_router-0.3.0b2-py3-none-any.whl", extras = ["async"]}
 
 
 [build-system]

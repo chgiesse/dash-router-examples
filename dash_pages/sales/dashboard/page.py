@@ -2,14 +2,13 @@ from .components.actionbar import ActionBar
 from .components.menu import GraphDownload
 from .models import AmazonQueryParams
 
-from dash_router import SlotContainer
 import dash_mantine_components as dmc
 
 
-async def layout(
-    ranks: SlotContainer, 
-    revenue: SlotContainer, 
-    sentiment: SlotContainer, 
+def layout(
+    ranks=None, 
+    revenue=None, 
+    sentiment=None, 
     filters: AmazonQueryParams = None, 
     **kwargs
 ):

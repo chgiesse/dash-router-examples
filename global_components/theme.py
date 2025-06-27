@@ -3,7 +3,8 @@ from utils.helpers import get_theme_template
 import dash_mantine_components as dmc
 from typing import Literal
 from dash_iconify import DashIconify
-from flash import clientside_callback, Input, callback, Output, Patch
+# from flash import clientside_callback, Input, callback, Output, Patch
+from dash import clientside_callback, Input, callback, Output, Patch
 import plotly.io as pio
 
 

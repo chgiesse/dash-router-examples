@@ -5,7 +5,7 @@ from ..components.switch import create_agg_switch
 from .api import SentimentEndpointResult
 
 
-async def layout(data: SentimentEndpointResult, **kwargs):
+def layout(data: SentimentEndpointResult, **kwargs):
     is_darkmode = bool(kwargs.pop("theme", True))
     return create_graph_card_wrapper(
         graph=TotalSentimentGraph(data.sentiment_data, data.rating_data, is_darkmode),

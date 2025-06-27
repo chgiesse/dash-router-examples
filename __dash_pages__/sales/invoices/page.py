@@ -1,12 +1,10 @@
 import dash_mantine_components as dmc
-from dash_router import RouteConfig, SlotContainer
+from dash import html
 
 from ._components.figures import bar_chart
 
-config = RouteConfig()
 
-
-def layout(invoice=SlotContainer, overview=SlotContainer, **kwargs):
+def layout(invoice=None, overview=None, **kwargs):
     return dmc.SimpleGrid(
         cols=2,
         children=[
