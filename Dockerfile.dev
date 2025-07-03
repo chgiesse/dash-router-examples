@@ -23,14 +23,9 @@ RUN poetry install --no-interaction --no-ansi
 # Copy application code
 COPY . /app
 
-# Create nonroot user
-RUN groupadd -r nonroot && \
-    useradd -r -g nonroot nonroot
-RUN chown -R nonroot:nonroot /app
-USER nonroot
-
 # Expose port
 EXPOSE 8050
- 
-# Use gunicorn for production deployment with standard Dash/Flask
-ENTRYPOINT ["python", "-m", "gunicorn", "--bind", "0.0.0.0:8050", "--workers", "2", "--timeout", "240", "--keep-alive", "2", "--max-requests", "1000", "--max-requests-jitter", "100", "--log-level", "error", "dash_app:server"]            
+
+# Use Dash development server for development
+RUN mkdir -p /app/.venv/bin && ln -sf /usr/local/bin/python3 /app/.venv/bin/python3
+CMD ["python", "dash_app.py"] 

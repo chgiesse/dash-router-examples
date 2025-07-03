@@ -9,17 +9,17 @@ package-mode=false
 
 [tool.poetry.dependencies]
 python = "^3.12"
-dash-mantine-components = "2.0.0"
+dash-mantine-components = "2.1.0"
 dash-iconify = "^0.1.2"
 orjson = "^3.10.15"
-dash = "3.0.4"
+dash = "3.1.1"
 pandas = "^2.2.3"
 dash-ag-grid = "v31.3.1"
 dash-aggrid-scales = "^0.2.1"
 dash-dynamic-grid-layout = "^0.1.2"
 dash-extensions = "2.0.0"
 aiocache = "^0.12.3"
-plotly = "6.0.1"
+plotly = "6.2.0"
 nbformat = "^5.10.4"
 dash-resizable-panels = "^0.1.0"
 dash-snap-grid = "^0.1.0"
@@ -29,10 +29,10 @@ python-dotenv = "^1.1.0"
 asyncpg = "^0.30.0"
 uvicorn = "^0.34.2"
 greenlet = "^3.2.2"
-kaleido = "0.2.1"
 quart-compress = "^0.2.1"
-flash-router = {path = "/Users/cgiessel/Documents/projects/dash-projects/dash-router/dist/flash_router-0.3.0b2-py3-none-any.whl", extras = ["async"]}
-
+flash-router = "0.3.0b4"
+gunicorn = "^23.0.0"
+dash-flash = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core"]

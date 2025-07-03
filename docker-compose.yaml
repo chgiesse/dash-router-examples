@@ -1,37 +1,59 @@
+
 services:
-  dash:
-    container_name: flash-complete-example
-    image: flash_example:v1
+  # Development service
+  dash-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8050:8050"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+      - DASH_DEBUG=true
+    profiles:
+      - dev
+
+  # Production service
+  dash-prod:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '8080:8050'
-    env_file:
-      - .env
-    volumes:
-      - .:/app
-    
-
-  redis:
-    container_name: redis
-    image: redis:7.2.4-alpine
-    restart: always
-    ports:
-      - '6379:6379'
-    
-  
-  redis_insights:
-    container_name: redis-insights
-    image: redis/redisinsight:latest
-    ports:
-      - '5540:5540'
-
-  db:
-    image: postgres:17.4-alpine3.21
-    restart: always
-    shm_size: 128mb
+      - "8050:8050"
     environment:
-      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - FLASK_ENV=production
+      - DASH_DEBUG=false
+    profiles:
+      - prod
+
+  # Redis service (if needed)
+  redis:
+    image: redis:7-alpine
     ports:
-      - '5432:5432'
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    profiles:
+      - dev
+      - prod
+
+  # PostgreSQL service (if needed)
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: dash_example
+      POSTGRES_USER: dash_user
+      POSTGRES_PASSWORD: dash_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    profiles:
+      - dev
+      - prod
+
+volumes:
+  redis_data:
+  postgres_data:

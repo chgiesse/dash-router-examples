@@ -14,11 +14,14 @@ app = Dash(
     suppress_callback_exceptions=True,
     routing_callback_inputs={"theme": State("color-scheme-toggle", "checked")},
 )
+
+server = app.server
 # app = Dash(__name__)
 router = Router(app, pages_folder="dash_pages",)
 apply_vizro_theme()
 
+
 app.layout = create_appshell([RootContainer()])
 
-if __name__ == "__main__":
-    app.run(debug=True, port=8032)
+# if __name__ == "__main__":
+#     app.run(port=8050, dev_tools_hot_reload=False)
