@@ -30,9 +30,9 @@ asyncpg = "^0.30.0"
 uvicorn = "^0.34.2"
 greenlet = "^3.2.2"
 quart-compress = "^0.2.1"
+flash-router = "0.4.0b2"
 gunicorn = "^23.0.0"
 dash-flash = "^1.0.0"
-flash-router = "^0.4.0b7"
 
 [build-system]
 requires = ["poetry-core"]

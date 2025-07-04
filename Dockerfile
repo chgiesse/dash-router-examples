@@ -21,7 +21,7 @@ RUN poetry lock --no-update || poetry lock
 RUN poetry install --no-interaction --no-ansi
 
 # Copy application code
-COPY . /app
+COPY app/. /app
 
 # Create nonroot user
 RUN groupadd -r nonroot && \
@@ -31,6 +31,6 @@ USER nonroot
 
 # Expose port
 EXPOSE 8050
- 
+
 # Use gunicorn for production deployment with standard Dash/Flask
-ENTRYPOINT ["python", "-m", "gunicorn", "--bind", "0.0.0.0:8050", "--workers", "2", "--timeout", "240", "--keep-alive", "2", "--max-requests", "1000", "--max-requests-jitter", "100", "--log-level", "error", "dash_app:server"]            
+ENTRYPOINT ["python", "-m", "uvicorn", "app:server", "--host", "0.0.0.0", "--port", "8050", "--workers", "2", "--timeout-keep-alive", "30", "--log-level", "error"]            

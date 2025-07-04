@@ -650,14 +650,14 @@ devel = ["colorama", "json-spec", "jsonschema", "pylint", "pytest", "pytest-benc
 
 [[package]]
 name = "flash-router"
-version = "0.3.0b4"
+version = "0.4.0b7"
 description = "File-system based router for Dash and Flash applications."
 optional = false
 python-versions = "<4.0,>=3.12"
 groups = ["main"]
 files = [
-    {file = "flash_router-0.3.0b4-py3-none-any.whl", hash = "sha256:dee1ae46c15ca8cc73ec934ca736e575554fc1927ef3e0e5114df41e1b022cc7"},
-    {file = "flash_router-0.3.0b4.tar.gz", hash = "sha256:b23ba2ee362c36dba12fa02b45eb3170ee1e98127f2bb7e5abdfa4d07fbde66b"},
+    {file = "flash_router-0.4.0b7-py3-none-any.whl", hash = "sha256:9c9ddfc2be39156a3534e344fa99891352e3c9d359712facccf3247cf961204d"},
+    {file = "flash_router-0.4.0b7.tar.gz", hash = "sha256:48dfb05a6a0d7bddcae5beb9c9f59ef21b738e05ded330beb1bcf524c30bf84c"},
 ]
 
 [package.dependencies]
@@ -665,7 +665,7 @@ dash = ">=3.0.0rc1,<4.0.0"
 pydantic = ">=2.10.4,<3.0.0"
 
 [package.extras]
-async = ["dash-flash (<=1.0.0)"]
+async = ["dash-flash (>=1.0.0,<2.0.0)"]
 
 [[package]]
 name = "flask"
@@ -2193,4 +2193,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "d05584559ef45abae6882a0c47d5a993be4c5b2623bcaf4f3581673335817202"
+content-hash = "eb3f6818aae9f414153293a0807755d98706e3f601dedf4d1049464c7b20eb62"
