@@ -5,7 +5,7 @@ from dash_router import SlotContainer, ChildContainer
 from dash import dcc
 
 
-async def layout(children: ChildContainer, overview: SlotContainer, **kwargs):
+async def layout(children: ChildContainer, overview: SlotContainer = None, **kwargs):
 
     page = int(kwargs.get("page", 1))
 
