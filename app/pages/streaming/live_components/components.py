@@ -1,6 +1,6 @@
 from .api import get_data
 from global_components.notifications import NotificationsContainer
-# from streaming.stream import flash_props, sse_callback
+from streaming.stream import flash_props, sse_callback
 
 from dash import dcc
 import dash_mantine_components as dmc
@@ -16,16 +16,16 @@ class TestComponentStream(dmc.Stack):
         button = "stream-button"
         table = "stream-table"
 
-    theme_csc = clientside_callback(
-        "( theme ) => theme === false ? 'ag-theme-quartz' : 'ag-theme-quartz-auto-dark';",
-        Output(ids.table, "className"),
-        Input("color-scheme-toggle", "checked"),
-    )
+    # theme_csc = clientside_callback(
+    #     "( theme ) => theme === false ? 'ag-theme-quartz' : 'ag-theme-quartz-auto-dark';",
+    #     Output(ids.table, "className"),
+    #     Input("color-scheme-toggle", "checked"),
+    # )
 
-    # @sse_callback(Input(ids.button, "n_clicks"))
+    @sse_callback(Input(ids.button, "n_clicks"))
     async def update_table(n_clicks):
 
-        # yield await flash_props(TestComponentStream.ids.button, {"loading": True})
+        yield await flash_props(TestComponentStream.ids.button, {"loading": True})
 
         yield await NotificationsContainer.push_notification(
             title="Starting Download!",
@@ -41,11 +41,11 @@ class TestComponentStream(dmc.Stack):
             if progress == 0:
                 update = {"rowData": data_chunk}
                 columnDefs = [{"field": col} for col in colnames]
-                # yield await flash_props(
-                #     TestComponentStream.ids.table, props={"columnDefs": columnDefs}
-                # )
+                yield await flash_props(
+                    TestComponentStream.ids.table, props={"columnDefs": columnDefs}
+                )
 
-            # yield await flash_props(TestComponentStream.ids.table, update)
+            yield await flash_props(TestComponentStream.ids.table, update)
 
             if len(data_chunk) == chunck_size:
                 yield await NotificationsContainer.push_notification(
@@ -57,14 +57,14 @@ class TestComponentStream(dmc.Stack):
 
             progress += 1
 
-        # yield await flash_props(
-        #     TestComponentStream.ids.button,
-        #     {
-        #         "loading": False,
-        #         # 'leftSection': DashIconify(icon='famicons:reload-circle', height=20),
-        #         "children": "Reload",
-        #     },
-        # )
+        yield await flash_props(
+            TestComponentStream.ids.button,
+            {
+                "loading": False,
+                # 'leftSection': DashIconify(icon='famicons:reload-circle', height=20),
+                "children": "Reload",
+            },
+        )
 
         yield await NotificationsContainer.push_notification(
             title="Finished Callback!",

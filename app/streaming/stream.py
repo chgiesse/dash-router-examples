@@ -82,7 +82,6 @@ class Streamer:
                 abort(400)
 
             async def send_done_signal(callback_id):
-                await asyncio.sleep(0.1)
                 response = ["[DONE]", {}, callback_id]
                 event = ServerSentEvent(json.dumps(response) + STEAM_SEPERATOR)
                 return event.encode()

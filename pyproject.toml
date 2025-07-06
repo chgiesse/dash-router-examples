@@ -33,6 +33,7 @@ quart-compress = "^0.2.1"
 gunicorn = "^23.0.0"
 dash-flash = "^1.0.0"
 flash-router = "0.5.0b2"
+psycopg2-binary = "^2.9.10"
 
 [build-system]
 requires = ["poetry-core"]

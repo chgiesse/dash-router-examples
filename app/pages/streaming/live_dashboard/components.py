@@ -112,7 +112,7 @@ class SSEGraph(html.Div):
         fig.update_layout(hovermode="x unified")
 
         fig.update_layout(
-            template=template,
+            template="plotly_dark",
             xaxis_title=None,
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",

@@ -6,7 +6,7 @@ from flash import Flash, State
 from global_components.appshell import create_appshell
 from streaming.stream import SSECallbackComponent, Streamer
 from theme import apply_vizro_theme
-# from api.sql_operator import setup_db
+from api.sql_operator import setup_db
 
 
 app = Flash(
@@ -28,7 +28,7 @@ app = Flash(
 app.layout = create_appshell([RootContainer(), SSECallbackComponent()])
 
 server = app.server
-# server.before_serving(setup_db)
+server.before_serving(setup_db)
 
 router = FlashRouter(app)
 streamer = Streamer(app)
