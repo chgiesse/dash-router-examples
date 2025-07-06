@@ -13,9 +13,7 @@ if ENVIRONMENT == "dev":
     PG_USER = os.environ.get("PG_DEV_USER", "postgres")
     PG_PASSWORD = os.environ.get("PG_DEV_PASSWORD", "postgres")
     PG_DATABASE = os.environ.get("PG_DEV_DATABASE", "postgres")
-    # PG_ENGINE_STR = f"postgresql+asyncpg://{PG_USER}:{PG_PASSWORD}@{PG_HOST}:{PG_PORT}/{PG_DATABASE}"
-    PG_ENGINE_STR = f"postgresql+asyncpg://datenschubse:E7h2Jtg4RSw57XfRILZ5c6KvAPszefQb@dpg-d1l7dvje5dus73fbg4gg-a.frankfurt-postgres.render.com/dash_example"
-
+    PG_ENGINE_STR = os.environ.get("PG_ENGINE_STR", "postgres")
 
 else:
     PG_HOST = os.environ.get("PG_DEV_HOST", "localhost")
@@ -23,8 +21,7 @@ else:
     PG_USER = os.environ.get("PG_DEV_USER", "postgres")
     PG_PASSWORD = os.environ.get("PG_DEV_PASSWORD", "postgres")
     PG_DATABASE = os.environ.get("PG_DEV_DATABASE", "postgres")
-    # PG_ENGINE_STR = f"postgresql+asyncpg://{PG_USER}:{PG_PASSWORD}@{PG_HOST}:{PG_PORT}/{PG_DATABASE}"
-    PG_ENGINE_STR = f"postgresql+asyncpg://datenschubse:E7h2Jtg4RSw57XfRILZ5c6KvAPszefQb@dpg-d1l7dvje5dus73fbg4gg-a.frankfurt-postgres.render.com/dash_example"
+    PG_ENGINE_STR = os.environ.get("PG_ENGINE_STR", "postgres")
 
 pg_engine = create_async_engine(
     PG_ENGINE_STR,
