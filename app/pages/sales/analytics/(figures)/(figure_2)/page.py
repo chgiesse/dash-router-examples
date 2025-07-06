@@ -10,7 +10,7 @@ from utils.helpers import create_theme_callback
 
 async def layout(data: DataFrame, *args, **kwargs):
     theme = kwargs.get("theme")
-    template = "plotly_dark" if theme else "plotly"
+    template = "plotly_dark"
     x = ["Winter", "Spring", "Summer", "Fall"]
 
     fig = go.Figure()

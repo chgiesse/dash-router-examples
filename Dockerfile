@@ -31,6 +31,7 @@ USER nonroot
 
 # Expose port
 EXPOSE 8050
+ENV PG_ENGINE_STR='postgresql+asyncpg://datenschubse:E7h2Jtg4RSw57XfRILZ5c6KvAPszefQb@dpg-d1l7dvje5dus73fbg4gg-a.frankfurt-postgres.render.com/dash_example'
 
 # Use gunicorn for production deployment with standard Dash/Flask
 ENTRYPOINT ["python", "-m", "uvicorn", "app:server", "--host", "0.0.0.0", "--port", "8050", "--workers", "2", "--timeout-keep-alive", "30", "--log-level", "error"]            

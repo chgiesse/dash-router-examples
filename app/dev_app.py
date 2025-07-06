@@ -26,7 +26,7 @@ app = Flash(
 app.layout = create_appshell([RootContainer(), SSECallbackComponent()])
 
 server = app.server
-server.before_serving(setup_db)
+# server.before_serving(setup_db)
 
 router = FlashRouter(app)
 streamer = Streamer(app)

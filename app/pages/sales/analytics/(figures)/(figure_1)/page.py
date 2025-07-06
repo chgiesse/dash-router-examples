@@ -9,7 +9,7 @@ from utils.helpers import create_theme_callback
 
 async def layout(data: DataFrame = None, *args, **kwargs):
     theme = kwargs.get("theme")
-    template = "plotly_dark" if theme else "plotly"
+    template = "plotly_dark"
     fig = px.box(data, x="day", y="total_bill", color="smoker", notched=True)
     fig.update_layout(hovermode="x unified")
     fig.update_layout(

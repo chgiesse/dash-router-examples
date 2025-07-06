@@ -11,7 +11,7 @@ from dash import dcc
 
 async def layout(data: DataFrame = None, *args, **kwargs):
     theme = kwargs.get("theme")
-    template = "plotly_dark" if theme else "plotly"
+    template = "plotly_dark"
     fig = go.Figure(
         go.Sunburst(
             labels=data.get("labels"),

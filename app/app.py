@@ -22,13 +22,13 @@ app = Flash(
     pages_folder="pages",
     use_pages=False,
     update_title=None,
-    routing_callback_inputs={"theme": State("color-scheme-toggle", "checked")},
+    routing_callback_inputs={"theme": State("color-scheme-toggle", "checked", allow_optional=True)},
 )
 
 app.layout = create_appshell([RootContainer(), SSECallbackComponent()])
 
 server = app.server
-server.before_serving(setup_db)
+# server.before_serving(setup_db)
 
 router = FlashRouter(app)
 streamer = Streamer(app)

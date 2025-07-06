@@ -1,10 +1,12 @@
 from .config.postgres import pg_engine
 from .models.amazon import AmazonProduct, Base as AmazonBase
 from .models.events import Base as EventBase
+from flash import get_app
 
 from sqlalchemy.exc import OperationalError, InterfaceError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+from dash._get_paths import get_asset_url, app_get_asset_url
 from sqlalchemy import text
 from functools import wraps
 import pandas as pd
@@ -72,7 +74,10 @@ def db_operator(
 
 @db_operator()
 async def setup_db(db: AsyncSession):
-    data = pd.read_csv("app/assets/data/amazon_processed.csv")
+    app = get_app()
+    assets_urls = app.get_asset_url(path="data/amazon_processed.csv")
+    print("assets_urls", assets_urls, flush=True)
+    data = pd.read_csv(assets_urls)
     data.SaleDate = pd.to_datetime(data.SaleDate)
     await db.execute(text('CREATE SCHEMA IF NOT EXISTS "AnalyticsDM"'))
     await db.execute(text('CREATE SCHEMA IF NOT EXISTS "EventsDM"'))
