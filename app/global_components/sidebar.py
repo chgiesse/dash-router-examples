@@ -7,7 +7,6 @@ from dash import Input, Output, clientside_callback
 from utils.helpers import get_icon
 
 theme_toggle = dmc.Switch(
-    mt="auto",
     offLabel=DashIconify(
         icon="line-md:sun-rising-loop",
         width=15,
@@ -20,19 +19,8 @@ theme_toggle = dmc.Switch(
     ),
     id="color-scheme-toggle",
     persistence=True,
-    color="grey",
+    color="gray",
 )
-
-# clientside_callback(
-#     """ 
-#     (switchOn) => {
-#        document.documentElement.setAttribute('data-mantine-color-scheme', switchOn ? 'dark' : 'light');  
-#        return window.dash_clientside.no_update
-#     }
-#     """,
-#     Output("color-scheme-toggle", "id"),
-#     Input("color-scheme-toggle", "checked"),
-# )
 
 
 def create_navlink(href: str, icon: str, *args, **kwargs):
@@ -51,7 +39,7 @@ navbar = dmc.AppShellNavbar(
             gap="sm",
             mt="lg",
             pb="lg",
-            mb="auto",
+            style={"marginBottom": "auto"},
             children=[
                 get_icon("mingcute:flash-circle-line", height=35),
                 create_navlink(
@@ -65,31 +53,11 @@ navbar = dmc.AppShellNavbar(
                     icon="material-symbols:route-outline",
                 ),
                 create_navlink(
-                    href="/streaming",
+                    href="/streaming/live-dashboard",
                     icon="material-symbols:stream-rounded",
                 ),
             ],
         ),
-        dmc.Box(theme_toggle, display="none")
-        # dmc.Box(
-        #     mx="auto",
-        #     mb="lg",
-        #     children=dmc.Menu(
-        #         [
-        #             dmc.MenuTarget(
-        #                 dmc.ActionIcon(
-        #                     get_icon(
-        #                         "material-symbols:settings-outline-rounded", height=30
-        #                     ),
-        #                     size="xl",
-        #                     variant="subtle",
-        #                 )
-        #             ),
-        #             # dmc.MenuDropdown([dmc.Group(["Theme", theme_toggle], m="sm")]),
-        #         ],
-        #         trigger="hover",
-        #         position="right",
-        #     ),
-        # ),
-    ]
+        dmc.Box(theme_toggle, my="md", mx="auto"),
+    ],
 )

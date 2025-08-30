@@ -1,25 +1,86 @@
 from dash import html
 import dash_mantine_components as dmc
-from streaming.stream import flash_props
+from flash import stream_props
+from dash_event_callback import stream_props as sync_stream_props
+import random
+
+class NotificationsContainer(dmc.Box):
+
+    class ids:
+        container = "notifications-container"
+        notification = "default-notifixcation-id"
+
+    @classmethod
+    def send_notification(
+        cls,
+        title: str,
+        message: str,
+        id: str | None = None,
+        color: str = "primary",
+        autoClose=True,
+        **kwargs,
+    ):
+        _id = id if id else random.randint(0, 1000)
+        return stream_props(
+            cls.ids.container,
+            {
+                "sendNotifications": [
+                    dict(
+                        title=title,
+                        id=_id,
+                        action="show",
+                        message=message,
+                        color=color,
+                        autoClose=autoClose,
+                        **kwargs,
+                    )
+                ]
+            },
+        )
+
+    def __init__(self):
+        super().__init__(
+            [
+                dmc.NotificationContainer(
+                    id=self.ids.container,
+                    transitionDuration=500,
+                    position="top-right"
+                ),
+            ]
+        )
 
 
-class NotificationsContainer(html.Div):
+class NotificationsContainerSync(html.Div):
 
     class ids:
         container = "notifications-container"
 
     @classmethod
-    async def push_notification(cls, **kwargs):
-        timer = kwargs.pop("autoClose", None) or 3000
-        return await flash_props(
-            cls.ids.container, {"children": dmc.Notification(**kwargs, autoClose=timer)}
-        )
-
-    @classmethod
-    async def clean_notifications(cls, **kwargs):
-        return await flash_props(
+    def push_notification(
+        cls,
+        title: str,
+        message: str,
+        id: str | None = None,
+        color: str = "primary",
+        autoClose=True,
+        **kwargs,
+    ):
+        _id = id if id else random.randint(0, 1000)
+        return stream_props(
             cls.ids.container,
-            {"children": dmc.Notification(action="cleanQueue", message="", **kwargs)},
+            {
+                "sendNotifications": [
+                    dict(
+                        title=title,
+                        id=_id,
+                        action="show",
+                        message=message,
+                        color=color,
+                        autoClose=autoClose,
+                        **kwargs,
+                    )
+                ]
+            },
         )
 
     def __init__(self):

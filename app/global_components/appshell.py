@@ -1,4 +1,5 @@
 import dash_mantine_components as dmc
+from dash import dcc
 
 from global_components.sidebar import navbar
 from global_components.notifications import NotificationsContainer
@@ -43,23 +44,41 @@ mantine_dark = [
     "#1b2027",
 ]
 
+blue = [
+    "#ecf4ff",
+    "#dce4f5",
+    "#b9c7e2",
+    "#94a8d0",
+    "#748dc0",
+    "#5f7cb7",
+    "#5474b4",
+    "#44639f",
+    "#3a5890",
+    "#2c4b80",
+]
+
 
 def create_appshell(content):
     return dmc.MantineProvider(
-        forceColorScheme="dark",
+        defaultColorScheme="dark",
         theme={
-            "primaryColor": "violet",
-            "primareShade": "3",
+            "primaryColor": "slate",
+            "primareShade": "6",
             "defaultRadius": "md",
             "components": {"Card": {"defaultProps": {"shadow": "sm"}}},
             "focusRing": "never",
             "colors": {
+                # "dark": list(reversed(shadcn_slate)),
                 "dark": mantine_dark,
                 "slate": list(reversed(shadcn_slate)),
+                "shadc_gray": list(reversed(shadcn_gray)),
+                "blue": blue
             },
         },
         children=dmc.AppShell(
             [
+                # Persistent store for theme or other global preferences
+                # dcc.Store(id="color-scheme-store", storage_type="local"),
                 navbar,
                 NotificationsContainer(),
                 Url(),

@@ -1,6 +1,5 @@
 from datetime import date
 
-import dash_dynamic_grid_layout as dgl
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
 from dash_router import RootContainer, SlotContainer
@@ -42,7 +41,7 @@ class ActionBar(dmc.Stack):
     )
 
     update_url_csc = clientside_callback(
-        f""" 
+        f"""
         function(country, period, veggie, currentPath, currentSearch ) {{
             // Create a new URLSearchParams object
             const queryParams = new URLSearchParams();
@@ -58,13 +57,13 @@ class ActionBar(dmc.Stack):
                 if (period.length == 2 && period.every((el) => el !== null)) {{
                     queryParams.set('period', period.join(', '))
                 }};
-                
+
             }};
             if (veggie) queryParams.set('veggie', veggie);
-            
+
             // Create the new URL string
             const queryString = queryParams.toString();
-            
+
             // Return the updated URL
             window.dash_clientside.set_props('{ids.filter_button}', {{href: currentPath + '?' + queryString}})
             // return noUpdate
@@ -210,41 +209,4 @@ class ActionBar(dmc.Stack):
                 ),
                 dmc.Divider(),
             ],
-        )
-
-
-class ResizeGrid(dgl.DashGridLayout):
-    class ids:
-        grid = "resize-grid-layout"
-
-    toggle_edit_csc = clientside_callback(
-        f"""function( nClicks, resize ){{
-            const buttonText = resize ? 'Edit' : 'Save';
-            window.dash_clientside.set_props(
-                '{ActionBar.ids.edit_button}', 
-                {{children: buttonText}}
-            );
-            return !resize
-        }}""",
-        Output(ids.grid, "showResizeHandles"),
-        Input(ActionBar.ids.edit_button, "n_clicks"),
-        State(ids.grid, "showResizeHandles"),
-        prevent_initial_call=True,
-    )
-
-    def __init__(self, slot_1: SlotContainer, slot_2: SlotContainer):
-        super().__init__(
-            id=self.ids.grid,
-            showResizeHandles=False,
-            itemLayout=[
-                dict(w=3, h=4, x=0, y=0, i="0"),
-                dict(w=3, h=4, x=3, y=0, i="1"),
-            ],
-            items=[
-                dgl.DraggableWrapper(recursive_to_plotly_json(slot_1)).to_plotly_json(),
-                dgl.DraggableWrapper(recursive_to_plotly_json(slot_2)).to_plotly_json(),
-            ],
-            rowHeight=75,
-            cols={"lg": 12, "md": 10, "sm": 6, "xs": 4, "xxs": 2},
-            showRemoveButton=False,
         )

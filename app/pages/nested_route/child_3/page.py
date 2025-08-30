@@ -1,7 +1,7 @@
 import dash_mantine_components as dmc
 from dash_router import RouteConfig, SlotContainer
 from .models import QueryParams
-from .components import ActionBar, ResizeGrid
+from .components import ActionBar
 
 config = RouteConfig(default_child="child-11")
 
@@ -22,7 +22,6 @@ async def layout(
         children=[
             ActionBar(params),
             dmc.Group([slot_31, slot_32], grow=True),
-            # ResizeGrid(slot_31, slot_32),
             dmc.Tabs(
                 [
                     dmc.TabsList(

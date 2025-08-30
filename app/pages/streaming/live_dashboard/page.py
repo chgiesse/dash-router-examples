@@ -1,4 +1,5 @@
-from .components import SSEGraph, MantineSSEGraph
+from .components import SSEGraph, StreamButtons
+
 import dash_mantine_components as dmc
 
 
@@ -7,19 +8,15 @@ async def layout(*args, **kwargs):
     template = "plotly_dark" if theme else "plotly"
 
     return [
-        dmc.Button("Start stream", id="start-stream-button", mb="md"),
+        StreamButtons(),
         dmc.SimpleGrid(
             w="100%",
-            cols=1,
+            cols=2,
             children=[
-                SSEGraph("Google", template),
-                # SSEGraph('Amazon', template),
-                # SSEGraph('Apple', template),
-                # SSEGraph('TSMC', template),
-                # MantineSSEGraph('Google'),
-                # MantineSSEGraph('Amazon'),
-                # MantineSSEGraph('Apple'),
-                # MantineSSEGraph('TSMC'),
+                SSEGraph("google", template),
+                SSEGraph("amazon", template),
+                SSEGraph("microsoft", template),
+                SSEGraph("apple", template),
             ],
         ),
     ]

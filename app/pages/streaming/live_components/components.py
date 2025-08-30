@@ -1,10 +1,9 @@
 from .api import get_data
 from global_components.notifications import NotificationsContainer
-from streaming.stream import flash_props, sse_callback
+from flash_router import RootContainer
+from flash import stream_props, event_callback
 
-from dash import dcc
 import dash_mantine_components as dmc
-from dash_extensions import SSE
 from flash import clientside_callback, Input, Output
 from dash_iconify import DashIconify
 import dash_ag_grid as dag
@@ -13,23 +12,32 @@ import dash_ag_grid as dag
 class TestComponentStream(dmc.Stack):
 
     class ids:
-        button = "stream-button"
+        start_btn = "stream-button-test"
+        cancel_btn = "cancel-button-test"
         table = "stream-table"
 
-    # theme_csc = clientside_callback(
-    #     "( theme ) => theme === false ? 'ag-theme-quartz' : 'ag-theme-quartz-auto-dark';",
-    #     Output(ids.table, "className"),
-    #     Input("color-scheme-toggle", "checked"),
-    # )
-
-    @sse_callback(Input(ids.button, "n_clicks"))
+    @event_callback(
+        Input(ids.start_btn, "n_clicks"),
+        cancel=[
+            (Input(RootContainer.ids.location, "pathname"), "/streaming/live-components"),
+            (Input(ids.cancel_btn, "n_clicks", allow_optional=True), 0)
+        ],
+        reset_props=[
+            (ids.table, {"rowData": [], "columnDefs": []}),
+            (ids.start_btn, {"children": "Download Data", "loading": False}),
+            (ids.cancel_btn, {"display": "none"}),
+        ]
+    )
     async def update_table(n_clicks):
 
-        yield await flash_props(TestComponentStream.ids.button, {"loading": True})
+        # batch set loading on both buttons
+        yield stream_props([
+            (TestComponentStream.ids.start_btn, {"loading": True}),
+            (TestComponentStream.ids.cancel_btn, {"display": "flex"}),
+        ])
 
-        yield await NotificationsContainer.push_notification(
+        yield NotificationsContainer.send_notification(
             title="Starting Download!",
-            action="show",
             message="Notifications in Dash, Awesome!",
             color="lime",
         )
@@ -37,38 +45,32 @@ class TestComponentStream(dmc.Stack):
         progress = 0
         chunck_size = 500
         async for data_chunk, colnames in get_data(chunck_size):
-            update = {"rowTransaction": {"add": data_chunk}}
             if progress == 0:
-                update = {"rowData": data_chunk}
                 columnDefs = [{"field": col} for col in colnames]
-                yield await flash_props(
-                    TestComponentStream.ids.table, props={"columnDefs": columnDefs}
-                )
+                update = {"rowData": data_chunk, "columnDefs": columnDefs}
+            else:
+                update = {"rowTransaction": {"add": data_chunk}}
 
-            yield await flash_props(TestComponentStream.ids.table, update)
+            # use batched stream_props (single-item list) for consistency
+            yield stream_props([(TestComponentStream.ids.table, update)])
 
             if len(data_chunk) == chunck_size:
-                yield await NotificationsContainer.push_notification(
+                yield NotificationsContainer.send_notification(
                     title="Progress",
-                    action="show",
                     message=f"Processed {chunck_size + (chunck_size * progress)} items",
                     color="violet",
                 )
 
             progress += 1
 
-        yield await flash_props(
-            TestComponentStream.ids.button,
-            {
-                "loading": False,
-                # 'leftSection': DashIconify(icon='famicons:reload-circle', height=20),
-                "children": "Reload",
-            },
-        )
+        # batch reset both buttons
+        yield stream_props([
+            (TestComponentStream.ids.start_btn, {"loading": False, "children": "Reload"}),
+            (TestComponentStream.ids.cancel_btn, {"display": "none"}),
+        ])
 
-        yield await NotificationsContainer.push_notification(
+        yield NotificationsContainer.send_notification(
             title="Finished Callback!",
-            action="show",
             message="Notifications in Dash, Awesome!",
             icon=DashIconify(icon="akar-icons:circle-check"),
             color="lime",
@@ -79,16 +81,28 @@ class TestComponentStream(dmc.Stack):
             justify="flex-start",
             align="flex-start",
             children=[
-                dmc.Button(
-                    "Start",
-                    id=self.ids.button,
-                    variant="gradient",
-                    gradient={"from": "grape", "to": "violet", "deg": 35},
-                    leftSection=DashIconify(
-                        icon="material-symbols:download-rounded", height=20
-                    ),
-                    fullWidth=False,
-                    styles={"section": {"marginRight": "var(--mantine-spacing-md)"}},
+                dmc.Group(
+                    [
+                        dmc.Button(
+                            "Download Data",
+                            id=self.ids.start_btn,
+                            leftSection=DashIconify(
+                                icon="material-symbols:download-rounded", height=20
+                            ),
+                            fullWidth=False,
+                            styles={"section": {"marginRight": "var(--mantine-spacing-md)"}},
+                        ),
+                        dmc.Button(
+                            "Cancel Download",
+                            id=self.ids.cancel_btn,
+                            leftSection=DashIconify(icon="mingcute:stop-circle-line", height=15),
+                            fullWidth=False,
+                            styles={"section": {"marginRight": "var(--mantine-spacing-md)"}},
+                            color="red",
+                            variant="outline",
+                            display="none",
+                        ),
+                    ],
                 ),
                 dag.AgGrid(
                     id=self.ids.table,

@@ -6,7 +6,7 @@ config = RouteConfig(default_child="live-dashboard")
 
 
 async def layout(children: ChildContainer, **kwargs):
-
+    print("streaming layout", kwargs, flush=True)
     create_navlink = lambda href, icon, label: dmc.NavLink(
         label=label,
         href=href,
@@ -25,6 +25,7 @@ async def layout(children: ChildContainer, **kwargs):
                 withBorder=True,
                 p=5,
                 w="fit-content",
+                mx="auto",
                 children=dmc.Group(
                     [
                         create_navlink(
@@ -43,5 +44,6 @@ async def layout(children: ChildContainer, **kwargs):
                 ),
             ),
             children,
-        ]
+        ],
+        # align="center",
     )

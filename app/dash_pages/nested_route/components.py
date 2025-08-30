@@ -1,4 +1,5 @@
-from flash import html, Input, clientside_callback, Output, State, ALL
+from flash import Input, clientside_callback, Output, State, ALL
+from dash import html
 from dash_router import RootContainer
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify

@@ -1,0 +1,75 @@
+{
+  "output": "{\"index\":[\"MATCH\"],\"type\":\"dash-router-lacy-component\"}.children",
+  "outputs": {
+    "id": {
+      "index": "sales/invoices/(overview)",
+      "type": "dash-router-lacy-component"
+    },
+    "property": "children"
+  },
+  "inputs": [
+    {
+      "id": {
+        "index": "sales/invoices/(overview)",
+        "type": "dash-router-lacy-component"
+      },
+      "property": "id",
+      "value": {
+        "index": "sales/invoices/(overview)",
+        "type": "dash-router-lacy-component"
+      }
+    },
+    {
+      "id": {
+        "index": "sales/invoices/(overview)",
+        "type": "dash-router-lacy-component"
+      },
+      "property": "data-path",
+      "value": "{\"page\": \"1\", \"theme\": null}"
+    }
+  ],
+  "changedPropIds": [],
+  "parsedChangedPropsIds": [],
+  "state": [
+    {
+      "id": "dash-router-location",
+      "property": "pathname",
+      "value": "/sales/invoices"
+    },
+    {
+      "id": "dash-router-location",
+      "property": "search",
+      "value": "?page=1"
+    },
+    {
+      "id": "dash-router-loading-state-store",
+      "property": "data",
+      "value": {
+        "(overview)": {
+          "node_id": "sales/invoices/(overview)",
+          "state": "done"
+        },
+        "[invoice_id][[default]]": {
+          "node_id": "sales/invoices/[invoice-id]",
+          "state": "done"
+        },
+        "invoices": {
+          "node_id": "sales/invoices",
+          "state": "done"
+        },
+        "items": {
+          "node_id": "sales/invoices/[invoice-id]/items",
+          "state": "done"
+        },
+        "query_params": {
+          "page": "1",
+          "theme": null
+        },
+        "sales": {
+          "node_id": "sales",
+          "state": "done"
+        }
+      }
+    }
+  ]
+}

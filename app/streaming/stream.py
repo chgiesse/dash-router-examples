@@ -2,18 +2,19 @@ from utils.helpers import generate_clientside_callback
 from dash_router.utils.helper_functions import recursive_to_plotly_json
 from dash_router import RootContainer
 from flash import Flash, Input, Output, State, clientside_callback
-from dash_extensions import SSE
-from dash import dcc
+from dash import dcc, html
 
 from quart import request, abort, make_response, websocket
 from quart.helpers import stream_with_context
-from flash import clientside_callback, html
 from dataclasses import dataclass
 from uuid import uuid4
 import asyncio
 import warnings
 import inspect
 import json
+from monitoring.metrics import METRICS
+from typing import Any, Callable
+from collections.abc import AsyncIterable
 
 
 SSE_CALLBACK_MAP = {}
@@ -48,13 +49,13 @@ class ServerSentEvent:
 class SSECallbackComponent(html.Div):
 
     class ids:
-        sse = "component-update-stream-sse"
-        store = "component-update-processing-store"
+        sse = "async-component-update-stream-sse"
+        store = "async-component-update-processing-store"
 
     def __init__(self):
         super().__init__(
             [
-                SSE(id=self.ids.sse, concat=True, url=SSE_CALLBACK_ENDPOINT),
+                # SSE(id=self.ids.sse, concat=True, url=SSE_CALLBACK_ENDPOINT),
                 dcc.Store(id=self.ids.store, data={}, storage_type="memory"),
             ]
         )
@@ -95,13 +96,18 @@ class Streamer:
             content = data["content"].copy()
             callback_id = content.pop(SSE_CALLBACK_ID_KEY)
             callback_func = SSE_CALLBACK_MAP.get(callback_id)
+            if not callable(callback_func):
+                abort(404)
 
             @stream_with_context
             async def callback_generator():
+                # mark an SSE stream started
+                await METRICS.on_sse_start()
                 yield await send_init_signal(callback_id)
                 await asyncio.sleep(0.1)
-                async for item in callback_func(**content):
-                    yield item
+                async for item in _iterate_callback(callback_func, content):
+                    if item is not None:
+                        yield item
 
                 yield await send_done_signal(callback_id)
 
@@ -114,12 +120,11 @@ class Streamer:
                 },
             )
 
-            response.timeout = None
             return response
 
     def setup_stream_callback(self):
 
-        @self.server.websocket(WS_CALLBACK_MAP)
+        @self.server.websocket(WS_CALLBACK_ENDPOINT)
         async def stream_callback():
             await websocket.accept()
 
@@ -129,8 +134,16 @@ class Streamer:
                 content = data["content"].copy()
                 callback_id = content.pop(SSE_CALLBACK_ID_KEY)
                 callback_func = WS_CALLBACK_MAP.get(callback_id)
-                async for item in callback_func(**content):
-                    await websocket.send(item)
+                if not callable(callback_func):
+                    await websocket.close(code=1008)
+                    break
+                await METRICS.on_ws_open()
+                try:
+                    async for item in _iterate_callback(callback_func, content):
+                        if item is not None:
+                            await websocket.send(item)
+                finally:
+                    await METRICS.on_ws_close()
 
     def setup_processing_callback(self):
 
@@ -139,18 +152,18 @@ class Streamer:
         //js
         function(message, processedData) {
             if (!message) { return processedData || {} };
-            
+
             const DONE_TOKEN = "[DONE]";
             const INIT_TOKEN = "[INIT]";
             processedData = processedData || {};
             const setProps = window.dash_clientside.set_props;
             const messageList = message.split('__concatsep__');
-            
+
             // Skip empty messages at the end (from the split)
             if (messageList[messageList.length - 1] === '') {
                 messageList.pop();
             }
-            
+
             // Process only new messages since last time
             const cbId = JSON.parse(messageList[0])[2]
             const startIdx = processedData[cbId] || 0;
@@ -162,15 +175,14 @@ class Streamer:
                         // Set properties on the component
                         setProps(componentId, props);
                         processedData[callbackId]++;
-                    } 
+                    }
 
                     if ( componentId == INIT_TOKEN ) {
                         processedData[callbackId] = 1
-                    } 
-                    
+                    }
+
                     if ( componentId == DONE_TOKEN) {
                         processedData[callbackId] = 0
-                        console.log('finished sse ', callbackId)
                     }
 
                 } catch (e) {
@@ -188,16 +200,16 @@ class Streamer:
             prevent_initial_call=True,
         )
 
-    clientside_callback(
-        f"""function ( pathChange ) {{
-            window.dash_clientside.set_props('{SSECallbackComponent.ids.sse}', {{done: true, url: null}});
-            window.dash_clientside.set_props('{SSECallbackComponent.ids.store}', {{data: {{}}}});
-            console.log('pathchange', pathChange)
-        }}""",
-        # Output(SSECallbackComponent.ids.sse, 'done'),
-        Input(RootContainer.ids.location, "pathname"),
-        prevent_initial_call=True,
-    )
+    # clientside_callback(
+    #     f"""function ( pathChange ) {{
+    #         window.dash_clientside.set_props('{SSECallbackComponent.ids.sse}', {{done: true, url: null}});
+    #         window.dash_clientside.set_props('{SSECallbackComponent.ids.store}', {{data: {{}}}});
+    #         console.log('pathchange', pathChange)
+    #     }}""",
+    #     # Output(SSECallbackComponent.ids.sse, 'done'),
+    #     Input(RootContainer.ids.location, "pathname"),
+    #     prevent_initial_call=True,
+    # )
 
 
 def generate_clientside_callback(input_ids, sse_callback_id):
@@ -210,23 +222,22 @@ def generate_clientside_callback(input_ids, sse_callback_id):
     payload_obj = "{\n" + ",\n".join(property_assignments) + "\n}"
 
     js_code = f"""
-        function({args_str}) {{    
+        function({args_str}) {{
 
-            if ( !window.dash_clientside.callback_context.triggered_id ) {{ 
+            if ( !window.dash_clientside.callback_context.triggered_id ) {{
                 return window.dash_clientside.no_update;
             }}
-            
+
             // Create payload object with all inputs
             const payload = {payload_obj};
-            console.log('payload: ', payload)
-            
+
             // Prepare SSE options with the payload
             const sse_options = {{
                 payload: JSON.stringify({{ content: payload }}),
                 headers: {{ "Content-Type": "application/json" }},
                 method: "POST"
             }};
-            
+
             // Set props for the SSE component
             window.dash_clientside.set_props(
                 "{SSECallbackComponent.ids.sse}",
@@ -248,7 +259,7 @@ def sse_callback(*dependencies, prevent_initital_call=True):
         callback_map[callback_id] = callback_func
         return callback_id
 
-    def decorator(func: callable) -> callable:
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         # Get function signature to know what arguments it expects
         sig = inspect.signature(func)
         param_names = list(sig.parameters.keys())
@@ -280,3 +291,22 @@ async def flash_props(component_id: str, props):
     response = [component_id, recursive_to_plotly_json(props), r_id]
     event = ServerSentEvent(json.dumps(response) + STEAM_SEPERATOR)
     return event.encode()
+
+
+async def _iterate_callback(func: Callable[..., Any], kwargs: dict[str, Any]):
+    """Iterate over results from a callback that may be:
+    - async generator yielding bytes
+    - async function returning bytes
+    - sync function returning bytes
+    """
+    res = func(**kwargs)
+    # Await awaitables
+    if inspect.isawaitable(res):
+        res = await res
+    # Async generator? It would have been an awaitable returning an async iterable or direct async gen object
+    if hasattr(res, "__aiter__"):
+        async for item in res:  # type: ignore[assignment]
+            yield item
+        return
+    # Single item
+    yield res

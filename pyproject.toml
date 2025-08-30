@@ -9,19 +9,14 @@ package-mode=false
 
 [tool.poetry.dependencies]
 python = "^3.12"
-dash-mantine-components = "2.1.0"
+dash-mantine-components = "2.2.0"
 dash-iconify = "^0.1.2"
-orjson = "^3.10.15"
-dash = "3.1.1"
+dash = "3.2.0"
 pandas = "^2.2.3"
 dash-ag-grid = "v31.3.1"
-dash-aggrid-scales = "^0.2.1"
-dash-dynamic-grid-layout = "^0.1.2"
-dash-extensions = "2.0.0"
 aiocache = "^0.12.3"
 plotly = "6.2.0"
 nbformat = "^5.10.4"
-dash-resizable-panels = "^0.1.0"
 dash-snap-grid = "^0.1.0"
 sqlalchemy = "^2.0.41"
 redis = "^6.1.0"
@@ -31,10 +26,22 @@ uvicorn = "^0.34.2"
 greenlet = "^3.2.2"
 quart-compress = "^0.2.1"
 gunicorn = "^23.0.0"
-dash-flash = "^1.0.0"
-flash-router = "0.5.0b2"
 psycopg2-binary = "^2.9.10"
+orjson = "^3.11.1"
+dash-html-components = "^2.0.0"
+flash-router = "^0.5.0b5"
+psutil = "^5.9.8"
+httpx = "^0.27.2"
+rich = "^13.9.2"
+dash-flash = {path = "vendors/dash_flash-1.2.0.tar.gz"}
+dash-extensions = "^2.0.4"
+dash-theme-plugin = {path = "vendors/dash_theme_plugin-0.1.0.tar.gz"}
+dash-event-callback = {path = "vendors/dash_event_callback-1.0.2.tar.gz"}
+matplotlib = "^3.10.5"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+dash-monitor = "app.monitoring.cli:main"

@@ -12,6 +12,7 @@ RUN pip install poetry
 
 # Copy dependency files
 COPY pyproject.toml ./
+COPY vendors/ ./vendors/
 
 # Configure poetry and install dependencies
 RUN poetry config virtualenvs.create false
@@ -20,12 +21,14 @@ COPY poetry.lock* ./
 RUN poetry lock --no-update || poetry lock
 RUN poetry install --no-interaction --no-ansi
 
-# Copy application code
-COPY . /app
+# Copy application code (only the repository's app folder into WORKDIR)
+COPY app/ .
 
-# Expose port
-EXPOSE 8050
+# Expose port used by dev_app.py
+EXPOSE 8031
+ENV PG_ENGINE_STR='postgresql+asyncpg://datenschubse:E7h2Jtg4RSw57XfRILZ5c6KvAPszefQb@dpg-d1l7dvje5dus73fbg4gg-a.frankfurt-postgres.render.com/dash_example'
 
 # Use Dash development server for development
 RUN mkdir -p /app/.venv/bin && ln -sf /usr/local/bin/python3 /app/.venv/bin/python3
-CMD ["python", "dash_app.py"] 
+# Now dev_app.py is at /app/dev_app.py; run the script directly
+CMD ["python", "dev_app.py"]

@@ -1,5 +1,9 @@
+from utils.helpers import get_icon
+
 from functools import reduce
 from typing import List
+import random
+import os
 import dash_mantine_components as dmc
 
 
@@ -23,3 +27,27 @@ def create_route_bar(route_elements: List[str]):
     # Apply reduction and return just the list of anchors
     anchors, _ = reduce(create_anchor_reducer, route_elements, initial_state)
     return dmc.Breadcrumbs(anchors)
+
+
+def create_route_cards(rest_segments: List):
+    n_cards = random.randint(1, 7)
+    base_path = "/files/" + '/'.join(rest_segments)
+
+    create_card = lambda i: dmc.Anchor(
+        dmc.Paper(
+            dmc.Stack([
+                get_icon("majesticons:file-line"),
+                dmc.Title(f"Folder - {i}", order=3),
+                dmc.Text(f"Path - {str(rest_segments)}", c="dimmed")
+            ]),
+            withBorder=True,
+            p="xl"
+        ),
+        href=os.path.join(base_path, str(i)),
+        # unstyled=True,
+        underline="never",
+        className="route-card"
+    )
+
+    cards = [create_card(i) for i in range(n_cards)]
+    return dmc.Flex(cards, gap="xl")

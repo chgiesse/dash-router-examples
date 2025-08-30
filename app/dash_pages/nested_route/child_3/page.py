@@ -1,7 +1,7 @@
 import dash_mantine_components as dmc
 from dash import html
 from .models import QueryParams
-from .components import ActionBar, ResizeGrid
+from .components import ActionBar
 
 
 def layout(
@@ -20,7 +20,6 @@ def layout(
         children=[
             ActionBar(params),
             dmc.Group([slot_31, slot_32], grow=True),
-            # ResizeGrid(slot_31, slot_32),
             dmc.Tabs(
                 [
                     dmc.TabsList(

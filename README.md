@@ -1,5 +1,10 @@
 # Dash Router Examples
 
+## Stats:
+prepare data: 0.00005465309960572963
+resolve url: 0.00011818181818181818
+build response: 0.00119
+
 A Dash application with advanced routing capabilities using dash-router.
 
 ## Docker Setup
@@ -106,4 +111,4 @@ The project uses Poetry for dependency management. Key dependencies include:
 
 ## License
 
-MIT License - see LICENSE file for details. 
+MIT License - see LICENSE file for details.

@@ -1,6 +1,5 @@
 import dash_mantine_components as dmc
-from dash import dcc
-from flash import html
+from dash import dcc, html
 
 
 class LacyTestComponent(html.Div):

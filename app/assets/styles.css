@@ -199,6 +199,10 @@
   cursor: pointer;
 }
 
-.mantine-TextInput-input {
-  cursor: pointer;
+.route-card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.route-card:hover {
+  transform: scale(1.05);
 }

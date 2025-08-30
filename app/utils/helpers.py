@@ -1,6 +1,6 @@
 from dash_iconify import DashIconify
 from urllib.parse import parse_qs as base_parse_qs
-from flash import callback, Input, Output, Patch
+from flash import callback, Input, Output, Patch, ctx
 import plotly.io as pio
 
 
@@ -28,9 +28,15 @@ def create_theme_callback(figure_id):
         template = (
             pio.templates["plotly_dark"] if theme is True else pio.templates["plotly"]
         )
-        patched_fig = Patch()
-        patched_fig["layout"]["template"] = template
-        return patched_fig
+        def create_patch():
+            patched_fig = Patch()
+            patched_fig["layout"]["template"] = template
+            return patched_fig
+
+        if isinstance(ctx.outputs_list, list):
+            return [create_patch() for _ in ctx.outputs_list]
+
+        return create_patch()
 
 
 def generate_clientside_callback(input_ids, sse_callback_id):
@@ -44,23 +50,23 @@ def generate_clientside_callback(input_ids, sse_callback_id):
     payload_obj = "{\n" + ",\n".join(property_assignments) + "\n}"
 
     js_code = f"""
-        function({args_str}) {{    
+        function({args_str}) {{
             // If no clicks on primary trigger (first argument), return no update
-            if ( !window.dash_clientside.callback_context.triggered_id ) {{ 
+            if ( !window.dash_clientside.callback_context.triggered_id ) {{
                 return window.dash_clientside.no_update;
             }}
             console.log('Received inputs:', {{{args_str}}});
-            
+
             // Create payload object with all inputs
             const payload = {payload_obj};
-            
+
             // Prepare SSE options with the payload
             const sse_options = {{
                 payload: JSON.stringify({{ content: payload }}),
                 headers: {{ "Content-Type": "application/json" }},
                 method: "POST"
             }};
-            
+
             // Set props for the SSE component
             window.dash_clientside.set_props(
                 "{sse_component_id}",

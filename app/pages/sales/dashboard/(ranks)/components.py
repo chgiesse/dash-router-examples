@@ -10,7 +10,8 @@ from ..components.select import create_sale_type_select
 
 from dash_router import RootContainer
 from pydantic import ValidationError
-from flash import callback, Input, Output, State, no_update, html
+from flash import callback, Input, Output, State, no_update
+from dash import html
 import dash_mantine_components as dmc
 import pandas as pd
 

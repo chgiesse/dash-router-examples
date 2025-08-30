@@ -3,4 +3,4 @@ from .components import TestComponentStream
 
 
 async def layout(*args, **kwargs):
-    return dmc.Stack([dmc.Title("Stream Components"), TestComponentStream()])
+    return dmc.Stack([TestComponentStream()])
