@@ -211,27 +211,192 @@
   box-sizing: border-box !important;
   display: table;
   width: 100%;
-  height: 99vh;
-  background-color: var(--mantine-color-body);  /* Background color */
+  height: calc(100vh - var(--mantine-spacing-xl)); /* DONT TOUCH THIS */
+  /* background-color: var(--mantine-color-body);   */
   line-height: 1.6;
   position: relative;
   font-family: sans-serif;
   overflow: hidden;
 }
 
+/* Landing page wrapper that reuses the animated background lines */
+.landing-page-bg {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - var(--mantine-spacing-xl));
+  overflow: hidden;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.landing-page-header {
+  position: absolute;
+  top: 6vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40; /* ensure header sits above content for clickability */
+  text-align: center;
+  pointer-events: auto;
+}
+
+.landing-page-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 4rem);
+  color: rgba(255,255,255,0.94);
+  text-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+
+/* Hero specific styles */
+.hero-title {
+  font-size: clamp(2.75rem, 8vw, 5.75rem);
+  margin: 0;
+  color: white;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+
+/* Emphasized span inside subtitle */
+.hero-em {
+  color: #fff;
+  font-weight: 700;
+}
+
+.hero-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+}
+
+.hero-subtitle {
+  max-width: 70ch;
+  margin: 0 auto;
+  color: rgba(255,255,255,0.9);
+  font-size: clamp(1rem, 2.4vw, 1.25rem);
+  text-align: center;
+}
+
+.hero-subtagline {
+  text-align: center;
+  opacity: 0.9;
+}
+
+.hero-features {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
+  margin: 0.5rem 0 0 0;
+  justify-content: center;
+}
+.hero-features li {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.95);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* Glassy features panel with CLI line beneath */
+.hero-cta-glass {
+  position: relative;
+  margin: clamp(1.25rem, 4vw, 2.5rem) auto 0 auto;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(20,20,20,0.35);
+  backdrop-filter: saturate(120%) blur(6px);
+  -webkit-backdrop-filter: saturate(120%) blur(6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  width: min(720px, 92vw);
+}
+
+.hero-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset;
+}
+
+.cli-line {
+  color: rgba(255,255,255,0.8);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.9;
+}
+
+.cli-caret {
+  color: #a78bfa; /* violet accent */
+  font-weight: 700;
+}
+
+.cli-code {
+  color: rgba(255,255,255,0.95);
+}
+
+.landing-page-header .mantine-Group-root + .mantine-Title-root {
+  margin-top: 0.25rem;
+}
+
+.landing-page-header .mantine-Group-root.mantine-Group-align-left {
+  margin-bottom: 0.5rem;
+}
+
+.landing-page-content {
+  position: absolute;
+  inset: 0;
+  z-index: 20; /* lower than header so header is clickable */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
 .line::after {
+  /* Rectangular pixelated block with gradient fill (vertical drop) */
   content: '';
   display: block;
   position: absolute;
-  height: 15vh;
-  width: 100%;
-  top: -50%;
-  left: 0;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 75%, #ffffff 100%);
-  /* controlled by variables below */
-  animation: drop var(--drop-duration, 6s) var(--drop-delay, 0s) infinite;
-  animation-fill-mode: none; /* let it loop continuously */
-  animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
+  /* rectangle size adjustable via --pixel-width and --pixel-height */
+  width: var(--pixel-width, 8px);
+  height: var(--pixel-height, 40vh);
+  /* start above viewport for drop (height is relative to --pixel-height) */
+  top: calc(-1 * var(--pixel-height, 40vh));
+  left: 50%;
+  transform: translateX(-50%);
+  /* repeating squares tiled vertically; --tile-size controls the square size */
+  --tile-size: var(--pixel-size, 8px);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--color, #ffffff) 0 var(--tile-size),
+    rgba(255,255,255,0) var(--tile-size) calc(var(--tile-size) * 2)
+  );
+  background-size: 100% calc(var(--tile-size) * 2); /* vertical stack of colored tile + gap */
+  background-repeat: repeat;
+  /* inverse: bottom -> top (opaque at bottom, fade toward top) */
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 60%);
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 60%);
+  /* glow controls (stronger defaults for more neon) */
+  --glow-size: var(--glow-size, 28px);
+  --glow-color: var(--glow-color, var(--color, #ffffff));
+
+  /* smooth vertical drop + independent glow pulse animation */
+  animation: drop var(--drop-duration, 20s) var(--delay, 0s) infinite linear, glowPulse var(--glow-duration, 2.4s) ease-in-out var(--delay, 0s) infinite;
+  /* stronger trailing glow and Tron-like neon bloom */
+  box-shadow: 0 6px 0 -4px rgba(0,0,0,0.04), 0 12px 0 -6px rgba(0,0,0,0.03), 0 0 calc(var(--glow-size) / 2) var(--glow-color), 0 0 calc(var(--glow-size)) rgba(255,255,255,0.08);
+  filter: drop-shadow(0 0 calc(var(--glow-size) / 1.5) var(--glow-color));
+  mix-blend-mode: screen;
+  border-radius: var(--line-border-radius, 0px);
 }
 
 /* Container that spaces multiple .line elements horizontally and keeps them thin */
@@ -251,6 +416,46 @@
   pointer-events: none; /* let clicks pass through if needed */
 }
 
+/* Big header overlay centered over the animated background */
+.bg-header {
+  position: absolute;
+  top: 8vh;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 20; /* above the lines */
+  pointer-events: auto; /* allow interaction if needed */
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 1rem;
+}
+
+.bg-header-title {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 5rem);
+  font-weight: 700;
+  color: rgba(255,255,255,0.92);
+  text-shadow: 0 6px 18px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.bg-header-subtitle {
+  margin-top: 0.5rem;
+  font-size: clamp(1rem, 2.6vw, 1.6rem);
+  color: rgba(255,255,255,0.9);
+  opacity: 0.95;
+}
+
+/* Overlay container for arbitrary components (e.g., dmc.Stack) placed on top of the background */
+.bg-overlay-stack {
+  position: absolute;
+  inset: 0; /* fill the grid-bg area */
+  z-index: 30; /* above header and lines */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto; /* let interactive elements work */
+}
+
 /* Ensure each .line is a thin vertical column instead of expanding full width */
 .line {
   position: relative;
@@ -263,8 +468,7 @@
 .line::after {
   /* keep the animated block centered on the 1px column */
   left: 50%;
-  width: 8px; /* a small horizontal footprint for the gradient so it is visible */
-  margin-left: -4px; /* center the 8px block over the 1px column (half of 8px) */
+  margin-left: calc(var(--pixel-size, 8px) / -2);
   will-change: left, top;
   border-radius: var(--line-border-radius, 0px);
 }
@@ -272,24 +476,41 @@
 /* Use per-line CSS variables to control color and delay so order is explicit.
    Set inline style="--i:0; --color: #FF4500;" on each .line element from Python. */
 .line::after {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, var(--color, #ffffff) 75%, var(--color, #ffffff) 100%);
-  /* simple explicit delays assigned per nth-child below */
-  /* animation controlled by inline CSS vars set from Python: */
-  /* --anim-name: drop | drop-left | drop-right */
-  /* --drop-duration: 6s */
-  /* --delay: 0s */
-  animation: var(--anim-name, drop) var(--drop-duration, 20s) var(--delay, 0s) infinite cubic-bezier(0.4,0.26,0,0.97);
+  /* color is applied as background-color above; ensure animation name and timing respected */
+  animation-name: var(--anim-name, drop);
+  animation-duration: var(--drop-duration, 20s);
+  animation-delay: var(--delay, 0s);
+  animation-iteration-count: infinite;
+  /* use steps for pixel feel on vertical drops, fallback to linear for horizontal when overridden */
 }
 
 @keyframes drop {
   0% {
-    top: -60%;
+    top: calc(-1 * var(--pixel-height, 40vh));
   }
-  80% {
-    top: 120%; /* quicker exit toward end so repeats are visible */
+  60% {
+    top: 50vh; /* mid-screen stop to create stepped fall */
   }
   100% {
-    top: 120%;
+    top: 120vh; /* exit below viewport */
+  }
+}
+
+@keyframes glowPulse {
+  0% {
+    opacity: 0.65;
+    transform: scale(1);
+    filter: drop-shadow(0 0 calc(var(--glow-size) / 3) var(--glow-color));
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 calc(var(--glow-size)) var(--glow-color));
+  }
+  100% {
+    opacity: 0.75;
+    transform: scale(1);
+    filter: drop-shadow(0 0 calc(var(--glow-size) / 3) var(--glow-color));
   }
 }
 
@@ -321,20 +542,59 @@
 /* Styling for horizontal-moving lines: display a short horizontal bar that
    travels left-right or right-left across the screen. */
 .line.horizontal::after {
-  /* horizontal bar appearance */
-  width: var(--h-width, 8vw); /* default narrower visual length */
-  height: 6px;
+  /* Horizontal rectangular gradient block that moves across the screen */
+  width: var(--h-width, 8vw); /* default horizontal visual length */
+  height: var(--h-height, var(--pixel-width, 8px));
   margin-left: 0;
   top: var(--h-top, 50%);
-  left: -120vw; /* start off-canvas for left->right */
-  transform: translateY(-50%); /* vertically center on its top position */
+  left: -120vw; /* start off-canvas */
+  transform: translateY(-50%);
   border-radius: var(--line-border-radius, 0px);
   will-change: left, top;
-  /* gradient direction controlled by --h-grad-dir (e.g. 'to right' or 'to left') */
-  background: linear-gradient(var(--h-grad-dir, to right), rgba(255,255,255,0) 0%, var(--color, #ffffff) 25%, var(--color, #ffffff) 100%);
-  /* horizontal animation uses the same --anim-name defined on the element */
-  animation-timing-function: linear;
+  /* horizontal repeating square tiles along the length of the bar */
+  --tile-size: var(--pixel-size, 8px);
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--color, #ffffff) 0 var(--tile-size),
+    rgba(255,255,255,0) var(--tile-size) calc(var(--tile-size) * 2)
+  );
+  background-size: calc(var(--tile-size) * 2) 100%;
+  background-repeat: repeat-x;
+  /* inverse: right -> left (opaque at right, fade toward left) */
+  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+  mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+  /* horizontal travel + glow pulse */
+  --glow-size: var(--glow-size, 22px);
+  --glow-color: var(--glow-color, var(--color, #ffffff));
+  animation: var(--anim-name, left-right) var(--drop-duration, 20s) var(--delay, 0s) infinite linear, glowPulse var(--glow-duration, 2.4s) ease-in-out var(--delay, 0s) infinite;
+  /* stronger trailing shadow and neon glow */
+  box-shadow: -6px 0 0 -4px rgba(0,0,0,0.04), -12px 0 0 -6px rgba(0,0,0,0.03), 0 0 calc(var(--glow-size) / 2) var(--glow-color), 0 0 calc(var(--glow-size)) rgba(255,255,255,0.08);
+  filter: drop-shadow(0 0 calc(var(--glow-size) / 1.5) var(--glow-color));
+  mix-blend-mode: screen;
 }
 
 /* diagonal variants removed: lines will only use the vertical `drop` animation */
 /* Remove per-line diagonal overrides so all lines animate with `drop` only. */
+
+/* Direction-specific masks for horizontal lines.
+   Use these by adding the matching class to the .line element:
+   - add `.anim-left-right` for left->right travel
+   - add `.anim-right-left` for right->left travel
+   (The Python generator can include the extra class when creating lines.) */
+.line.horizontal.anim-left-right::after {
+  /* left->right: opaque on left, fade toward right */
+  /* inverse helper: make this helper now right->left (opaque right, fade left) */
+  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+  mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+    /* ensure animation starts off-canvas on the left for left->right travel */
+    left: -120vw;
+}
+
+.line.horizontal.anim-right-left::after {
+  /* right->left: opaque on right, fade toward left */
+  /* inverse helper: make this helper now left->right (opaque left, fade right) */
+  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+  mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+    /* ensure animation starts off-canvas on the right for right->left travel */
+    left: 120vw;
+}
