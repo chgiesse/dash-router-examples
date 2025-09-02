@@ -1,5 +1,4 @@
 import dash_mantine_components as dmc
-from dash_theme_plugin import setup_theme, theme_template
 from aiocache import Cache
 # from dash_router import RootContainer, Router
 # from dash_router import Router, RootContainer
@@ -25,27 +24,25 @@ app = Flash(
 
 app.layout = create_appshell([
     RootContainer(),
-    theme_template
 ])
 
 server = app.server
 # server.before_serving(setup_db)
 
-setup_theme()
 
-app.clientside_callback(
-    """
-    function(checked){
-        var scheme = checked ? 'dark' : 'light';
-        if (typeof window.setMantineScheme === 'function') {
-            window.setMantineScheme(scheme);
-        }
-        return scheme;
-    }
-    """,
-    Output(theme_template, "data"),
-    Input("color-scheme-toggle", "checked"),
-)
+# app.clientside_callback(
+#     """
+#     function(checked){
+#         var scheme = checked ? 'dark' : 'light';
+#         if (typeof window.setMantineScheme === 'function') {
+#             window.setMantineScheme(scheme);
+#         }
+#         return scheme;
+#     }
+#     """,
+#     Output(theme_template, "data"),
+#     Input("color-scheme-toggle", "checked"),
+# )
 
 router = FlashRouter(app)
 cache = Cache()

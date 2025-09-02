@@ -1,6 +1,6 @@
 :root {
   overscroll-behavior: none;
-  overflow-x: hidden; 
+  overflow-x: hidden;
 }
 
 .amazon-total-sales-table[data-hidden="true"] {
@@ -44,11 +44,11 @@
 }
 
 @keyframes fadeInFromLeft {
-  from { 
+  from {
     opacity: 0;
     transform: translateX(-30px);
   }
-  to { 
+  to {
     opacity: 1;
     transform: translateX(0);
   }
@@ -70,11 +70,11 @@
 }
 
 @keyframes fadeInFromBottom {
-  from { 
+  from {
     opacity: 0;
     transform: translateY(30px);
   }
-  to { 
+  to {
     opacity: 1;
     transform: translateY(0);
   }
@@ -86,11 +86,11 @@
 }
 
 @keyframes fadeInRight {
-  from { 
+  from {
     opacity: 0;
     transform: translateX(30px);
   }
-  to { 
+  to {
     opacity: 1;
     transform: translateX(0);
   }
@@ -102,11 +102,11 @@
 }
 
 @keyframes fadeInTop {
-  from { 
+  from {
     opacity: 0;
     transform: translateY(-30px);
   }
-  to { 
+  to {
     opacity: 1;
     transform: translateY(0);
   }
@@ -118,8 +118,8 @@
 }
 
 
-:root[data-mantine-color-scheme="light"]{ 
-  
+:root[data-mantine-color-scheme="light"]{
+
   /* body {
       background-color: var(--light-color-body);
   } */
@@ -130,7 +130,7 @@
   .mantine-RichTextEditor-controlsGroup {
     background-color: var(--light-color-body);
   }
-  
+
   .mantine-RichTextEditor-controlIcon:hover,
   .mantine-RichTextEditor-control:hover{
     background-color: var(--light-color-card);
@@ -185,9 +185,9 @@
   flex-direction: row;
 
   @container (max-width: 900px) {
-    flex-direction: column;   
+    flex-direction: column;
   }
-} 
+}
 
 .slots-container > * {
   flex-grow: 1;
@@ -206,3 +206,135 @@
 .route-card:hover {
   transform: scale(1.05);
 }
+
+.grid-bg {
+  box-sizing: border-box !important;
+  display: table;
+  width: 100%;
+  height: 99vh;
+  background-color: var(--mantine-color-body);  /* Background color */
+  line-height: 1.6;
+  position: relative;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+.line::after {
+  content: '';
+  display: block;
+  position: absolute;
+  height: 15vh;
+  width: 100%;
+  top: -50%;
+  left: 0;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 75%, #ffffff 100%);
+  /* controlled by variables below */
+  animation: drop var(--drop-duration, 6s) var(--drop-delay, 0s) infinite;
+  animation-fill-mode: none; /* let it loop continuously */
+  animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
+}
+
+/* Container that spaces multiple .line elements horizontally and keeps them thin */
+.lines, .grid-bg {
+  --lines-width: 90vw;
+}
+
+.lines {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: var(--lines-width);
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none; /* let clicks pass through if needed */
+}
+
+/* Ensure each .line is a thin vertical column instead of expanding full width */
+.line {
+  position: relative;
+  width: 1px; /* thin line */
+  min-width: 1px;
+  height: 100%;
+  overflow: visible;
+}
+
+.line::after {
+  /* keep the animated block centered on the 1px column */
+  left: 50%;
+  width: 8px; /* a small horizontal footprint for the gradient so it is visible */
+  margin-left: -4px; /* center the 8px block over the 1px column (half of 8px) */
+  will-change: left, top;
+  border-radius: var(--line-border-radius, 0px);
+}
+
+/* Use per-line CSS variables to control color and delay so order is explicit.
+   Set inline style="--i:0; --color: #FF4500;" on each .line element from Python. */
+.line::after {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, var(--color, #ffffff) 75%, var(--color, #ffffff) 100%);
+  /* simple explicit delays assigned per nth-child below */
+  /* animation controlled by inline CSS vars set from Python: */
+  /* --anim-name: drop | drop-left | drop-right */
+  /* --drop-duration: 6s */
+  /* --delay: 0s */
+  animation: var(--anim-name, drop) var(--drop-duration, 20s) var(--delay, 0s) infinite cubic-bezier(0.4,0.26,0,0.97);
+}
+
+@keyframes drop {
+  0% {
+    top: -60%;
+  }
+  80% {
+    top: 120%; /* quicker exit toward end so repeats are visible */
+  }
+  100% {
+    top: 120%;
+  }
+}
+
+/* Horizontal travel animations for some lines. These animate the small
+   gradient block across the viewport while keeping it at a fixed vertical
+   position controlled by the per-line variable `--h-top`. */
+@keyframes left-right {
+  0% {
+    left: -120vw;
+    top: var(--h-top, 30%);
+  }
+  100% {
+    left: 120vw;
+    top: var(--h-top, 30%);
+  }
+}
+
+@keyframes right-left {
+  0% {
+    left: 120vw;
+    top: var(--h-top, 70%);
+  }
+  100% {
+    left: -120vw;
+    top: var(--h-top, 70%);
+  }
+}
+
+/* Styling for horizontal-moving lines: display a short horizontal bar that
+   travels left-right or right-left across the screen. */
+.line.horizontal::after {
+  /* horizontal bar appearance */
+  width: var(--h-width, 8vw); /* default narrower visual length */
+  height: 6px;
+  margin-left: 0;
+  top: var(--h-top, 50%);
+  left: -120vw; /* start off-canvas for left->right */
+  transform: translateY(-50%); /* vertically center on its top position */
+  border-radius: var(--line-border-radius, 0px);
+  will-change: left, top;
+  /* gradient direction controlled by --h-grad-dir (e.g. 'to right' or 'to left') */
+  background: linear-gradient(var(--h-grad-dir, to right), rgba(255,255,255,0) 0%, var(--color, #ffffff) 25%, var(--color, #ffffff) 100%);
+  /* horizontal animation uses the same --anim-name defined on the element */
+  animation-timing-function: linear;
+}
+
+/* diagonal variants removed: lines will only use the vertical `drop` animation */
+/* Remove per-line diagonal overrides so all lines animate with `drop` only. */

@@ -645,13 +645,13 @@ pydantic = ">=2.10.6"
 
 [[package]]
 name = "dash-flash"
-version = "1.2.0"
+version = "1.2.1"
 description = "Flash - async port of the Dash framework"
 optional = false
 python-versions = ">=3.12,<4.0"
 groups = ["main"]
 files = [
-    {file = "dash_flash-1.2.0.tar.gz", hash = "sha256:2fb4917be74670f33bb7b196d921e0d21070c8e630b41f91157159115e8b5fc3"},
+    {file = "dash_flash-1.2.1.tar.gz", hash = "sha256:5b118e6f88c6f9483bd6c4625c4f49d3d5d33f994d0771c7e403fa377f935f76"},
 ]
 
 [package.dependencies]
@@ -661,7 +661,7 @@ quart-compress = ">=0.2.1,<0.3.0"
 
 [package.source]
 type = "file"
-url = "vendors/dash_flash-1.2.0.tar.gz"
+url = "vendors/dash_flash-1.2.1.tar.gz"
 
 [[package]]
 name = "dash-html-components"
@@ -716,24 +716,6 @@ files = [
     {file = "dash_snap_grid-0.1.0-py3-none-any.whl", hash = "sha256:c0ae198c12217d3712cfe10d3489cb587e37456a6486af15b6e9613180f3cf05"},
     {file = "dash_snap_grid-0.1.0.tar.gz", hash = "sha256:11c586fc5b96631f4bc3d6b85df2a650934fdc4b96ab235a0779c1304c684384"},
 ]
-
-[[package]]
-name = "dash-theme-plugin"
-version = "0.1.0"
-description = "Plugin for Dash to better manage theming"
-optional = false
-python-versions = "^3.12"
-groups = ["main"]
-files = [
-    {file = "dash_theme_plugin-0.1.0.tar.gz", hash = "sha256:cc9e8dd9f5334461882186346f2b19facb505ee1629e4b7f4db97a1175598c5c"},
-]
-
-[package.dependencies]
-dash-flash = "1.2.0"
-
-[package.source]
-type = "file"
-url = "vendors/dash_theme_plugin-0.1.0.tar.gz"
 
 [[package]]
 name = "dataclass-wizard"
@@ -2991,4 +2973,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "f90656a07bc2cd299dac798aa5034f000653b9278fa9bd0e2f8fd38d87aeb19e"
+content-hash = "e0ea701685881a2d0f8e12f2f443d774386bdff32e1f8238271599ad2f9cbfc1"
