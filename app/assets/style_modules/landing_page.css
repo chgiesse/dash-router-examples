@@ -1,218 +1,9 @@
-:root {
-  overscroll-behavior: none;
-  overflow-x: hidden;
-}
-
-.amazon-total-sales-table[data-hidden="true"] {
-  display: none;
-}
-
-.amazon-total-sales-graph[data-hidden="true"] {
-  display: none;
-}
-
-.modebar { display: none !important; }
-
-._dash-loading {
-  display: none;
-  background-color: var(--mantine-color-body);
-}
-
-.badge-btn:hover{
-  cursor: pointer;
-}
-
-.mantine-NavLink-root{
-  border-radius: var(--mantine-radius-xl)!important;
-}
-
-.search-card {
-  transition: scale 0.3s;
-  scale: 1;
-}
-
-.search-card:hover {
-  background-color: var(--mantine-color-light-5);
-  cursor: pointer;
-  scale: 1.01;
-  transition: scale 0.3s;
-}
-
-.nav-group-container {
-  display: flex;
-  flex-direction: row;
-}
-
-@keyframes fadeInFromLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.fade-in-left {
-  opacity: 0;
-  animation: fadeInFromLeft 0.6s ease-in-out forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.fade-in-chart {
-  opacity: 0;
-  animation: fadeIn .3s ease-in-out forwards;
-}
-
-@keyframes fadeInFromBottom {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in-bottom {
-  opacity: 0;
-  animation: fadeInFromBottom 0.6s ease-in-out forwards;
-}
-
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.fade-in-right {
-  opacity: 0;
-  animation: fadeInRight 0.6s ease-in-out forwards;
-}
-
-@keyframes fadeInTop {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in-top {
-  opacity: 0;
-  animation: fadeInTop 0.3s ease-in-out forwards;
-}
-
-
-:root[data-mantine-color-scheme="light"]{
-
-  /* body {
-      background-color: var(--light-color-body);
-  } */
-  .mantine-RichTextEditor-content,
-  .mantine-RichTextEditor-toolbar,
-  .mantine-RichTextEditor-root,
-  .mantine-RichTextEditor-control,
-  .mantine-RichTextEditor-controlsGroup {
-    background-color: var(--light-color-body);
-  }
-
-  .mantine-RichTextEditor-controlIcon:hover,
-  .mantine-RichTextEditor-control:hover{
-    background-color: var(--light-color-card);
-  }
-
-  --mantine-color-body: rgb(245, 247, 248) !important;
-  .mantine-Paper-root{
-    background-color: white;
-  }
-}
-
-:root{
-  --light-color-body: rgb(245, 247, 248);
-  --light-color-card: rgb(235, 240, 243);
-  --nprogress-color-good: var(--mantine-color-blue-5);
-}
-
-.banner {
-  background-color: #fa5252; /* Material Red 50 */
-  padding: 40px 24px;
-  text-align: center;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Subtle elevation */
-  border-radius: 6px;
-}
-
-.banner h1 {
-  margin: 0;
-  font-size: 2rem;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.banner p {
-  margin: 8px 0 0;
-  font-size: 1rem;
-  font-weight: 400;
-  color: rgba(0, 0, 0, 0.6);
-}
-
-
-.first-level-slots-container {
-  max-width: 100%;
-  container-type: inline-size;
-}
-
-.slots-container {
-  --container-padding: var(--mantine-spacing-md, 1rem);
-  --slots-gap: var(--mantine-spacing-md, 1rem);
-  gap: var(--slots-gap);
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-
-  @container (max-width: 900px) {
-    flex-direction: column;
-  }
-}
-
-.slots-container > * {
-  flex-grow: 1;
-  flex-basis: 0;
-  min-width: 0;
-}
-
-.text-input-button:hover {
-  cursor: pointer;
-}
-
-.route-card {
-  transition: transform 0.2s ease-in-out;
-}
-
-.route-card:hover {
-  transform: scale(1.05);
-}
 
 .grid-bg {
   box-sizing: border-box !important;
   display: table;
   width: 100%;
   height: calc(100vh - var(--mantine-spacing-xl)); /* DONT TOUCH THIS */
-  /* background-color: var(--mantine-color-body);   */
   line-height: 1.6;
   position: relative;
   font-family: sans-serif;
@@ -230,10 +21,6 @@
 }
 
 .landing-page-header {
-  position: absolute;
-  top: 6vh;
-  left: 50%;
-  transform: translateX(-50%);
   z-index: 40; /* ensure header sits above content for clickability */
   text-align: center;
   pointer-events: auto;
@@ -242,44 +29,46 @@
 .landing-page-header h1 {
   margin: 0;
   font-size: clamp(2rem, 6vw, 4rem);
-  color: rgba(255,255,255,0.94);
-  text-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  /* text-shadow: 0 6px 18px rgba(0,0,0,0.45); */
 }
 
 /* Hero specific styles */
 .hero-title {
   font-size: clamp(2.75rem, 8vw, 5.75rem);
   margin: 0;
-  color: white;
   letter-spacing: -0.035em;
   line-height: 1.02;
+  color: light-dark(var(--mantine-color-dark-6), var(--mantine-color-gray-3));
 }
 
 /* Emphasized span inside subtitle */
 .hero-em {
-  color: #fff;
   font-weight: 700;
-}
-
-.hero-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
+  color: light-dark(var(--mantine-color-dark-6), var(--mantine-color-gray-3));
 }
 
 .hero-subtitle {
   max-width: 70ch;
   margin: 0 auto;
-  color: rgba(255,255,255,0.9);
-  font-size: clamp(1rem, 2.4vw, 1.25rem);
   text-align: center;
 }
 
 .hero-subtagline {
   text-align: center;
   opacity: 0.9;
+}
+
+/* translucent panel behind hero text to blur moving background underneath */
+.hero-panel {
+  display: grid;
+  place-items: center;
+  padding: var(--mantine-spacing-lg);
+  margin: 0 auto;
+  border-radius: 10px;
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  border: none; /* remove visible border for cleaner look */
+  width: min(1100px, 96%);
 }
 
 .hero-features {
@@ -344,17 +133,7 @@
   color: rgba(255,255,255,0.95);
 }
 
-.landing-page-header .mantine-Group-root + .mantine-Title-root {
-  margin-top: 0.25rem;
-}
-
-.landing-page-header .mantine-Group-root.mantine-Group-align-left {
-  margin-bottom: 0.5rem;
-}
-
 .landing-page-content {
-  position: absolute;
-  inset: 0;
   z-index: 20; /* lower than header so header is clickable */
   display: flex;
   align-items: center;
@@ -362,7 +141,7 @@
   pointer-events: auto;
 }
 
-.line::after {
+.lp-grid-line::after {
   /* Rectangular pixelated block with gradient fill (vertical drop) */
   content: '';
   display: block;
@@ -399,12 +178,12 @@
   border-radius: var(--line-border-radius, 0px);
 }
 
-/* Container that spaces multiple .line elements horizontally and keeps them thin */
-.lines, .grid-bg {
+/* Container that spaces multiple lp-grid-line elements horizontally and keeps them thin */
+.lp-grid-lines, .grid-bg {
   --lines-width: 90vw;
 }
 
-.lines {
+.lp-grid-lines {
   position: absolute;
   top: 0;
   left: 50%;
@@ -416,37 +195,7 @@
   pointer-events: none; /* let clicks pass through if needed */
 }
 
-/* Big header overlay centered over the animated background */
-.bg-header {
-  position: absolute;
-  top: 8vh;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  z-index: 20; /* above the lines */
-  pointer-events: auto; /* allow interaction if needed */
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 1rem;
-}
-
-.bg-header-title {
-  margin: 0;
-  font-size: clamp(2rem, 6vw, 5rem);
-  font-weight: 700;
-  color: rgba(255,255,255,0.92);
-  text-shadow: 0 6px 18px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.2);
-}
-
-.bg-header-subtitle {
-  margin-top: 0.5rem;
-  font-size: clamp(1rem, 2.6vw, 1.6rem);
-  color: rgba(255,255,255,0.9);
-  opacity: 0.95;
-}
-
-/* Overlay container for arbitrary components (e.g., dmc.Stack) placed on top of the background */
-.bg-overlay-stack {
+.landing-page-bg .bg-overlay-stack {
   position: absolute;
   inset: 0; /* fill the grid-bg area */
   z-index: 30; /* above header and lines */
@@ -456,8 +205,8 @@
   pointer-events: auto; /* let interactive elements work */
 }
 
-/* Ensure each .line is a thin vertical column instead of expanding full width */
-.line {
+/* Ensure each lp-grid-line is a thin vertical column instead of expanding full width */
+.lp-grid-line {
   position: relative;
   width: 1px; /* thin line */
   min-width: 1px;
@@ -465,7 +214,7 @@
   overflow: visible;
 }
 
-.line::after {
+.lp-grid-line::after {
   /* keep the animated block centered on the 1px column */
   left: 50%;
   margin-left: calc(var(--pixel-size, 8px) / -2);
@@ -474,8 +223,8 @@
 }
 
 /* Use per-line CSS variables to control color and delay so order is explicit.
-   Set inline style="--i:0; --color: #FF4500;" on each .line element from Python. */
-.line::after {
+  Set inline style="--i:0; --color: #FF4500;" on each lp-grid-line element from Python. */
+.lp-grid-line::after {
   /* color is applied as background-color above; ensure animation name and timing respected */
   animation-name: var(--anim-name, drop);
   animation-duration: var(--drop-duration, 20s);
@@ -541,7 +290,7 @@
 
 /* Styling for horizontal-moving lines: display a short horizontal bar that
    travels left-right or right-left across the screen. */
-.line.horizontal::after {
+.lp-grid-line.horizontal::after {
   /* Horizontal rectangular gradient block that moves across the screen */
   width: var(--h-width, 8vw); /* default horizontal visual length */
   height: var(--h-height, var(--pixel-width, 8px));
@@ -577,11 +326,11 @@
 /* Remove per-line diagonal overrides so all lines animate with `drop` only. */
 
 /* Direction-specific masks for horizontal lines.
-   Use these by adding the matching class to the .line element:
+   Use these by adding the matching class to the lp-grid-line element:
    - add `.anim-left-right` for left->right travel
    - add `.anim-right-left` for right->left travel
    (The Python generator can include the extra class when creating lines.) */
-.line.horizontal.anim-left-right::after {
+.lp-grid-line.horizontal.anim-left-right::after {
   /* left->right: opaque on left, fade toward right */
   /* inverse helper: make this helper now right->left (opaque right, fade left) */
   -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
@@ -590,7 +339,7 @@
     left: -120vw;
 }
 
-.line.horizontal.anim-right-left::after {
+.lp-grid-line.horizontal.anim-right-left::after {
   /* right->left: opaque on right, fade toward left */
   /* inverse helper: make this helper now left->right (opaque left, fade right) */
   -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);

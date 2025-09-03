@@ -60,7 +60,7 @@ blue = [
 
 def create_appshell(content):
     return dmc.MantineProvider(
-        defaultColorScheme="dark",
+        defaultColorScheme="auto",
         theme={
             "primaryColor": "slate",
             "primareShade": "6",

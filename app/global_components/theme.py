@@ -325,15 +325,19 @@ vizro_dark = {
 def landing_background(total: int = 16):
     """Generate the animated background lines markup.
 
-    Returns a `html.Div` with class 'lines' containing the animated `.line` elements.
+    Returns a `html.Div` with class 'lp-grid-lines' containing the animated `.lp-grid-line` elements.
     """
-    colors = ['#FF4500', '#32CD32', '#1E90FF', '#FFD700', '#8A2BE2', '#20B2AA', '#DC143C', '#00FA9A', '#FF1493', '#00BFFF']
+    colors = [
+        '#FF4500', '#32CD32', '#1E90FF', '#FFD700', '#8A2BE2',
+        '#20B2AA', '#DC143C', '#00FA9A', '#FF1493', '#00BFFF'
+    ]
     lines = []
     for i in range(total):
         delay = f"{random.uniform(0,10):.2f}s"
         duration = f"{random.uniform(12,24):.2f}s"
         hoff = f"{random.uniform(20,40):.0f}px"
         color = colors[i % len(colors)]
+
         if random.random() < 0.5:
             anim = 'drop'
             style = {
@@ -343,7 +347,7 @@ def landing_background(total: int = 16):
                 '--h-offset': hoff,
                 '--color': color,
             }
-            lines.append(html.Div(className='line', style=style))
+            lines.append(html.Div(className='lp-grid-line', style=style))
         else:
             anim = random.choice(['left-right', 'right-left'])
             htop = f"{random.uniform(10,90):.0f}%"
@@ -357,9 +361,9 @@ def landing_background(total: int = 16):
                 '--color': color,
             }
             dir_class = 'anim-left-right' if anim == 'left-right' else 'anim-right-left'
-            lines.append(html.Div(className=f'line horizontal {dir_class}', style=style))
+            lines.append(html.Div(className=f'lp-grid-line horizontal {dir_class}', style=style))
 
-    return html.Div(className='lines', children=lines)
+    return html.Div(className='lp-grid-lines', children=lines)
 
 vizro_light = {
     "layout": {
