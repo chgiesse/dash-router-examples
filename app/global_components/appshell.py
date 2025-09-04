@@ -1,7 +1,7 @@
 import dash_mantine_components as dmc
 from dash import dcc
 
-from global_components.sidebar import navbar
+from global_components.sidebar import navbar, theme_toggle
 from global_components.notifications import NotificationsContainer
 from global_components.location import Url
 
@@ -79,18 +79,33 @@ def create_appshell(content):
             [
                 # Persistent store for theme or other global preferences
                 # dcc.Store(id="color-scheme-store", storage_type="local"),
-                navbar,
+                # navbar,
+                # theme_toggle,
                 NotificationsContainer(),
                 Url(),
+                dmc.AppShellHeader(
+                    withBorder=True,
+                    children=dmc.Group(
+                        align="center",
+                        px="md",
+                        children=[
+                            dmc.Text("Flash", fw="bold", size="lg"),
+                            theme_toggle,
+                        ],
+                    ),
+                ),
                 dmc.AppShellMain(
-                    content,
+                    content
                 ),
             ],
-            padding="md",
-            navbar={
-                "width": 65,
-                "breakpoint": "sm",
-                "collapsed": {"mobile": True},
-            },
+            # padding="md",
+            header={
+                "height": 60,
+            }
+            # navbar={
+            #     "width": 65,
+            #     "breakpoint": "sm",
+            #     "collapsed": {"mobile": True},
+            # },
         ),
     )
