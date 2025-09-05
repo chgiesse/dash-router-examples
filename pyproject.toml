@@ -36,6 +36,7 @@ rich = "^13.9.2"
 dash-extensions = "^2.0.4"
 dash-event-callback = {path = "vendors/dash_event_callback-1.0.2.tar.gz"}
 matplotlib = "^3.10.5"
+dash-flash = "1.2.1"
 
 [build-system]
 requires = ["poetry-core"]

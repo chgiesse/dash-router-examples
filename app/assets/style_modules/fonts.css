@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Sansation:wght@300;400;700&display=swap');
+
+.sansation-light {
+  font-family: "Sansation", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.sansation-regular {
+  font-family: "Sansation", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.sansation-bold {
+  font-family: "Sansation", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.sansation-light-italic {
+  font-family: "Sansation", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.sansation-regular-italic {
+  font-family: "Sansation", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.sansation-bold-italic {
+  font-family: "Sansation", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}

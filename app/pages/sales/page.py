@@ -8,18 +8,23 @@ config = RouteConfig(default_child="overview")
 
 async def layout(children: ChildContainer = None, **kwargs):
     tab = children.props.active
-    return dmc.Stack(
-        gap="sm",
-        children=[
-            dmc.Paper(
-                SalesTabs(tab),
-                withBorder=True,
-                radius="xl",
-                p=5,
-                w="fit-content",
-                mx="auto",
-                className='fade-in-top',
-            ),
-            children,
-        ],
+    return dmc.ScrollArea(
+        dmc.Stack(
+            gap="sm",
+            children=[
+                dmc.Paper(
+                    SalesTabs(tab),
+                    withBorder=True,
+                    radius="xl",
+                    p=5,
+                    w="fit-content",
+                    mx="auto",
+                    className='fade-in-top',
+                ),
+                children,
+            ],
+        ),
+        h="calc(100vh - var(--appshell-header-height) - 70px)",
+        type="scroll",
+        p="md",
     )

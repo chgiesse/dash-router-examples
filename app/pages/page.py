@@ -15,13 +15,15 @@ layout = html.Div(
                         [
                             hero_header,
                             hero_section,
+                            dmc.Space(h=50),
                             hero_content
                         ],
                         align="center",
-                        gap="xl"
+                        gap="xl",
+                        py="md",
                     ),
                     # className="bg-overlay-stack",
-                    h="calc(100vh - 100px)",
+                    h="calc(100vh - var(--app-shell-header-height) - 20px)",
                     type="scroll"
                 )
             ],

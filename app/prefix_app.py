@@ -1,6 +1,7 @@
+from flash import Flash
+
 from utils.helpers import create_theme_callback, get_icon
 from global_components.notifications import NotificationsContainer
-from global_components.theme import ThemeComponent
 from flash_router import RootContainer
 
 import asyncio
@@ -18,7 +19,6 @@ from flash import (
     Input,
     event_callback,
     stream_props,
-    State
 )
 
 count = 0
@@ -76,21 +76,19 @@ class SSEGraph(dcc.Graph):
 
     @event_callback(
         Input(StreamButtons.ids.start_btn, "n_clicks"),
-        State(ThemeComponent.ids.toggle, "checked"),
-        on_error=lambda e: NotificationsContainer.send_notification(
-            title="Error", message=str(e), color="red"
-        ),
         cancel=[
-            (Input(RootContainer.ids.location, "pathname"), "streaming/live-dashboard"),
+            (Input(RootContainer.ids.location, "pathname", allow_optional=True), "/streaming/live-dashboard"),
             (Input(StreamButtons.ids.end_btn, "n_clicks", allow_optional=True), 0),
         ],
         reset_props=[
             (StreamButtons.ids.start_btn, {"disabled": False, "children": "Start stream"}),
             (StreamButtons.ids.end_btn, {"display": "none"}),
         ],
+        on_error=lambda e: NotificationsContainer.send_notification(
+            title="Error", message=str(e), color="red"
+        )
     )
-    async def update_graph(n_clicks, is_dark = None):
-        stock_ticks = ["google", "apple", "microsoft", "amazon"]
+    async def update_graph(n_clicks):
 
         yield NotificationsContainer.send_notification(
             title="Starting stream!",
@@ -98,22 +96,14 @@ class SSEGraph(dcc.Graph):
             color="lime",
         )
 
-        init_figs = [
-            (
-                SSEGraph.ids.graph(tick),
-                {
-                    "figure": SSEGraph.create_figure("plotly_dark" if is_dark else "plotly", tick.capitalize()), "style": {"visibility": "visible"}
-                    })
-                    for tick in stock_ticks]
-
         yield stream_props([
             (StreamButtons.ids.start_btn, {"disabled": True, "children": "Running"}),
             (StreamButtons.ids.end_btn, {"display": "flex"}),
-            *init_figs
         ])
 
         while True:
             await asyncio.sleep(1)
+            stock_ticks = ["google", "apple", "microsoft", "amazon"]
             stocks = await asyncio.gather(*[get_stocks() for _ in stock_ticks])
             update = []
             for tick, value in zip(stock_ticks, stocks):
@@ -121,8 +111,7 @@ class SSEGraph(dcc.Graph):
 
             yield stream_props(update)
 
-    @staticmethod
-    def create_figure(template: str, title: str):
+    def __init__(self, chart_type: str, template: str):
         fig = go.Figure()
 
         fig.add_trace(
@@ -149,7 +138,7 @@ class SSEGraph(dcc.Graph):
             xaxis_title=None,
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",
-            title=dict(text=title),
+            title=dict(text=chart_type.title()),
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
@@ -158,13 +147,28 @@ class SSEGraph(dcc.Graph):
                 x=1,
             ),
         )
-        return fig
-
-    def __init__(self, chart_type: str, template: str):
 
         super().__init__(
             id=self.ids.graph(chart_type),
-            style={"height": 400, "visibility": "hidden"},
+            figure=fig,
+            style={"height": 400}
         )
 
-create_theme_callback(SSEGraph.ids.graph(ALL))
+app = Flash(__name__, requests_pathname_prefix="/dev/dash/", routes_pathname_prefix="/dev/dash/")
+app.layout = dmc.MantineProvider(dmc.Stack(
+    children=[
+        StreamButtons(),
+        dmc.SimpleGrid(
+            w="100%",
+            cols=1,
+            children=[
+                SSEGraph("google", "plotly_dark"),
+                SSEGraph('amazon', 'plotly_dark'),
+                SSEGraph('apple', 'plotly_dark'),
+                SSEGraph('microsoft', 'plotly_dark'),
+            ],
+        ),
+    ]
+))
+
+app.run(debug=True, port=11111)

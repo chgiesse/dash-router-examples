@@ -6,7 +6,7 @@ from typing import Literal
 
 
 # Consistent height across feature cards for a clean grid
-CARD_HEIGHT = "calc(26rem + var(--mantine-spacing-md))"
+CARD_HEIGHT = "calc(32rem + var(--mantine-spacing-md))"
 
 
 hero_section = html.Div(
@@ -85,6 +85,7 @@ class LottieAnimation(EventListener):
         Output(ids.lottie_id(MATCH), "action"),
         Input(ids.listener_id(MATCH), "n_events"),
         State(ids.listener_id(MATCH), "event"),
+        prevent_initial_call=True,
     )
     def on_event(n_events, event):
         evet_type = event["type"] if event else None
@@ -100,15 +101,26 @@ class LottieAnimation(EventListener):
     def __init__(
         self,
         type: Literal["router", "stream"],
-        lottie_url: str,
-        w: int | str | float,
+        lottie_url: str | None = None,
+        w: int | str | float | None = None,
         loop: bool | int | float | None = None,
         h: int | str | float | None = None,
-
+        children=None,
     ):
+        """Create an EventListener that wraps arbitrary children.
+
+        If `children` is provided, it's used as the wrapped content (so the
+        listener covers the whole card). Otherwise a centered Lottie is
+        rendered using `lottie_url` and sizing from `w`/`h`.
+        """
+        # If sizing not provided, let child components determine sizing
         h = w if h is None else h
-        super().__init__(
-            dmc.Flex(
+
+        # Build the inner content: prefer explicit children, else construct a Lottie
+        if children is not None:
+            inner = children
+        else:
+            inner = dmc.Flex(
                 Lottie(
                     options={
                         "loop": loop,
@@ -123,96 +135,123 @@ class LottieAnimation(EventListener):
                     id=self.ids.lottie_id(type),
                 ),
                 h=h, w=w, align="center", justify="center"
-            ),
-        id=self.ids.listener_id(type),
-        events=[
-            {"event": "mouseenter", "props": ["type"]},
-            {"event": "mouseleave", "props": ["type"]},
-        ],
-    )
+            )
 
-
-router_card = dmc.Card(
-    h=CARD_HEIGHT,
-    withBorder=True,
-    className="card-glass",
-    children=[
-        dmc.CardSection(
-            LottieAnimation(
-                "router",
-                lottie_url="/assets/lottie/Router128.json",
-                h=200,
-                loop=0,
-                w=256 * 1.5,
-            ),
-            withBorder=True,
-            display="flex",
-            style={
-                "justifyContent": "center",
-                "alignItems": "center"
-            }
-        ),
-    dmc.Text("Flash Router", fw="bold", size="xl", mt="md"),
-        dmc.List(
-            [
-        dmc.ListItem("Filesystem‑based routing"),
-        dmc.ListItem("Parallel routes & sub‑rendering"),
-        dmc.ListItem("Smart query params"),
-        dmc.ListItem("Lazy loading"),
+        super().__init__(
+            inner,
+            id=self.ids.listener_id(type),
+            events=[
+                {"event": "mouseenter", "props": ["type"]},
+                {"event": "mouseleave", "props": ["type"]},
             ],
-        m="md",
-        spacing="sm",
-        style={"fontSize": "1rem", "lineHeight": 1.55},
-        ),
-    ],
-)
+        )
 
-streamin_card = dmc.Card(
-    h=CARD_HEIGHT,
-    withBorder=True,
-    className="card-glass",
-    children=[
-        dmc.CardSection([
-            dmc.Text("Streaming", fw="bold", size="xl", mb="md"),
+
+router_card = LottieAnimation(
+    "router",
+    children=dmc.Card(
+        # h=CARD_HEIGHT,
+        withBorder=True,
+        className="card-glass",
+        children=[
+            dmc.CardSection(
+                # keep the lottie inside as a visual, but the listener now wraps the whole card
+                dmc.Flex(
+                    Lottie(
+                        options={
+                            "loop": 0,
+                            "autoplay": False,
+                            "rendererSettings": {"preserveAspectRatio": "xMidYMid slice"},
+                            "className": "lottie-animation",
+                        },
+                        url="/assets/lottie/Router128.json",
+                        speed=0.5,
+                        id=LottieAnimation.ids.lottie_id("router"),
+                    ),
+                    h=200, w=256 * 1.5, align="center", justify="center"
+                ),
+                withBorder=True,
+                display="flex",
+                style={
+                    "justifyContent": "center",
+                    "alignItems": "center"
+                }
+            ),
+            dmc.Text("Flash Router", fw="bold", size="xl", mt="md"),
             dmc.List(
                 [
-            dmc.ListItem("Real‑time dashboards, monitoring, push notifications, and progressive UI updates"),
-            dmc.ListItem("WebSockets & server‑sent events via Quart"),
+                    dmc.ListItem("Filesystem‑based routing"),
+                    dmc.ListItem("Parallel routes & sub‑rendering"),
+                    dmc.ListItem("Smart query params"),
+                    dmc.ListItem("Lazy loading"),
                 ],
                 m="md",
-        spacing="sm",
-        style={"fontSize": "1rem", "lineHeight": 1.55},
-            )
-        ], p="md", withBorder=True),
-        dmc.CardSection(
-            LottieAnimation(
-                "stream",
-                lottie_url="/assets/lottie/DynamicCubeLine(3).json",
-                w=256 * 0.75,
-                loop=1
+                spacing="sm",
+                style={"fontSize": "1rem", "lineHeight": 1.55},
             ),
-            withBorder=True,
-            display="flex",
-            style={
-                "justifyContent": "center",
-                "alignItems": "center"
-            }
-        ),
-    ],
+        ],
+    ),
+)
+
+streamin_card = LottieAnimation(
+    "stream",
+    children=dmc.Card(
+        # h=CARD_HEIGHT,
+        withBorder=True,
+        className="card-glass",
+        my="auto",
+        children=[
+            dmc.CardSection(
+                dmc.Flex(
+                    Lottie(
+                        options={
+                            "loop": 1,
+                            "autoplay": False,
+                            "rendererSettings": {"preserveAspectRatio": "xMidYMid slice"},
+                            "className": "lottie-animation",
+                        },
+                        url="/assets/lottie/DynamicCubeLine(3).json",
+                        speed=0.5,
+                        id=LottieAnimation.ids.lottie_id("stream"),
+                    ),
+                    w=256 * 0.75, align="center", justify="center"
+                ),
+                withBorder=True,
+                display="flex",
+                style={
+                    "justifyContent": "center",
+                    "alignItems": "center"
+                }
+            ),
+            dmc.CardSection([
+                dmc.Text("Streaming", fw="bold", size="xl", mb="md"),
+                dmc.List(
+                    [
+                        dmc.ListItem("Real‑time dashboards, monitoring, push notifications, and progressive UI updates"),
+                        dmc.ListItem("WebSockets & server‑sent events via Quart"),
+                    ],
+                    m="md",
+                    spacing="sm",
+                    style={"fontSize": "1rem", "lineHeight": 1.55},
+                )
+            ], p="md", withBorder=True),
+        ],
+    ),
 )
 
 
 hero_content = dmc.SimpleGrid(
     mt="xl",
     cols=3,
+    maw=1100,
     children=[
-        streamin_card,
+        dmc.Flex(streamin_card, h=CARD_HEIGHT, align="center", justify="center"),
         dmc.Stack([
             dmc.Card(
                 withBorder=True,
                 className="card-glass",
                 p="md",
-                h="12.75rem",
+                h="16rem",
                 children=[
                     dmc.Text("Async‑first", fw="bold", size="xl", mb="xs"),
                     dmc.Text(
@@ -236,7 +275,7 @@ hero_content = dmc.SimpleGrid(
                 withBorder=True,
                 className="card-glass",
                 p="md",
-                h="12.75rem",
+                h="16rem",
                 children=[
                     dmc.Text("Advanced routing", fw="bold", size="xl", mb="xs"),
                     dmc.Text(
@@ -257,7 +296,7 @@ hero_content = dmc.SimpleGrid(
                 ],
             ),
         ]),
-        router_card
+        dmc.Flex(router_card, h=CARD_HEIGHT, align="center")
     ],
     w="60vw",
 )

@@ -1,0 +1,8 @@
+.main-header-bar { height:55px; display:flex; align-items:center; }
+.logo-wrap { display:inline-flex; align-items:center; gap:8px; height:55px; }
+.logo-title { line-height:1; margin:0; padding:0; }
+.logo-title.italic-adjust { transform:translateY(1px); }
+.mainHeaderLink { display:inline-flex; align-items:center; height:55px; padding:0 10px; line-height:1; font-weight:600; letter-spacing:.5px; text-decoration:none; }
+.mainHeaderLink:hover { text-decoration:none; }
+.header-icon-btn { height:40px; width:40px; display:inline-flex; align-items:center; justify-content:center; }
+.search-input-trigger { cursor:pointer; }

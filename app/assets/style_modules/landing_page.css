@@ -13,7 +13,7 @@
 .landing-page-bg {
   position: relative;
   width: 100%;
-  height: calc(100vh - var(--mantine-spacing-xl));
+  height: calc(100vh - var(--app-shell-header-height));
   overflow: hidden;
   box-sizing: border-box;
   background: transparent;
@@ -124,6 +124,8 @@
   -webkit-backdrop-filter: saturate(120%) blur(6px);
   cursor: pointer;
 }
+
+
 
 .cli-line {
   color: rgba(255,255,255,0.8);
@@ -357,4 +359,36 @@
   mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
     /* ensure animation starts off-canvas on the right for right->left travel */
     left: 120vw;
+}
+
+/* .mantine-AppShell-header {
+  background: rgba(var(--mantine-color-body),0.5);
+  backdrop-filter: saturate(120%) blur(6px);
+  -webkit-backdrop-filter: saturate(120%) blur(6px);
+} */
+
+.mainHeaderLink {
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-1));
+  font-size: var(--mantine-font-size-xs);
+  text-transform: uppercase;
+  transition: color 100ms ease;
+}
+
+.mainHeaderLink:hover {
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+  text-decoration: none;
+}
+
+/* Preferred: remove the visual ring for pointer focus but keep it for keyboard users */
+.search-input-trigger,
+.search-input-trigger input {
+  border: none;
+  cursor: pointer;
+}
+
+/* Hide focus ring when not using keyboard (preserves accessibility) */
+.search-input-trigger:focus:not(:focus-visible),
+.search-input-trigger input:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
 }

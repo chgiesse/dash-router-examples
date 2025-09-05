@@ -2,6 +2,7 @@ import dash_mantine_components as dmc
 from dash import dcc
 
 from global_components.sidebar import navbar, theme_toggle
+from global_components.header import header
 from global_components.notifications import NotificationsContainer
 from global_components.location import Url
 
@@ -62,14 +63,14 @@ def create_appshell(content):
     return dmc.MantineProvider(
         defaultColorScheme="auto",
         theme={
-            "primaryColor": "slate",
+            "primaryColor": "blue",
             "primareShade": "6",
             "defaultRadius": "md",
             "components": {"Card": {"defaultProps": {"shadow": "sm"}}},
             "focusRing": "never",
             "colors": {
                 # "dark": list(reversed(shadcn_slate)),
-                "dark": mantine_dark,
+                "dark": list(reversed(shadcn_gray)),
                 "slate": list(reversed(shadcn_slate)),
                 "shadc_gray": list(reversed(shadcn_gray)),
                 "blue": blue
@@ -83,24 +84,14 @@ def create_appshell(content):
                 # theme_toggle,
                 NotificationsContainer(),
                 Url(),
-                dmc.AppShellHeader(
-                    withBorder=True,
-                    children=dmc.Group(
-                        align="center",
-                        px="md",
-                        children=[
-                            dmc.Text("Flash", fw="bold", size="lg"),
-                            theme_toggle,
-                        ],
-                    ),
-                ),
+                header,
                 dmc.AppShellMain(
                     content
                 ),
             ],
             # padding="md",
             header={
-                "height": 60,
+                "height": 55,
             }
             # navbar={
             #     "width": 65,

@@ -644,6 +644,23 @@ more-itertools = ">=10.6.0"
 pydantic = ">=2.10.6"
 
 [[package]]
+name = "dash-flash"
+version = "1.2.1"
+description = "Flash - async port of the Dash framework"
+optional = false
+python-versions = "<4.0,>=3.12"
+groups = ["main"]
+files = [
+    {file = "dash_flash-1.2.1-py3-none-any.whl", hash = "sha256:45aaf288df46f4ea8a61cd0b50696c010f598f55ad1f3232097f56f8889ce9f5"},
+    {file = "dash_flash-1.2.1.tar.gz", hash = "sha256:4dbe3fd7b0042d92579c893cb6254bf36df7ba2674ea93cece86d62cfd68bc23"},
+]
+
+[package.dependencies]
+dash = ">=3.0.0rc1,<4.0.0"
+Quart = ">=0.20.0,<0.21.0"
+quart-compress = ">=0.2.1,<0.3.0"
+
+[[package]]
 name = "dash-html-components"
 version = "2.0.0"
 description = "Vanilla HTML components for Dash"
@@ -2953,4 +2970,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "eaacb0adc2976d56834189a66229a6da20b9fef72368b434ed4801e3a54fe302"
+content-hash = "eb4797b37da5c1f2bb1fa20236ad3dda49b08fa956b19e6624a0a09bc4417d8f"

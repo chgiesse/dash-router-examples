@@ -1,0 +1,43 @@
+.main-button {
+  background-color: var(--mantine-color-white);
+  border: calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-gray-4);
+  box-shadow: 0 -0.5px 1px rgba(0, 0, 0, 0.05);
+
+  &:disabled,
+  &[data-disabled] {
+    background-color: transparent;
+    border-color: transparent;
+  }
+}
+
+
+:root[data-mantine-color-scheme="dark"] .main-button {
+  background-color: var(--mantine-color-dark-6);
+  border: calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-dark-4);
+  /* border-color: transparent; */
+
+  &:disabled,
+  &[data-disabled] {
+    background-color: transparent;
+    border-color: transparent;
+  }
+  &:hover {
+    background-color: var(--mantine-color-body);
+  }
+}
+
+/* Search input styling to match main-button */
+.search-input-trigger input,
+.search-input-trigger.mantine-Input-input,
+input.search-input-trigger {
+  background-color: var(--mantine-color-white);
+  border: calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-gray-4);
+  box-shadow: 0 -0.5px 1px rgba(0, 0, 0, 0.05);
+}
+
+:root[data-mantine-color-scheme="dark"] .search-input-trigger input,
+:root[data-mantine-color-scheme="dark"] .search-input-trigger.mantine-Input-input,
+:root[data-mantine-color-scheme="dark"] input.search-input-trigger {
+  background-color: var(--mantine-color-dark-6);
+  border: calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-dark-4);
+}

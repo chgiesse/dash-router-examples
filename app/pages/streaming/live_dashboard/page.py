@@ -10,8 +10,9 @@ async def layout(*args, **kwargs):
     return [
         StreamButtons(),
         dmc.SimpleGrid(
-            w="100%",
+            w="80%",
             cols=2,
+            id="graphs-grid",
             children=[
                 SSEGraph("google", template),
                 SSEGraph("amazon", template),

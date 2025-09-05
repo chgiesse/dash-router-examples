@@ -35,7 +35,7 @@ class SearchModal(dmc.Modal):
         function filterSearchItems(value) {
             // Early return if value is null
             if (value === null) return;
-            
+
             const searchItems = document.querySelectorAll('.search-card');
             const visibleCount = { link: 0, btn: 0 };
 
@@ -49,16 +49,16 @@ class SearchModal(dmc.Modal):
             searchItems.forEach(card => {
                 const searchKey = card.getAttribute('data-search-key');
                 const itemType = card.getAttribute('data-search-item-type');
-                
+
                 const isVisible = searchKey.startsWith(value);
-                
+
                 card.style.display = isVisible ? 'block' : 'none';
-                
+
                 if (isVisible && (itemType === 'link' || itemType === 'btn')) {
                     visibleCount[itemType]++;
                 }
             });
-            
+
             toggleDivider('.filter-divider', visibleCount.btn > 0);
             toggleDivider('.links-divider', visibleCount.link > 0);
         }
@@ -267,7 +267,7 @@ class Tabs(dmc.Paper):
             shadow="md",
             children=dmc.Group(
                 [
-                    SearchModal(),
+                    # SearchModal(),
                     create_navlink(
                         label="Campaign",
                         href="/nested-route/child-1",
