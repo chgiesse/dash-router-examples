@@ -27,7 +27,7 @@ class TotalSentimentGraph(dmc.Box):
         Output(ids.graph, "data"),
         Input(ids.relative_switch, "checked"),
         State(RootContainer.ids.location, "search"),
-        State(ThemeComponent.ids.toggle, "checked"),
+        State(ThemeComponent.ids.store, "data"),
         prevent_initial_call=True,
     )
     async def update(is_relative: bool, qs: str, is_darkmode: bool):

@@ -42,7 +42,7 @@ class TotalSalesGraph(dmc.AreaChart):
         Input(ids.running_switch, "checked"),
         Input(ids.variant_select, "value"),
         State(RootContainer.ids.location, "search"),
-        State(ThemeComponent.ids.toggle, "checked"),
+        State(ThemeComponent.ids.store, "data"),
         running=[
             (Output(GraphMenu.ids.trigger_button(ids.graph), "loading"), True, False)
         ],
@@ -91,22 +91,22 @@ class TotalSalesGraph(dmc.AreaChart):
     def figure(data: pd.DataFrame):
         series = []
         colors = ["violet.6", "blue.6", "teal.6", "red.6", "green.6", "orange.6"]
-        
+
         for i, col in enumerate(data.columns):
             series.append({
-                "name": col, 
+                "name": col,
                 "color": colors[i % len(colors)],
                 "stackId": "stack1"  # Add stackId for stacking
             })
-        
+
         data = data.fillna(0)
         chart_data = data.reset_index(names="date").to_dict(orient="records")
-        
+
         for record in chart_data:
             for key in record:
                 if record[key] is None or pd.isna(record[key]):
                     record[key] = 0
-        
+
         chart_config = {
             "data": chart_data,
             "dataKey": "date",
@@ -118,7 +118,7 @@ class TotalSalesGraph(dmc.AreaChart):
             "yAxisProps": {"width": 50},
             "areaProps": {"isAnimationActive": True}  # Changed from barProps to areaProps
         }
-        
+
         return chart_config
 
     @classmethod
@@ -143,7 +143,7 @@ class TotalSalesGraph(dmc.AreaChart):
 
     def __init__(self, data: pd.DataFrame):
         chart_config = self.figure(data)
-        
+
         super().__init__(
             id=self.ids.graph,
             h=500,

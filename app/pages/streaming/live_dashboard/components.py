@@ -76,7 +76,7 @@ class SSEGraph(dcc.Graph):
 
     @event_callback(
         Input(StreamButtons.ids.start_btn, "n_clicks"),
-        State(ThemeComponent.ids.toggle, "checked"),
+        State(ThemeComponent.ids.store, "data"),
         on_error=lambda e: NotificationsContainer.send_notification(
             title="Error", message=str(e), color="red"
         ),

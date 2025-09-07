@@ -1,12 +1,12 @@
-from utils.helpers import get_theme_template
+from utils.helpers import get_theme_template, get_icon
 
 import dash_mantine_components as dmc
 from typing import Literal
 from dash_iconify import DashIconify
 # from flash import clientside_callback, Input, callback, Output, Patch
-from dash import clientside_callback, Input, callback, Output, Patch
+from flash import clientside_callback, Input, callback, Output, Patch, State
 import plotly.io as pio
-from dash import html
+from dash import html, dcc
 import random
 
 
@@ -50,44 +50,62 @@ mantine_dark = [
 theme_type = Literal["plotly_dark", "plotly"]
 
 
-class ThemeComponent(dmc.Switch):
+class ThemeComponent(dmc.ActionIcon):
 
     class ids:
-        toggle = "color-scheme-toggle"
+        button = "color-scheme-toggle"
+        store = "color-theme-store"
 
     base_colors_scheme = "dark"
 
     theme_csc = clientside_callback(
         """
-        (switchOn) => {
-            const theme = switchOn ? 'dark' : 'light'
-            document.documentElement.setAttribute('data-mantine-color-scheme', theme);
+        ( nClicks, storeData ) => {
+            // don't run on initial hydration
+            if (!window.dash_clientside.callback_context.triggered_id) {
+                return window.dash_clientside.no_update;
+            }
+
+            // determine current theme stored (default to true == dark)
+            const currentIsDark = (typeof storeData === 'boolean') ? storeData : true;
+            // toggle: newIsDark is the opposite
+            const newIsDark = !currentIsDark;
+
+            // apply to document and persist boolean to store
+            const newTheme = newIsDark ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-mantine-color-scheme', newTheme);
+            return newIsDark;
         }
         """,
-        Input(ids.toggle, "checked"),
+        Output(ids.store, "data", allow_duplicate=True),
+        Input(ids.button, "n_clicks"),
+        State(ids.store, "data"),
+        prevent_initial_call=True,
     )
 
     @classmethod
     def graph_theme_callback(cls, graph_id: str):
         @callback(
             Output(graph_id, "figure", allow_duplicate=True),
-            Input(cls.ids.toggle, "checked"),
+            Input(cls.ids.store, "data"),
             prevent_initial_call=True,
         )
-        def update_graph_template(is_darkmode: bool):
+        def update_graph_template(store_data):
+            # store_data is expected to be a boolean: True == dark, False == light
+            is_darkmode = bool(store_data) if store_data is not None else False
             template = get_theme_template(is_darkmode)
             figure = Patch()
             figure.layout.template = template
             return figure
 
-    @classmethod
-    def echarts_theme_callback(cls, graph_id: str):
-        return clientside_callback(
-            """( isDarkmode ) => { return isDarkmode ? 'dark' : 'light' }""",
-            Output(graph_id, "theme"),
-            Input(cls.ids.toggle, "checked"),
-            prevent_initial_call=True,
-        )
+    # @classmethod
+    # def echarts_theme_callback(cls, graph_id: str):
+    #     return clientside_callback(
+    #         """( isDarkmode ) => { return isDarkmode ? 'dark' : 'light' }""",
+    #         Output(graph_id, "theme"),
+    #         Input(cls.ids.button, "n_clicks"),
+    #         prevent_initial_call=True,
+    #     )
 
     theme = {
         "primaryColor": "violet",
@@ -100,22 +118,23 @@ class ThemeComponent(dmc.Switch):
 
     def __init__(self) -> None:
         super().__init__(
-            mt="auto",
-            offLabel=DashIconify(
-                icon="line-md:sun-rising-loop",
-                width=15,
-                color=dmc.DEFAULT_THEME["colors"]["yellow"][8],
-                id="temp2",
-            ),
-            onLabel=DashIconify(
-                icon="line-md:moon-rising-alt-loop",
-                width=15,
-                color=dmc.DEFAULT_THEME["colors"]["yellow"][6],
-                id="temp1",
-            ),
-            id=self.ids.toggle,
-            color="grey",
-            checked=True,
+            [
+                dmc.Box(
+                    get_icon("line-md:moon-to-sunny-outline-transition", height=25),
+                    darkHidden=True,
+                ),
+                dmc.Box(
+                    get_icon("line-md:moon-twotone", height=25),
+                    lightHidden=True,
+                ),
+                dcc.Store(id=self.ids.store, storage_type="local"),
+            ],
+            size="lg",
+            color="dark",
+            variant="default",
+            id=self.ids.button,
+            className="main-button",
+            h=36
         )
 
 
