@@ -35,5 +35,5 @@ EXPOSE 8050
 ENV PG_ENGINE_STR='postgresql+asyncpg://datenschubse:E7h2Jtg4RSw57XfRILZ5c6KvAPszefQb@dpg-d1l7dvje5dus73fbg4gg-a.frankfurt-postgres.render.com/dash_example'
 
 # Use gunicorn for production deployment with standard Dash/Flask
-ENTRYPOINT ["python", "-m", "uvicorn", "app:server", "--host", "0.0.0.0", "--port", "8050", "--workers", "2", "--timeout-keep-alive", "30", "--log-level", "error"]
+ENTRYPOINT ["python", "-m", "uvicorn", "app:server", "--host", "0.0.0.0", "--port", "8050", "--workers", "1", "--timeout-keep-alive", "30", "--log-level", "error"]
 # ENTRYPOINT ["python", "-m", "gunicorn", "--bind", "0.0.0.0:8051", "--workers", "2", "--timeout", "240", "--keep-alive", "2", "--max-requests", "1000", "--max-requests-jitter", "100", "--log-level", "error", "dash_app:server"]
