@@ -43,5 +43,5 @@ class GridTable(dag.AgGrid):
                 "loadingOverlayComponent": "CustomLoadingOverlay",
             },
             className="ag-theme-quartz-auto-dark",
-            style={"height": "85vh"},
+            style={"height": "85dvh"},
         )

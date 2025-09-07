@@ -15,7 +15,7 @@ def layout(figures=None, **kwargs):
                 style={
                     "position": "sticky",
                     "top": 0,
-                    "height": "calc(100vh - var(--mantine-spacing-xl))",
+                    "height": "calc(100dvh - var(--mantine-spacing-xl))",
                 },
             ),
         ]

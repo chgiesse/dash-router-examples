@@ -3,7 +3,7 @@
   box-sizing: border-box !important;
   display: table;
   width: 100%;
-  height: calc(100vh - var(--mantine-spacing-xl)); /* DONT TOUCH THIS */
+  height: calc(100mvh - var(--mantine-spacing-xl)); /* DONT TOUCH THIS */
   line-height: 1.6;
   position: relative;
   overflow: hidden;
@@ -182,9 +182,9 @@
   position: absolute;
   /* rectangle size adjustable via --pixel-width and --pixel-height */
   width: var(--pixel-width, 8px);
-  height: var(--pixel-height, 40vh);
+  height: var(--pixel-height, 40dvh);
   /* start above viewport for drop (height is relative to --pixel-height) */
-  top: calc(-1 * var(--pixel-height, 40vh));
+  top: calc(-1 * var(--pixel-height, 40dvh));
   left: 50%;
   transform: translateX(-50%);
   /* repeating squares tiled vertically; --tile-size controls the square size */
@@ -269,7 +269,7 @@
 
 @keyframes drop {
   0% {
-    top: calc(-1 * var(--pixel-height, 40vh));
+    top: calc(-1 * var(--pixel-height, 40dvh));
   }
   60% {
     top: 50vh; /* mid-screen stop to create stepped fall */

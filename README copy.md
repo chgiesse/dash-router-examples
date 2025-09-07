@@ -9,8 +9,8 @@ All routes are dynamic by default and have to be set static manually. Static rou
 - **slots**: silent route segment with isolated placement in the layout and folder
 - **path templates**: dynamic route segments defined by `[folder_name]` that capture URL parameters
 
-This segmentation not only makes your codebase easier to manage but also enhances performance through subrendering, parallel execution, and individualized error and loading handling. 
-In addition to that, Dash Router lets you encapsulate your data from the layout. This enables the router to collect all data functions / api endpoints in a linear structure and execute all in one. 
+This segmentation not only makes your codebase easier to manage but also enhances performance through subrendering, parallel execution, and individualized error and loading handling.
+In addition to that, Dash Router lets you encapsulate your data from the layout. This enables the router to collect all data functions / api endpoints in a linear structure and execute all in one.
 
 ![routing](animated_router.gif)
 _Resolving a URL example_
@@ -24,8 +24,8 @@ _layout and render example_ -->
 
 ## Conventions & Features
 
-Note: Each level needs a distinct route into the next layer, that means that 
-each level can only have one dynamic route. So a layer can have slots without any path and a nested route 
+Note: Each level needs a distinct route into the next layer, that means that
+each level can only have one dynamic route. So a layer can have slots without any path and a nested route
 
 - `Slots`: Slots are defined by folder names starting and ending with **(_slot_name_)**. They are silent route segments that don't appear in the URL but provide isolated content areas within a layout. Perfect for sidebars, headers, or modular dashboard components that can be positioned independently by their parent layout. **Advantages**: Parallel execution (Flash), independent error handling, reusable components, and isolated state management.
 
@@ -332,7 +332,7 @@ async def layout(children: ChildContainer, **kwargs):
             dmc.Divider(),
             dmc.ScrollArea(
                 children,
-                h="calc(85vh)",
+                h="calc(85dvh)",
                 type="auto",
                 offsetScrollbars=True
             )
@@ -478,7 +478,7 @@ config = RouteConfig(title="Analytics Figures")
 
 async def layout(data: dict, **kwargs):
     df = px.data.tips()  # Using sample data for demo
-    
+
     return dmc.Stack([
         dmc.Title("Sales Analytics", order=2),
         dmc.SimpleGrid([
@@ -627,7 +627,7 @@ from typing import Optional
 
 def layout(e: Exception, invoice_id: Optional[str] = None, *args, **kwargs):
     error_message = str(e)
-    
+
     if "not found" in error_message.lower():
         return dmc.Alert(
             f"Invoice {invoice_id} not found",
@@ -636,7 +636,7 @@ def layout(e: Exception, invoice_id: Optional[str] = None, *args, **kwargs):
             variant="light",
             icon=dmc.Icon("carbon:warning")
         )
-    
+
     return dmc.Alert(
         error_message,
         title="Unexpected Error",

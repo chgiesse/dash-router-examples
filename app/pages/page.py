@@ -9,7 +9,7 @@ layout = html.Div(
         html.Div(
             children=[
                 landing_background(total=16),
-                dmc.ScrollArea(
+                html.Div(
                     dmc.Stack(
                         [
                             hero_header,
@@ -21,7 +21,6 @@ layout = html.Div(
                                     variant="white",
                                     w="10.5rem",
                                     lightHidden=True
-
                                 ),
                                 dmc.Button(
                                     "Get Started",
@@ -45,10 +44,11 @@ layout = html.Div(
                         gap="xl",
                         py="md",
                     ),
-                    h="calc(100vh - var(--app-shell-header-height))",
-                    type="scroll",
-                    offsetScrollbars="y",
-                    pl="xs"
+                    style={
+                        "height": "calc(100dvh - var(--app-shell-header-height))",
+                        "overflowY": "auto",
+                        "paddingLeft": "var(--mantine-spacing-xs)"
+                    },
                 )
             ],
             className="landing-page-bg",
