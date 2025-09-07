@@ -137,9 +137,9 @@
   }
 
   --mantine-color-body: rgb(245, 247, 248) !important;
-  .mantine-Paper-root{
+  /* .mantine-Paper-root{
     background-color: white;
-  }
+  } */
 }
 
 :root{

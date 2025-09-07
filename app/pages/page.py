@@ -2,7 +2,6 @@ from global_components.theme import landing_background
 from .components import hero_header, hero_section, hero_content
 
 import dash_mantine_components as dmc
-from dash_extensions import Lottie
 from dash import html
 
 layout = html.Div(
@@ -20,13 +19,24 @@ layout = html.Div(
                                     "Get Started",
                                     size="md",
                                     variant="white",
+                                    w="10.5rem",
+                                    lightHidden=True
+
+                                ),
+                                dmc.Button(
+                                    "Get Started",
+                                    size="md",
+                                    color="dark",
+                                    w="10.5rem",
+                                    darkHidden=True
                                 ),
                                 dmc.Button(
                                     "View on GitHub",
                                     size="md",
                                     variant="default",
                                     color="dark",
-                                    className="main-button"
+                                    className="main-button",
+                                    w="10.5rem"
                                 ),
                             ], my="xl"),
                             hero_content
@@ -35,8 +45,7 @@ layout = html.Div(
                         gap="xl",
                         py="md",
                     ),
-                    # className="bg-overlay-stack",
-                    h="calc(100vh - var(--app-shell-header-height) - 40px)",
+                    h="calc(100vh - var(--app-shell-header-height))",
                     type="scroll",
                     offsetScrollbars="y",
                     pl="xs"

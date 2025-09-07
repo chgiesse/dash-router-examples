@@ -1,7 +1,10 @@
+from typing import Any
+from typing_extensions import Literal
 from utils.helpers import get_icon
 
 import dash_mantine_components as dmc
 from flash import clientside_callback, Input, Output, ALL, State
+from flash_router import RootContainer
 from dash import html
 from dash_iconify import DashIconify
 
@@ -58,6 +61,130 @@ SEARCH_LINKS = {
         "href": "/nested-route/child-3",
     },
 }
+
+header_links = [
+    {"label": "Docs", "href": "/sales"},
+    {"label": "Showcase", "href": "/nested-route"},
+    {"label": "Tips & Tricks", "href": "/streaming/live-dashboard"},
+    {"label": "Integrations", "href": "#"},
+    {"label": "Blog", "href": "#"},
+]
+
+def nav_anchor(label, href):
+    return dmc.Anchor(label, href=href, className="mainHeaderLink", unstyled=True, p=0)
+
+class MobileDrawer(dmc.Box):
+
+    class ids:
+        drawer = "mobile-drawer"
+        burger = "navbar-burger"
+
+    # Sync drawer and burger states both ways. If the burger is toggled, open/close the drawer.
+    # If the drawer is closed (for example by clicking outside or the close button),
+    # ensure the burger's opened state is also set to False so they don't diverge.
+    # We use triggered_id to determine which input caused the callback.
+    clientside_callback(
+        """
+        //js
+        function (burgerOpened, drawerOpened) {
+            // Identify what triggered the callback
+            const triggered = window.dash_clientside.callback_context.triggered_id;
+
+            // If no triggered id, do nothing
+            if (triggered === undefined) {
+                return window.dash_clientside.no_update;
+            }
+
+            // If the burger triggered, toggle the drawer to match burger
+            if (triggered === 'navbar-burger') {
+                return [burgerOpened, window.dash_clientside.no_update];
+            }
+
+            // If the drawer triggered (e.g., closed by outside click),
+            // and the burger is still opened, close the burger to keep them in sync.
+            if (triggered === 'mobile-drawer') {
+                // when drawerOpened is false (drawer closed) but burger is true, close burger
+                if (drawerOpened === false) {
+                    return [window.dash_clientside.no_update, false];
+                }
+                // otherwise no change
+                return window.dash_clientside.no_update;
+            }
+
+            return window.dash_clientside.no_update;
+        }
+        ;//
+        """,
+        # Outputs: first updates drawer.opened, second updates burger.opened
+        [Output(ids.drawer, "opened"), Output(ids.burger, "opened", allow_duplicate=True)],
+        Input(ids.burger, "opened"),
+        Input(ids.drawer, "opened"),
+        prevent_initial_call=True,
+    )
+
+    clientside_callback(
+        "( pathChange ) => { console.log(pathChange); return false }",
+        Output(ids.drawer, "opened", allow_duplicate=True),
+        Input(RootContainer.ids.location, "pathname"),
+        prevent_initial_call=True,
+    )
+
+    def __init__(self):
+        # Build drawer anchor items from header_links to match header navigation
+        drawer_items = []
+        icons = [
+            'tabler:book',
+            'tabler:star',
+            'tabler:lightbulb',
+            'tabler:plugin',
+            'tabler:brand-blogger',
+        ]
+
+        for i, item in enumerate(header_links):
+            icon = icons[i] if i < len(icons) else icons[0]
+            drawer_items.append(
+                dmc.Anchor(
+                    dmc.Paper(
+                        dmc.Group([dmc.Text(item['label'], fw='bold')]),
+                        p='sm',
+                        withBorder=True,
+                    ),
+                    href=item['href'],
+                    underline='never',
+                    w='100%'
+                )
+            )
+
+        drawer = dmc.Drawer(
+            id=self.ids.drawer,
+            padding="md",
+            position="bottom",
+            withCloseButton=True,
+            closeOnClickOutside=True,
+            children=dmc.Stack(
+                children=drawer_items,
+                gap="md",
+            ),
+        )
+
+        burger = dmc.ActionIcon(
+            dmc.Burger(
+                id="navbar-burger",
+                opened=False,
+                size="sm",
+                # mr="xl",
+            ),
+            size="lg",
+            color="dark",
+            variant="default",
+            className="main-button",
+            h=36
+        )
+
+        super().__init__(
+            [drawer, burger],
+            display={"xxs": "flex", "xs": "flex", "sm": "none", "md": "none", "lg": "none", "xl": "none"},
+        )
 
 
 class SearchModal(dmc.Modal):
@@ -285,13 +412,13 @@ logo = dmc.Anchor(
         align="center",
         justify="center",
         gap=5,
+        mb=6,
         children=[
             get_icon("mingcute:flash-circle-line", height=35),
             dmc.Title(
                 "Flash",
                 order=2,
                 className="sansation-bold sansation-regular-italic logo-title italic-adjust",
-                mb=5,
                 style={
                     "fontFamily": "Sansation, sans-serif",
                     "fontWeight": 700,
@@ -311,26 +438,31 @@ logo = dmc.Anchor(
     mr="xs"
 )
 
-header_links = [
-    {"label": "Docs", "href": "/sales"},
-    {"label": "Showcase", "href": "/nested-route"},
-    {"label": "Tips & Tricks", "href": "/streaming/live-dashboard"},
-    {"label": "Integrations", "href": "#"},
-    {"label": "Blog", "href": "#"},
-]
-
-def nav_anchor(label, href):
-    return dmc.Anchor(label, href=href, className="mainHeaderLink", unstyled=True, p=0)
 
 version_badge = dmc.Anchor(
-    dmc.Badge(
-        "v1.2.1",
-        variant="outline",
-        size="lg",
-        radius="md",
-        h=35,
-        leftSection=get_icon("mingcute:tag-line")
-    ),
+    [
+        dmc.Badge(
+            "v1.2.1",
+            variant="outline",
+            size="lg",
+            radius="md",
+            h=35,
+            leftSection=get_icon("mingcute:tag-line"),
+            color="dark",
+            darkHidden=True,
+        ),
+        dmc.Badge(
+            "v1.2.1",
+            variant="outline",
+            size="lg",
+            radius="md",
+            h=35,
+            leftSection=get_icon("mingcute:tag-line"),
+            # color="gray",
+            lightHidden=True,
+            # opacity=0.8
+        ),
+    ],
     unstyled=True,
     href="https://pypi.org/project/dash-flash/",
     target="_blank",
@@ -377,6 +509,7 @@ search_button = dmc.ActionIcon(
     variant="default",
     display={"xxs": "flex", "xs": "flex", "sm": "flex", "md": "flex", "lg": "none", "xl": "none"},
     id=ids.search_icon_button,
+    h=36
 )
 
 github_button = dmc.Anchor(
@@ -386,6 +519,7 @@ github_button = dmc.Anchor(
         className="main-button",
         color="dark",
         variant="default",
+        h=36
     ),
     unstyled=True,
     href="https://github.com/chgiesse/flash",
@@ -397,6 +531,7 @@ github_button = dmc.ActionIcon(
     size="lg",
     className="main-button",
     variant="default",
+    h=36,
 )
 
 theme_button = dmc.ActionIcon(
@@ -415,24 +550,10 @@ theme_button = dmc.ActionIcon(
     variant="default",
     id="color-scheme-toggle",
     className="main-button",
-    h=35
+    h=36
 )
 
-burger = dmc.ActionIcon(
-    dmc.Burger(
-        id="navbar-burger",
-        opened=False,
-        size="sm",
-        # mr="xl",
-    ),
-    size="lg",
-    color="dark",
-    variant="default",
-    display={"xxs": "flex", "xs": "flex", "sm": "none", "md": "none", "lg": "none", "xl": "none"},
-    className="main-button",
-)
-
-header_links = dmc.Group(
+header_links_component = dmc.Group(
     [nav_anchor(item["label"], item["href"]) for item in header_links],
     gap="sm",
     display={"xxs": "none", "xs": "none", "sm": "flex", "md": "flex", "lg": "flex", "xl": "flex"},
@@ -444,13 +565,12 @@ header = dmc.AppShellHeader(
         align="center",
         justify="flex-start",
         mx="auto",
-        # w="85%",
-        w="95%",
-        gap=0,
+        w="85%",
+        gap="sm",
         h=55,
         children=[
             logo,
-            header_links,
+            header_links_component,
             dmc.Group(
                 style={"marginLeft": "auto"},
                 gap="sm",
@@ -463,7 +583,7 @@ header = dmc.AppShellHeader(
                     search_button,
                     github_button,
                     theme_button,
-                    burger,
+                    MobileDrawer()
                 ],
             ),
         ],

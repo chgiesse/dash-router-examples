@@ -12,14 +12,16 @@ CARD_HEIGHT = "calc(32rem + var(--mantine-spacing-md))"
 hero_section = dmc.Group(
     className='landing-page-content',
     mt="xl",
+    wrap="wrap-reverse",
     children=[
-        html.Div(
+        dmc.Card(
+            withBorder=True,
             className="hero-cta-glass hero-glass fade-in-bottom",
             children=[
                 html.Ul(className="hero-features hero-features-cta", children=[
-                    html.Li("Async-first"),
-                    html.Li("Native streaming"),
-                    html.Li("Advanced routing"),
+                    html.Li("Async First"),
+                    html.Li("Native Streaming"),
+                    html.Li("Advanced Routing"),
                 ]),
                 html.Div(
                     className="cli-line",
@@ -150,12 +152,11 @@ class LottieAnimation(EventListener):
 router_card = LottieAnimation(
     "router",
     children=dmc.Card(
-        # h=CARD_HEIGHT,
+        h=CARD_HEIGHT,
         withBorder=True,
-        className="card-glass",
+        className="panel-glass",
         children=[
             dmc.CardSection(
-                # keep the lottie inside as a visual, but the listener now wraps the whole card
                 dmc.Flex(
                     Lottie(
                         options={
@@ -170,7 +171,6 @@ router_card = LottieAnimation(
                     ),
                     h=200, w=256, align="center", justify="center"
                 ),
-                # withBorder=True,
                 display="flex",
                 style={
                     "justifyContent": "center",
@@ -186,6 +186,7 @@ router_card = LottieAnimation(
                     dmc.ListItem("Lazy loading"),
                 ],
                 m="md",
+                mr="xl",
                 spacing="sm",
                 style={"fontSize": "1rem", "lineHeight": 1.55},
             ),
@@ -196,9 +197,9 @@ router_card = LottieAnimation(
 streamin_card = LottieAnimation(
     "stream",
     children=dmc.Card(
-        # h=CARD_HEIGHT,
-        # withBorder=True,
-        className="card-glass",
+        h=CARD_HEIGHT,
+        withBorder=True,
+        className="panel-glass",
         my="auto",
         children=[
             dmc.CardSection(
@@ -230,17 +231,26 @@ streamin_card = LottieAnimation(
                         dmc.ListItem("WebSockets & server‑sent events via Quart"),
                     ],
                     m="md",
+                    mr="xl",
                     spacing="sm",
                     style={"fontSize": "1rem", "lineHeight": 1.55},
                 )
-            ], p="md"),
+            ],
+            p="md",
+            display="flex",
+                style={
+                    "justifyContent": "center",
+                    "alignItems": "center",
+                    "flexDirection": "column",
+                }
+            ),
         ],
     ),
 )
 
 callback_card = dmc.Card(
     withBorder=True,
-    className="card-glass",
+    className="panel-glass",
     p="md",
     h="16rem",
     children=[
@@ -265,7 +275,7 @@ callback_card = dmc.Card(
 
 layout_card = dmc.Card(
     withBorder=True,
-    className="card-glass",
+    className="panel-glass",
     p="md",
     h="16rem",
     children=[
@@ -297,7 +307,6 @@ hero_content = dmc.Grid(
             streamin_card,
             span={"xl": 4, "lg": 4, "md": 6, "sm": 6, "xs": 12},
             order={"xl": 1, "lg": 1, "md": 2, "sm": 2, "xs": 2},
-            # maw=350,
             mx="auto",
         ),
         dmc.GridCol(
@@ -316,14 +325,11 @@ hero_content = dmc.Grid(
             ),
             span={"xl": 4, "lg": 4, "md": 12, "sm": 12, "xs": 12},
             order={"xl": 2, "lg": 2, "md": 3, "sm": 3, "xs": 3},
-            # maw=350,
         ),
         dmc.GridCol(
             router_card,
-            # h=CARD_HEIGHT,
             span={"xl": 4, "lg": 4, "md": 6, "sm": 6, "xs": 12},
             order={"xl": 3, "lg": 3, "md": 1, "sm": 1, "xs": 1},
-            # maw=350,
             mx="auto",
         )
     ],

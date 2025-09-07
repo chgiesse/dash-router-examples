@@ -13,7 +13,6 @@
 .landing-page-bg {
   position: relative;
   width: 100%;
-  height: calc(100vh - var(--app-shell-header-height));
   overflow: hidden;
   box-sizing: border-box;
   background: transparent;
@@ -69,6 +68,29 @@
   width: min(1100px, 96%);
 }
 
+/* Variant of hero-panel for use inside cards/boxes where we don't want
+   the header-related stacking or layout side-effects. Use class
+   `panel-glass` on inner panels to get the same glass visual without
+   interfering with `.landing-page-header` or layout flow. */
+.panel-glass {
+  display: grid;
+  place-items: center;
+  padding: var(--mantine-spacing-lg);
+  margin: 0 auto;
+  border-radius: 10px;
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  width: 100%; /* allow parent containers to control max width */
+  background: transparent; /* avoid creating unexpected stacking contexts */
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+:root[data-mantine-color-scheme="dark"] .panel-glass {
+  background: rgba(20,20,20,0.35);
+  border: none;
+}
+
 .hero-features {
   list-style: none;
   display: flex;
@@ -76,7 +98,7 @@
   padding: 0;
   margin: 0.5rem 0 0 0;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: wrap-reverse;
 }
 
 .hero-features li {
@@ -102,6 +124,7 @@
   justify-items: center;
   width: min(720px, 92vw);
 }
+
 
 .hero-glass::before {
   content: "";
@@ -377,10 +400,23 @@
   text-decoration: none;
 }
 
+/* Dark-mode: dim all header links by default, but keep hovered or keyboard-focused links fully visible */
+:root[data-mantine-color-scheme="dark"] .mainHeaderLink {
+  opacity: 0.55; /* reduce visual weight for non-hovered links in dark theme */
+  transition: opacity 160ms ease, color 120ms ease;
+}
+
+:root[data-mantine-color-scheme="dark"] .mainHeaderLink:hover,
+:root[data-mantine-color-scheme="dark"] .mainHeaderLink:focus-visible {
+  opacity: 1; /* restore full visibility on hover or keyboard focus */
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+  text-decoration: none;
+}
+
 /* Preferred: remove the visual ring for pointer focus but keep it for keyboard users */
 .search-input-trigger,
 .search-input-trigger input {
-  border: none;
+  /* border: none; */
   cursor: pointer;
 }
 
