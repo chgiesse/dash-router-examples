@@ -16,11 +16,11 @@ def create_invoice_table(data = [], page: int = 1,  is_loading: bool = False):
                 "Open",
                 variant="light",
                 size="compact-sm",
-                rightSection=get_icon("material-symbols:open-in-new").to_plotly_json(),
-            ).to_plotly_json(),
+                # rightSection=get_icon("material-symbols:open-in-new"),
+            ),
             underline=False,
             href=(href + "?page=" + str(page) if page else href),
-        ).to_plotly_json()
+        )
 
     data = data or [{} for _ in range(0, 5)]
     rows = [
@@ -32,7 +32,7 @@ def create_invoice_table(data = [], page: int = 1,  is_loading: bool = False):
                         if not is_loading
                         else create_td_skeleton()
                     ),
-                    w="15%",
+                    w="10%",
                 ),
                 dmc.TableTd(
                     element.get("mass") if not is_loading else create_td_skeleton(),

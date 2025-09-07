@@ -11,7 +11,6 @@ class SalesTabs(dmc.Tabs):
         super().__init__(
             id=self.ids.tabs,
             value=active_tab,
-            className="fade-in",
             children=dmc.TabsList(
             [
                 dmc.Anchor(

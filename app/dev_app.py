@@ -20,29 +20,30 @@ app = Flash(
     update_title=None,  # type: ignore[arg-type]
     routing_callback_inputs={"theme": State("color-scheme-toggle", "checked")},
     compress=True,
-    _router=FlashRouter,
+    router=FlashRouter,
+    handle_theme=True,
 )
 
 app.layout = create_appshell([
     RootContainer(),
 ])
 
-@hooks.index()
-def add_meta(index):
-    index = index.replace("<head>", "<head>" + '''
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" type="image/png" href="/assets/favicon.png">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-        <style>
-            body {
-                font-family: 'Inter', sans-serif;
-            }
-        </style>
-    '''
-)
-    return index
+# @hooks.index()
+# def add_meta(index):
+#     index = index.replace("<head>", "<head>" + '''
+#         <meta name="viewport" content="width=device-width, initial-scale=1">
+#         <link rel="icon" type="image/png" href="/assets/favicon.png">
+#         <link rel="preconnect" href="https://fonts.googleapis.com">
+#         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+#         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+#         <style>
+#             body {
+#                 font-family: 'Inter', sans-serif;
+#             }
+#         </style>
+#     '''
+# )
+#     return index
 
 server = app.server
 # server.before_serving(setup_db)

@@ -60,26 +60,28 @@ class ThemeComponent(dmc.ActionIcon):
 
     theme_csc = clientside_callback(
         """
-        ( nClicks, storeData ) => {
+        ( nClicks ) => {
             // don't run on initial hydration
             if (!window.dash_clientside.callback_context.triggered_id) {
                 return window.dash_clientside.no_update;
             }
-
-            // determine current theme stored (default to true == dark)
-            const currentIsDark = (typeof storeData === 'boolean') ? storeData : true;
-            // toggle: newIsDark is the opposite
-            const newIsDark = !currentIsDark;
+            const de = document.documentElement;
+            const currentAttr = de.getAttribute('data-mantine-color-scheme');
+            const attrIsDark = currentAttr === 'dark';
+            const newIsDark = !attrIsDark;
 
             // apply to document and persist boolean to store
             const newTheme = newIsDark ? 'dark' : 'light';
             document.documentElement.setAttribute('data-mantine-color-scheme', newTheme);
+            document.documentElement.style.backgroundColor = newIsDark ? '#1A1B1E' : '#FFFFFF';
+            localStorage.setItem('color-theme-store', JSON.stringify(newIsDark));
+            // const meta = document.querySelector('meta[name="color-scheme"]');
+            // if (meta) meta.content = newTheme;
             return newIsDark;
         }
         """,
         Output(ids.store, "data", allow_duplicate=True),
         Input(ids.button, "n_clicks"),
-        State(ids.store, "data"),
         prevent_initial_call=True,
     )
 

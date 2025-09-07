@@ -19,6 +19,8 @@ app = Flash(
     update_title=None,  # type: ignore[arg-type]
     routing_callback_inputs={"theme": State("color-scheme-toggle", "checked")},
     compress=True,
+    router=FlashRouter,
+    handle_theme=True,
 )
 
 app.layout = create_appshell([RootContainer()])
@@ -114,6 +116,6 @@ async def network_heavy():
         "plotly_fig": fig_json
     }
 
-router = FlashRouter(app)
+# router = FlashRouter(app)
 cache = Cache()
 apply_vizro_theme()

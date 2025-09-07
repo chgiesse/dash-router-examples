@@ -642,14 +642,14 @@ pydantic = ">=2.10.6"
 
 [[package]]
 name = "dash-flash"
-version = "1.2.1"
+version = "1.3.0rc1"
 description = "Flash - async port of the Dash framework"
 optional = false
 python-versions = "<4.0,>=3.12"
 groups = ["main"]
 files = [
-    {file = "dash_flash-1.2.1-py3-none-any.whl", hash = "sha256:45aaf288df46f4ea8a61cd0b50696c010f598f55ad1f3232097f56f8889ce9f5"},
-    {file = "dash_flash-1.2.1.tar.gz", hash = "sha256:4dbe3fd7b0042d92579c893cb6254bf36df7ba2674ea93cece86d62cfd68bc23"},
+    {file = "dash_flash-1.3.0rc1-py3-none-any.whl", hash = "sha256:c31ebfd452b8db449896d6f8037f07a76e1ce80d5544d5ec61654872a9f2640b"},
+    {file = "dash_flash-1.3.0rc1.tar.gz", hash = "sha256:5f0a3cbcb2c894a60c65ae202d490ff1ff0055ec72dc444950ec036fbb34a522"},
 ]
 
 [package.dependencies]
@@ -2967,4 +2967,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "b9abedc001ea49a042faa6c1898b7438a1c8d8ad6bdf6e6e8c9a13c0fb2bd852"
+content-hash = "bd644e95636f87d437b99b522db3ca4ff9ec2c8575324caa1e9a35e8d97f0f7e"
