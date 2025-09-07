@@ -1,8 +1,5 @@
 from typing import Dict, List
-
 import dash_mantine_components as dmc
-
-from ..models import QueryParams
 
 
 async def layout(data: List[Dict[str, str | int]], *args, **kwargs):
@@ -20,7 +17,7 @@ async def layout(data: List[Dict[str, str | int]], *args, **kwargs):
                     "animationDuration": 500,
                 },
                 thickness=15,
-                size=220,
+                # size=220,
             ),
         ],
         className="fade-in",

@@ -304,7 +304,7 @@ hero_content = dmc.Grid(
     mx="xl",
     children=[
         dmc.GridCol(
-            streamin_card,
+            dmc.Anchor(streamin_card, href="/streaming", underline="never", unstyled=True, td="none"),
             span={"xl": 4, "lg": 4, "md": 6, "sm": 6, "xs": 12},
             order={"xl": 1, "lg": 1, "md": 2, "sm": 2, "xs": 2},
             mx="auto",
@@ -313,11 +313,11 @@ hero_content = dmc.Grid(
             dmc.Grid(
                 [
                     dmc.GridCol(
-                        callback_card,
+                        dmc.Anchor(callback_card, href="/docs/callbacks", underline="never", unstyled=True, td="none"),
                         span={"xxl": 12, "xl": 12, "lg": 12, "md": 6, "sm": 6, "xs": 12, "xxs": 12}
                     ),
                     dmc.GridCol(
-                        layout_card,
+                        dmc.Anchor(layout_card, href="/docs/routing", underline="never", unstyled=True, td="none"),
                         span={"xxl": 12, "xl": 12, "lg": 12, "md": 6, "sm": 6, "xs": 12, "xxs": 12}
                     ),
                 ],
@@ -327,7 +327,7 @@ hero_content = dmc.Grid(
             order={"xl": 2, "lg": 2, "md": 3, "sm": 3, "xs": 3},
         ),
         dmc.GridCol(
-            router_card,
+            dmc.Anchor(router_card, href="/sales/invoices/2?page=4", underline="never", unstyled=True, td="none"),
             span={"xl": 4, "lg": 4, "md": 6, "sm": 6, "xs": 12},
             order={"xl": 3, "lg": 3, "md": 1, "sm": 1, "xs": 1},
             mx="auto",

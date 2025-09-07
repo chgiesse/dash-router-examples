@@ -92,6 +92,8 @@ class SSEGraph(dcc.Graph):
     async def update_graph(n_clicks, is_dark = None):
         stock_ticks = ["google", "apple", "microsoft", "amazon"]
 
+        yield stream_props("graphs-box", {"children": "testest \n\n further text"})
+
         yield NotificationsContainer.send_notification(
             title="Starting stream!",
             message="Notifications in Dash, Awesome!",

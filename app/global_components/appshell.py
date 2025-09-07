@@ -71,6 +71,19 @@ pale_indigo = [
   "#36437a"
 ]
 
+light_blue = [
+  "#dffbff",
+  "#caf2ff",
+  "#99e2ff",
+  "#64d2ff",
+  "#3cc4fe",
+  "#23bcfe",
+  "#00b5ff",
+  "#00a1e4",
+  "#008fcd",
+  "#007cb6"
+]
+
 
 def create_appshell(content):
     return dmc.MantineProvider(
@@ -91,12 +104,13 @@ def create_appshell(content):
             "components": {"Card": {"defaultProps": {"shadow": "sm"}}},
             "focusRing": "never",
             "colors": {
-                # "dark": list(reversed(shadcn_slate)),
-                "dark": list(reversed(shadcn_gray)),
+                "dark": mantine_dark,
+                # "dark": list(reversed(shadcn_gray)),
                 "slate": list(reversed(shadcn_slate)),
                 "shadc_gray": list(reversed(shadcn_gray)),
                 "blue": blue,
                 "pale_indigo": pale_indigo,
+                "light_blue": light_blue,
             },
         },
         children=dmc.AppShell(

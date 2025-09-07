@@ -18,7 +18,8 @@ async def layout(
     params = QueryParams(**kwargs)
     return dmc.Stack(
         gap="0.25rem",
-        miw="45vw",
+        # miw="45vw",
+        maw={"xl": "50dvw", "lg": "50dvw", "md": "100%", "sm": "100%", "xs": "100%"},
         children=[
             ActionBar(params),
             dmc.Group([slot_31, slot_32], grow=True),

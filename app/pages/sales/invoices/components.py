@@ -81,20 +81,20 @@ def create_invoice_table(data = [], page: int = 1,  is_loading: bool = False):
         withColumnBorders=False,
         withRowBorders=False,
         className="fade-in-chart",
-        h=300
+        h=300,
     )
 
 
 class InvoicePagination(dmc.Pagination):
     class ids:
         pagination = 'invoice-pagination'
-    
+
     clientside_callback(
         """
         function(page, current_search) {
             // Parse current URL parameters
             const urlParams = new URLSearchParams(current_search || '');
-            
+
             // Update or add the page parameter
             if (page) {
                 urlParams.set('page', page.toString());
@@ -102,7 +102,7 @@ class InvoicePagination(dmc.Pagination):
                 // Remove page parameter if page is 1 or falsy
                 urlParams.delete('page');
             }
-            
+
             // Return the updated query string
             const newSearch = urlParams.toString();
             return newSearch ? '?' + newSearch : '';
@@ -113,7 +113,7 @@ class InvoicePagination(dmc.Pagination):
         State(RootContainer.ids.location, "search"),
         prevent_initial_call=True
     )
-    
+
     def __init__(self, page: int = 1):
         super().__init__(
             id=self.ids.pagination,

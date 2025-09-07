@@ -24,6 +24,7 @@ async def layout(
     return dmc.Stack(
         justify="flex-start",
         gap="lg",
+        maw="99dvw",
         children=[
             dmc.Title(
                 "All sales of vendor with ID " + str(invoice_id),

@@ -55,6 +55,14 @@ async def layout(
             ),
         ],
         align="center",
-        # gap=0,
         justify="space-between",
+        px="xl",
+        py="md",
+        style={
+            "maxHeight": "calc(100dvh - var(--app-shell-header-height))",
+            "overflowY": "auto",
+            "overflowX": "hidden",
+            "paddingLeft": "var(--mantine-spacing-xs)",
+            "paddingRight": "var(--mantine-spacing-xs)"
+        }
     )

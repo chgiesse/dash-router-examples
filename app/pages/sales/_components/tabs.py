@@ -10,61 +10,50 @@ class SalesTabs(dmc.Tabs):
     def __init__(self, active_tab: str = None, **kwargs):
         super().__init__(
             id=self.ids.tabs,
-            variant="pills",
             value=active_tab,
-            radius="xl",
+            className="fade-in",
             children=dmc.TabsList(
-                [
-                    dmc.Anchor(
-                        dmc.TabsTab(
-                            "Overview",
-                            value="overview",
-                            leftSection=DashIconify(
-                                icon="radix-icons:dot", height=20
-                            ).to_plotly_json(),
-                            py=8,
-                        ),
-                        href="/sales/overview",
-                        underline=False,
-                    ),
-                    dmc.Anchor(
-                        dmc.TabsTab(
-                            "Invoices",
-                            value="invoices",
-                            py=8,
-                            leftSection=DashIconify(
-                                icon="radix-icons:dot", height=20
-                            ).to_plotly_json(),
-                        ),
-                        href="/sales/invoices",
-                        underline=False,
-                    ),
-                    dmc.Anchor(
-                        dmc.TabsTab(
-                            "Dashboard",
-                            value="dashboard",
-                            py=8,
-                            leftSection=DashIconify(
-                                icon="radix-icons:dot", height=20
-                            ).to_plotly_json(),
-                        ),
-                        href="/sales/dashboard",
-                        underline=False,
-                    ),
-                    dmc.Anchor(
-                        dmc.TabsTab(
-                            "Plotly",
-                            value="analytics",
-                            py=8,
-                            leftSection=DashIconify(
-                                icon="radix-icons:dot", height=20
-                            ).to_plotly_json(),
-                        ),
-                        href="/sales/analytics",
-                        underline=False,
-                    ),
-                    # dmc.Anchor(dmc.TabsTab('Invoices', value='invoices'), href='/sales/invoices', underline=False),
-                ]
+            [
+                dmc.Anchor(
+                dmc.TabsTab(
+                    "Overview",
+                    value="overview",
+                    className="mainLink",
+                ),
+                href="/sales/overview",
+                underline=False,
+                ml={"xxl": "12.5%", "xl": "7.5%", "lg": "7.5%", "md": "7.5%", "sm": "5%", "xs": "2.5%", "xxs": "2.5%"},
+                ),
+                dmc.Anchor(
+                dmc.TabsTab(
+                    "Invoices",
+                    value="invoices",
+                    className="mainLink",
+                ),
+                href="/sales/invoices",
+                underline=False,
+                ),
+                dmc.Anchor(
+                dmc.TabsTab(
+                    "Dashboard",
+                    value="dashboard",
+                    className="mainLink",
+                ),
+                href="/sales/dashboard",
+                underline=False,
+                ),
+                dmc.Anchor(
+                dmc.TabsTab(
+                    "Plotly",
+                    value="analytics",
+                    className="mainLink",
+                ),
+                href="/sales/analytics",
+                underline=False,
+                ),
+            ],
+            grow=True,
+            justify="flex-start",
             ),
         )
 

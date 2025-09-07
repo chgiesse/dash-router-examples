@@ -20,6 +20,11 @@ async def layout(children: ChildContainer, overview: SlotContainer = None, **kwa
 
     return dmc.SimpleGrid(
         cols={"xl": 2, "lg": 2, "md": 1, "sm": 1, "xs": 1},
+        style={
+            "maxHeight": "calc(85dvh)",
+            "overflowY": "auto",
+            "paddingLeft": "var(--mantine-spacing-xs)"
+        },
         children=[
             dmc.Stack(
                 [
