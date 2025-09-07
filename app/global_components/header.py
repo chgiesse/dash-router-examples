@@ -205,7 +205,7 @@ class SearchModal(dmc.Modal):
                 size="md",
                 placeholder="Search nested route...",
             ),
-            dmc.Divider(label="Router", className="filter-divider"),
+            dmc.Divider(label="Router", className="links-divider"),
         ]
         # Add links divider and linked pages
         # search_children.append(
@@ -259,21 +259,24 @@ class SearchModal(dmc.Modal):
 
 class ids:
     search_button = "search-input-trigger"
+    search_icon_button = "search-icon-trigger"
 
 clientside_callback(
     """
     //js
-    function ( nClicks, opened ) {
-        if ( nClicks === undefined ) {
+    function ( nClicksInput, nClicksIcon, opened ) {
+        // If neither has been clicked yet, do nothing
+        if ((nClicksInput || 0) + (nClicksIcon || 0) === 0) {
             return
         }
-        const nextOpened = !opened
-        return nextOpened
+        // Toggle modal state
+        return !opened
     }
     ;//
     """,
     Output(SearchModal.ids.modal, "opened"),
     Input(ids.search_button, "n_clicks"),
+    Input(ids.search_icon_button, "n_clicks"),
     State(SearchModal.ids.modal, "opened"),
 )
 
@@ -282,13 +285,13 @@ logo = dmc.Anchor(
         align="center",
         justify="center",
         gap=5,
-        mt=6.5,
         children=[
             get_icon("mingcute:flash-circle-line", height=35),
             dmc.Title(
                 "Flash",
                 order=2,
                 className="sansation-bold sansation-regular-italic logo-title italic-adjust",
+                mb=5,
                 style={
                     "fontFamily": "Sansation, sans-serif",
                     "fontWeight": 700,
@@ -311,7 +314,7 @@ logo = dmc.Anchor(
 header_links = [
     {"label": "Docs", "href": "/sales"},
     {"label": "Showcase", "href": "/nested-route"},
-    {"label": "Tips & Tricks", "href": "/streaming"},
+    {"label": "Tips & Tricks", "href": "/streaming/live-dashboard"},
     {"label": "Integrations", "href": "#"},
     {"label": "Blog", "href": "#"},
 ]
@@ -319,92 +322,148 @@ header_links = [
 def nav_anchor(label, href):
     return dmc.Anchor(label, href=href, className="mainHeaderLink", unstyled=True, p=0)
 
+version_badge = dmc.Anchor(
+    dmc.Badge(
+        "v1.2.1",
+        variant="outline",
+        size="lg",
+        radius="md",
+        h=35,
+        leftSection=get_icon("mingcute:tag-line")
+    ),
+    unstyled=True,
+    href="https://pypi.org/project/dash-flash/",
+    target="_blank",
+    className="search-input-trigger",
+    style={"textDecoration": "none", "color": "inherit"},
+    p=0,
+    display={"xxs": "none", "xs": "none", "sm": "none", "md": "flex", "lg": "flex", "xl": "flex"},
+)
+
+search_input = dmc.Box(
+    html.Div(
+        className="search-input-trigger",
+        id=ids.search_button,
+        style={"cursor": "pointer"},
+        children=dmc.TextInput(
+            className="search-input-trigger",
+            variant="default",
+            placeholder="Search",
+            w=250,
+            radius="md",
+            leftSection=DashIconify(
+                icon="material-symbols:input-circle-rounded",
+                height=20,
+                rotate=1,
+            ),
+            readOnly=True,
+            rightSection=DashIconify(
+                icon="material-symbols:search-rounded", height=20
+            ),
+        ),
+    ),
+    display={"xxs": "none", "xs": "none", "sm": "none", "md": "none", "lg": "flex", "xl": "flex"},
+)
+
+search_button = dmc.ActionIcon(
+    DashIconify(
+        icon="material-symbols:search-rounded",
+        height=25,
+        rotate=1,
+    ),
+    size="lg",
+    className="main-button",
+    color="dark",
+    variant="default",
+    display={"xxs": "flex", "xs": "flex", "sm": "flex", "md": "flex", "lg": "none", "xl": "none"},
+    id=ids.search_icon_button,
+)
+
+github_button = dmc.Anchor(
+    dmc.ActionIcon(
+        get_icon("line-md:github", height=25),
+        size="lg",
+        className="main-button",
+        color="dark",
+        variant="default",
+    ),
+    unstyled=True,
+    href="https://github.com/chgiesse/flash",
+    target="_blank",
+)
+
+github_button = dmc.ActionIcon(
+    get_icon("line-md:github", height=25),
+    size="lg",
+    className="main-button",
+    variant="default",
+)
+
+theme_button = dmc.ActionIcon(
+    [
+        dmc.Box(
+            get_icon("line-md:moon-to-sunny-outline-transition", height=25),
+            darkHidden=True,
+        ),
+        dmc.Box(
+            get_icon("line-md:moon-twotone", height=25),
+            lightHidden=True,
+        ),
+    ],
+    size="lg",
+    color="dark",
+    variant="default",
+    id="color-scheme-toggle",
+    className="main-button",
+    h=35
+)
+
+burger = dmc.ActionIcon(
+    dmc.Burger(
+        id="navbar-burger",
+        opened=False,
+        size="sm",
+        # mr="xl",
+    ),
+    size="lg",
+    color="dark",
+    variant="default",
+    display={"xxs": "flex", "xs": "flex", "sm": "none", "md": "none", "lg": "none", "xl": "none"},
+    className="main-button",
+)
+
+header_links = dmc.Group(
+    [nav_anchor(item["label"], item["href"]) for item in header_links],
+    gap="sm",
+    display={"xxs": "none", "xs": "none", "sm": "flex", "md": "flex", "lg": "flex", "xl": "flex"},
+)
+
 header = dmc.AppShellHeader(
     withBorder=False,
     children=dmc.Group(
-        # className="main-header-bar",
-        align="flex-start",
+        align="center",
         justify="flex-start",
         mx="auto",
-        w="85%",
-        gap="sm",
+        # w="85%",
+        w="95%",
+        gap=0,
+        h=55,
         children=[
             logo,
-            *[nav_anchor(item["label"], item["href"]) for item in header_links],
+            header_links,
             dmc.Group(
                 style={"marginLeft": "auto"},
                 gap="sm",
                 align="center",
                 my="auto",
                 children=[
-                    dmc.Anchor(
-                        dmc.Badge(
-                            "v1.2.1",
-                            variant="outline",
-                            size="lg",
-                            radius="md",
-                            h=35,
-                            leftSection=get_icon("mingcute:tag-line")
-                        ),
-                        unstyled=True,
-                        href="https://pypi.org/project/dash-flash/",
-                        target="_blank",
-                        className="search-input-trigger",
-                        style={"textDecoration": "none", "color": "inherit"},
-                        p=0,
-                    ),
                     SearchModal(),
-                    html.Div(
-                        className="search-input-trigger",
-                        id=ids.search_button,
-                        children=dmc.TextInput(
-                            className="search-input-trigger",
-                            variant="default",
-                            placeholder="Search",
-                            w=250,
-                            radius="md",
-                            leftSection=DashIconify(
-                                icon="material-symbols:input-circle-rounded",
-                                height=20,
-                                rotate=1,
-                            ),
-                            readOnly=True,
-                            rightSection=DashIconify(
-                                icon="material-symbols:search-rounded", height=20
-                            ),
-                        ),
-                    ),
-                    dmc.Anchor(
-                        dmc.ActionIcon(
-                            get_icon("line-md:github", height=25),
-                            size="lg",
-                            className="main-button",
-                            color="dark",
-                            variant="default",
-                        ),
-                        unstyled=True,
-                        href="https://github.com/chgiesse/flash",
-                        target="_blank",
-                        p=0,
-                    ),
-                    dmc.ActionIcon(
-                        [
-                            dmc.Box(
-                                get_icon("line-md:moon-to-sunny-outline-transition", height=25),
-                                darkHidden=True,
-                            ),
-                            dmc.Box(
-                                get_icon("line-md:moon-twotone", height=25),
-                                lightHidden=True,
-                            ),
-                        ],
-                        size="lg",
-                        color="dark",
-                        variant="default",
-                        id="color-scheme-toggle",
-                        className="main-button",
-                        h=35
-                    ),
+                    version_badge,
+                    search_input,
+                    search_button,
+                    github_button,
+                    theme_button,
+                    burger,
                 ],
             ),
         ],

@@ -12,7 +12,7 @@ RUN pip install poetry
 
 # Copy dependency files
 COPY pyproject.toml ./
-COPY vendors/ ./vendors/
+# COPY vendors/ ./vendors/
 # Configure poetry and install dependencies
 RUN poetry config virtualenvs.create false
 # Copy poetry.lock if it exists, otherwise generate it

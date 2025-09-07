@@ -58,14 +58,36 @@ blue = [
     "#2c4b80",
 ]
 
+pale_indigo = [
+  "#eff2ff",
+  "#dfe2f2",
+  "#bdc2de",
+  "#99a0ca",
+  "#7a84b9",
+  "#6672af",
+  "#5c69ac",
+  "#4c5897",
+  "#424e88",
+  "#36437a"
+]
+
 
 def create_appshell(content):
     return dmc.MantineProvider(
         defaultColorScheme="auto",
         theme={
-            "primaryColor": "blue",
-            "primareShade": "6",
+            "primaryColor": "pale_indigo",
+            "primareShade": "7",
             "defaultRadius": "md",
+            "breakpoints": {
+                "xxs": '20em',             # custom breakpoint
+                "xs": '30em',              # customize breakpoints here
+                "sm": '48em',
+                "md": '64em',
+                "lg": '74em',
+                "xl": '90em',
+                "xxl": '120em',
+            },
             "components": {"Card": {"defaultProps": {"shadow": "sm"}}},
             "focusRing": "never",
             "colors": {
@@ -73,7 +95,8 @@ def create_appshell(content):
                 "dark": list(reversed(shadcn_gray)),
                 "slate": list(reversed(shadcn_slate)),
                 "shadc_gray": list(reversed(shadcn_gray)),
-                "blue": blue
+                "blue": blue,
+                "pale_indigo": pale_indigo,
             },
         },
         children=dmc.AppShell(
@@ -89,14 +112,9 @@ def create_appshell(content):
                     content
                 ),
             ],
-            # padding="md",
+            id="app-shell",
             header={
                 "height": 55,
             }
-            # navbar={
-            #     "width": 65,
-            #     "breakpoint": "sm",
-            #     "collapsed": {"mobile": True},
-            # },
         ),
     )

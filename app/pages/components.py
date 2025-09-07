@@ -9,8 +9,9 @@ from typing import Literal
 CARD_HEIGHT = "calc(32rem + var(--mantine-spacing-md))"
 
 
-hero_section = html.Div(
+hero_section = dmc.Group(
     className='landing-page-content',
+    mt="xl",
     children=[
         html.Div(
             className="hero-cta-glass hero-glass fade-in-bottom",
@@ -146,7 +147,6 @@ class LottieAnimation(EventListener):
             ],
         )
 
-
 router_card = LottieAnimation(
     "router",
     children=dmc.Card(
@@ -168,9 +168,9 @@ router_card = LottieAnimation(
                         speed=0.5,
                         id=LottieAnimation.ids.lottie_id("router"),
                     ),
-                    h=200, w=256 * 1.5, align="center", justify="center"
+                    h=200, w=256, align="center", justify="center"
                 ),
-                withBorder=True,
+                # withBorder=True,
                 display="flex",
                 style={
                     "justifyContent": "center",
@@ -197,7 +197,7 @@ streamin_card = LottieAnimation(
     "stream",
     children=dmc.Card(
         # h=CARD_HEIGHT,
-        withBorder=True,
+        # withBorder=True,
         className="card-glass",
         my="auto",
         children=[
@@ -216,7 +216,6 @@ streamin_card = LottieAnimation(
                     ),
                     w=256 * 0.75, align="center", justify="center"
                 ),
-                withBorder=True,
                 display="flex",
                 style={
                     "justifyContent": "center",
@@ -234,69 +233,99 @@ streamin_card = LottieAnimation(
                     spacing="sm",
                     style={"fontSize": "1rem", "lineHeight": 1.55},
                 )
-            ], p="md", withBorder=True),
+            ], p="md"),
         ],
     ),
 )
 
-
-hero_content = dmc.SimpleGrid(
-    mt="xl",
-    cols=3,
-    maw=1100,
+callback_card = dmc.Card(
+    withBorder=True,
+    className="card-glass",
+    p="md",
+    h="16rem",
     children=[
-        dmc.Flex(streamin_card, h=CARD_HEIGHT, align="center", justify="center"),
-        dmc.Stack([
-            dmc.Card(
-                withBorder=True,
-                className="card-glass",
-                p="md",
-                h="16rem",
-                children=[
-                    dmc.Text("Async‑first", fw="bold", size="xl", mb="xs"),
-                    dmc.Text(
-                        "Non‑blocking callbacks with Python async/await for snappy UIs.",
-                        style={"color": "var(--mantine-color-dimmed)"},
-                        size="sm",
-                        mb="xs",
-                    ),
-                    dmc.List(
-                        [
-                            dmc.ListItem("Concurrent background tasks"),
-                            dmc.ListItem("Seamless I/O without blocking"),
-                            dmc.ListItem("Predictable performance under load"),
-                        ],
-                        spacing="xs",
-                        style={"fontSize": "0.95rem", "lineHeight": 1.5},
-                    ),
-                ],
-            ),
-            dmc.Card(
-                withBorder=True,
-                className="card-glass",
-                p="md",
-                h="16rem",
-                children=[
-                    dmc.Text("Advanced routing", fw="bold", size="xl", mb="xs"),
-                    dmc.Text(
-                        "Compose complex apps with small, reusable pages.",
-                        style={"color": "var(--mantine-color-dimmed)"},
-                        size="sm",
-                        mb="xs",
-                    ),
-                    dmc.List(
-                        [
-                            dmc.ListItem("Nested routes & sub‑rendering"),
-                            dmc.ListItem("Smart query params"),
-                            dmc.ListItem("Lazy loading for fast startup"),
-                        ],
-                        spacing="xs",
-                        style={"fontSize": "0.95rem", "lineHeight": 1.5},
-                    ),
-                ],
-            ),
-        ]),
-        dmc.Flex(router_card, h=CARD_HEIGHT, align="center")
+        dmc.Text("Async‑first", fw="bold", size="xl", mb="xs"),
+        dmc.Text(
+            "Non‑blocking callbacks with Python async/await for snappy UIs.",
+            style={"color": "var(--mantine-color-dimmed)"},
+            size="sm",
+            mb="xs",
+        ),
+        dmc.List(
+            [
+                dmc.ListItem("Concurrent background tasks"),
+                dmc.ListItem("Seamless I/O without blocking"),
+                dmc.ListItem("Predictable performance under load"),
+            ],
+            spacing="xs",
+            style={"fontSize": "0.95rem", "lineHeight": 1.5},
+        ),
     ],
-    w="60vw",
+)
+
+layout_card = dmc.Card(
+    withBorder=True,
+    className="card-glass",
+    p="md",
+    h="16rem",
+    children=[
+        dmc.Text("Advanced routing", fw="bold", size="xl", mb="xs"),
+        dmc.Text(
+            "Compose complex apps with small, reusable pages.",
+            style={"color": "var(--mantine-color-dimmed)"},
+            size="sm",
+            mb="xs",
+        ),
+        dmc.List(
+            [
+                dmc.ListItem("Nested routes & sub‑rendering"),
+                dmc.ListItem("Smart query params"),
+                dmc.ListItem("Lazy loading for fast startup"),
+            ],
+            spacing="xs",
+            style={"fontSize": "0.95rem", "lineHeight": 1.5},
+        ),
+    ],
+)
+
+hero_content = dmc.Grid(
+    maw=1100,
+    grow=True,
+    mx="xl",
+    children=[
+        dmc.GridCol(
+            streamin_card,
+            span={"xl": 4, "lg": 4, "md": 6, "sm": 6, "xs": 12},
+            order={"xl": 1, "lg": 1, "md": 2, "sm": 2, "xs": 2},
+            # maw=350,
+            mx="auto",
+        ),
+        dmc.GridCol(
+            dmc.Grid(
+                [
+                    dmc.GridCol(
+                        callback_card,
+                        span={"xxl": 12, "xl": 12, "lg": 12, "md": 6, "sm": 6, "xs": 12, "xxs": 12}
+                    ),
+                    dmc.GridCol(
+                        layout_card,
+                        span={"xxl": 12, "xl": 12, "lg": 12, "md": 6, "sm": 6, "xs": 12, "xxs": 12}
+                    ),
+                ],
+                grow=True,
+            ),
+            span={"xl": 4, "lg": 4, "md": 12, "sm": 12, "xs": 12},
+            order={"xl": 2, "lg": 2, "md": 3, "sm": 3, "xs": 3},
+            # maw=350,
+        ),
+        dmc.GridCol(
+            router_card,
+            # h=CARD_HEIGHT,
+            span={"xl": 4, "lg": 4, "md": 6, "sm": 6, "xs": 12},
+            order={"xl": 3, "lg": 3, "md": 1, "sm": 1, "xs": 1},
+            # maw=350,
+            mx="auto",
+        )
+    ],
+    # w="60vw",
 )

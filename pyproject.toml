@@ -34,9 +34,9 @@ psutil = "^5.9.8"
 httpx = "^0.27.2"
 rich = "^13.9.2"
 dash-extensions = "^2.0.4"
-dash-event-callback = {path = "vendors/dash_event_callback-1.0.2.tar.gz"}
 matplotlib = "^3.10.5"
 dash-flash = "1.2.1"
+dash-event-callback = "^1.2.0"
 
 [build-system]
 requires = ["poetry-core"]

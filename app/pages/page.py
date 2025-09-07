@@ -15,7 +15,20 @@ layout = html.Div(
                         [
                             hero_header,
                             hero_section,
-                            dmc.Space(h=50),
+                            dmc.Group([
+                                dmc.Button(
+                                    "Get Started",
+                                    size="md",
+                                    variant="white",
+                                ),
+                                dmc.Button(
+                                    "View on GitHub",
+                                    size="md",
+                                    variant="default",
+                                    color="dark",
+                                    className="main-button"
+                                ),
+                            ], my="xl"),
                             hero_content
                         ],
                         align="center",
@@ -23,8 +36,10 @@ layout = html.Div(
                         py="md",
                     ),
                     # className="bg-overlay-stack",
-                    h="calc(100vh - var(--app-shell-header-height) - 20px)",
-                    type="scroll"
+                    h="calc(100vh - var(--app-shell-header-height) - 40px)",
+                    type="scroll",
+                    offsetScrollbars="y",
+                    pl="xs"
                 )
             ],
             className="landing-page-bg",

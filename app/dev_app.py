@@ -68,4 +68,4 @@ apply_vizro_theme()
 # router = FlashRouter(app, requests_pathname_prefix="/dev/")
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8031)
+    app.run(debug=True, dev_tools_ui=False, port=8031)

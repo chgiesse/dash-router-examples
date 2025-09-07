@@ -607,21 +607,18 @@ docs = ["colorlover", "dash (>=2.9.0)", "dash-bootstrap-components (>=1.0.0)", "
 
 [[package]]
 name = "dash-event-callback"
-version = "1.0.2"
+version = "1.2.0"
 description = "Streaming callback for Dash"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "dash_event_callback-1.0.2.tar.gz", hash = "sha256:cd95d2436772fbd0d472117d60880d2b97715175540d6e39703385f856c4bce3"},
+    {file = "dash_event_callback-1.2.0-py3-none-any.whl", hash = "sha256:852f052d1f31bbdaacdf9a9317b11e876279c6c5a80d05cd18164baec2f79c71"},
+    {file = "dash_event_callback-1.2.0.tar.gz", hash = "sha256:d843928a6409ff6483c1efa6a399fb423b38d722f54ee57e6fd3d48fd32ad8db"},
 ]
 
 [package.dependencies]
 dash = "3.2.0"
-
-[package.source]
-type = "file"
-url = "vendors/dash_event_callback-1.0.2.tar.gz"
 
 [[package]]
 name = "dash-extensions"
@@ -2970,4 +2967,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "eb4797b37da5c1f2bb1fa20236ad3dda49b08fa956b19e6624a0a09bc4417d8f"
+content-hash = "b9abedc001ea49a042faa6c1898b7438a1c8d8ad6bdf6e6e8c9a13c0fb2bd852"
