@@ -1,5 +1,5 @@
 FROM python:3.12-slim-bookworm
-
+RUN echo "Building flash router example app"
 WORKDIR /app
 
 # Install system dependencies

@@ -1,33 +1,19 @@
 import plotly.express as px
-import dash_mantine_components as dmc
 from dash._utils import to_json
 from aiocache import Cache
 from flash_router import RootContainer, FlashRouter
 from flash import Flash, State
-from flash import Input, Output
 
 from global_components.appshell import create_appshell
-from streaming.stream import SSECallbackComponent, Streamer
 from theme import apply_vizro_theme
-from api.sql_operator import setup_db
-from monitoring.metrics import setup_metrics
 from concurrent.futures import ProcessPoolExecutor
 import asyncio
-import time
-import os
 import random
 
 
 app = Flash(
     __name__,
     suppress_callback_exceptions=True,
-    external_stylesheets=[
-        dmc.styles.CHARTS,
-        dmc.styles.DATES,
-        dmc.styles.NOTIFICATIONS,
-        dmc.styles.RICH_TEXT_EDITOR,
-    ],
-    # external_scripts=["https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"],
     pages_folder="pages",
     use_pages=False,
     update_title=None,  # type: ignore[arg-type]
@@ -35,11 +21,10 @@ app = Flash(
     compress=True,
 )
 
-app.layout = create_appshell([RootContainer(), SSECallbackComponent()])
+app.layout = create_appshell([RootContainer()])
 process_pool = ProcessPoolExecutor(max_workers=2)
 
 server = app.server
-
 
 import pandas as pd
 import numpy as np
@@ -130,25 +115,5 @@ async def network_heavy():
     }
 
 router = FlashRouter(app)
-streamer = Streamer(app)
 cache = Cache()
 apply_vizro_theme()
-
-# enable metrics endpoint and request hooks
-setup_metrics(app)
-
-# Keep dcc.Store (local) and Mantine scheme in sync with the UI toggle.
-# Expects a toggle with id "color-scheme-toggle" (already referenced in routing_callback_inputs).
-app.clientside_callback(
-    """
-    function(checked){
-        var scheme = checked ? 'dark' : 'light';
-        if (typeof window.setMantineScheme === 'function') {
-            window.setMantineScheme(scheme);
-        }
-        return scheme;
-    }
-    """,
-    Output("color-scheme-store", "data"),
-    Input("color-scheme-toggle", "checked"),
-)
