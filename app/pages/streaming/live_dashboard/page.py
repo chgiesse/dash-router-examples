@@ -1,6 +1,7 @@
 from .components import SSEGraph, StreamButtons
 
 import dash_mantine_components as dmc
+from dash import dcc
 
 
 async def layout(*args, **kwargs):
@@ -14,7 +15,7 @@ async def layout(*args, **kwargs):
             cols=2,
             id="graphs-grid",
             children=[
-                dmc.Text(id="graphs-box"),
+                dcc.Markdown(id="graphs-box"),
                 SSEGraph("google", template),
                 SSEGraph("amazon", template),
                 SSEGraph("microsoft", template),

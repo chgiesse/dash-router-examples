@@ -1,8 +1,12 @@
-from flash import Flash
+from flash import Flash, Output
 
 from utils.helpers import create_theme_callback, get_icon
 from global_components.notifications import NotificationsContainer
 from flash_router import RootContainer
+from dash_extensions.streaming import sse_message, sse_options
+from dash_extensions import SSE
+import json
+from quart import request, Response
 
 import asyncio
 import random
@@ -21,154 +25,77 @@ from flash import (
     stream_props,
 )
 
-count = 0
-start_time = time.time()
-multiplicator = 1
 
-def get_count():
-    global count
-    count += 1
-    return count
+app = Flash(
+    __name__,
+    # requests_pathname_prefix="/dev/dash/",
+    # routes_pathname_prefix="/dev/dash/"
+)
 
-async def get_stocks():
-    global start_time, multiplicator
-    rounds = get_count()
-    elapsed_time = time.time() - start_time
-    y1 = random.random() * multiplicator
-    y2 = random.random() * multiplicator
+payload = {"model": "GPT", "messages": [{'role':'user','content':'tell me a story'}]}
 
-    if int(elapsed_time) % 10 == 0:
-        multiplicator = random.randint(-1, 1) * rounds + 1
-        rounds += 1
+app.layout = dmc.MantineProvider(dmc.Paper([
+    dmc.Button("Start Streaming", id="start-btn"),
+    SSE(
+        id="sse1",
+        # url="/stream-openai",
+        # options=sse_options(json.dumps(payload)),
+        concat=True,
+        animate_chunk=5,
+        animate_delay=10,
+    ),
+    dcc.Markdown(id="last_response",style={'font-size':15})
+]))
 
-    x = datetime.now()
-    update = [dict(x=[[x], [x]], y=[[y1], [y2]]), [0, 1], 100]
-    return update
+def stream_text(model_name, hist):
+    # Simulate streaming text generation
+    responses = """
+    Once upon a time in a land far, far away,
+    there lived a wise old owl. The owl was known throughout \n\n
+    the land for its knowledge and kindness. Every day, animals from all over
+    would come to the owl to seek advice and learn new **things**. \n\n
+    One day, a young rabbit approached the owl with a question about courage. The **owl**
+    smiled and began to tell the rabbit a story about bravery and friendship...
+    """
+    yield responses
+    # for response in responses:
+    #     yield response + " "
+    #     time.sleep(1)  # Simulate delay for streaming effect
 
+@app.server.post("/stream-openai")
+async def stream_openai():
+    # Accept either raw text or JSON body (sse_options handles both)
+    data = await request.get_json()
+    print("DATA SSE", data, flush=True)
+    if data is None:
+        # fallback: raw text (not used here, but keeps parity with your example)
+        data = {"messages": [{"role": "user", "content": await request.get_data()}]}
 
-class StreamButtons(dmc.Group):
-    class ids:
-        start_btn = "start-stream-button"
-        end_btn = "end-stream-button"
+    messages = data.get("messages", [])
+    model = data.get("model")
 
-    def __init__(self):
-        super().__init__(
-            children=[
-                dmc.Button(
-                    "Start stream",
-                    id=self.ids.start_btn,
-                ),
-                dmc.Button(
-                    "End stream",
-                    id=self.ids.end_btn,
-                    display="none",
-                    leftSection=get_icon("mingcute:stop-circle-line", height=15),
-                    color="red",
-                    variant="outline",
-                ),
-            ],
-            mb="md",
-        )
+    async def eventStream():
+        for piece in stream_text(model_name=model, hist=[{'role':'user','content':'tell me a story'}]):
 
-class SSEGraph(dcc.Graph):
-    class ids:
-        graph = lambda idx: {"type": "sse-graph-example", "index": idx}
+            yield sse_message(piece)
 
-    @event_callback(
-        Input(StreamButtons.ids.start_btn, "n_clicks"),
-        cancel=[
-            (Input(RootContainer.ids.location, "pathname", allow_optional=True), "/streaming/live-dashboard"),
-            (Input(StreamButtons.ids.end_btn, "n_clicks", allow_optional=True), 0),
-        ],
-        reset_props=[
-            (StreamButtons.ids.start_btn, {"disabled": False, "children": "Start stream"}),
-            (StreamButtons.ids.end_btn, {"display": "none"}),
-        ],
-        on_error=lambda e: NotificationsContainer.send_notification(
-            title="Error", message=str(e), color="red"
-        )
-    )
-    async def update_graph(n_clicks):
+        yield sse_message("[DONE]")
 
-        yield NotificationsContainer.send_notification(
-            title="Starting stream!",
-            message="Notifications in Dash, Awesome!",
-            color="lime",
-        )
+    return Response(eventStream(), mimetype="text/event-stream")
 
-        yield stream_props([
-            (StreamButtons.ids.start_btn, {"disabled": True, "children": "Running"}),
-            (StreamButtons.ids.end_btn, {"display": "flex"}),
-        ])
+app.clientside_callback(
+    "function(x){return x;}",
+    Output("last_response", "children"),
+    Input("sse1", "animation"),
+)
 
-        while True:
-            await asyncio.sleep(1)
-            stock_ticks = ["google", "apple", "microsoft", "amazon"]
-            stocks = await asyncio.gather(*[get_stocks() for _ in stock_ticks])
-            update = []
-            for tick, value in zip(stock_ticks, stocks):
-                update.append((SSEGraph.ids.graph(tick), {"extendData": value}))
-
-            yield stream_props(update)
-
-    def __init__(self, chart_type: str, template: str):
-        fig = go.Figure()
-
-        fig.add_trace(
-            go.Scatter(
-                x=pd.Series(dtype=object),
-                y=pd.Series(dtype=object),
-                mode="lines+markers",
-                name="trace-1",
-            )
-        )
-
-        fig.add_trace(
-            go.Scatter(
-                x=pd.Series(dtype=object),
-                y=pd.Series(dtype=object),
-                mode="lines+markers",
-                name="trace-2",
-            )
-        )
-        fig.update_layout(hovermode="x unified")
-
-        fig.update_layout(
-            template=template,
-            xaxis_title=None,
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)",
-            title=dict(text=chart_type.title()),
-            legend=dict(
-                orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="right",
-                x=1,
-            ),
-        )
-
-        super().__init__(
-            id=self.ids.graph(chart_type),
-            figure=fig,
-            style={"height": 400}
-        )
-
-app = Flash(__name__, requests_pathname_prefix="/dev/dash/", routes_pathname_prefix="/dev/dash/")
-app.layout = dmc.MantineProvider(dmc.Stack(
-    children=[
-        StreamButtons(),
-        dmc.SimpleGrid(
-            w="100%",
-            cols=1,
-            children=[
-                SSEGraph("google", "plotly_dark"),
-                SSEGraph('amazon', 'plotly_dark'),
-                SSEGraph('apple', 'plotly_dark'),
-                SSEGraph('microsoft', 'plotly_dark'),
-            ],
-        ),
-    ]
-))
+@app.callback(
+    Output("sse1", "url"),
+    Output("sse1", "options"),
+    Input("start-btn", "n_clicks"),
+    prevent_initial_call=True,
+)
+def start_streaming(_):
+    return "/stream-openai", sse_options("Hello, world!")
 
 app.run(debug=True, port=11111)

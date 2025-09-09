@@ -32,7 +32,7 @@ def create_invoice_table(data = [], page: int = 1,  is_loading: bool = False):
                         if not is_loading
                         else create_td_skeleton()
                     ),
-                    w="10%",
+                    w="20%",
                 ),
                 dmc.TableTd(
                     element.get("mass") if not is_loading else create_td_skeleton(),
@@ -44,7 +44,7 @@ def create_invoice_table(data = [], page: int = 1,  is_loading: bool = False):
                 ),
                 dmc.TableTd(
                     element.get("amount") if not is_loading else create_td_skeleton(),
-                    w="fit-content",
+                    w="15%",
                 ),
                 dmc.TableTd(
                     (
@@ -52,7 +52,7 @@ def create_invoice_table(data = [], page: int = 1,  is_loading: bool = False):
                         if not is_loading
                         else create_td_skeleton()
                     ),
-                    w="20%",
+                    w="15%"
                 ),
             ],
             h=50
@@ -72,16 +72,23 @@ def create_invoice_table(data = [], page: int = 1,  is_loading: bool = False):
         )
     )
 
-    return dmc.Table(
-        [head, body],
-        verticalSpacing="sm",
-        horizontalSpacing="sm",
-        highlightOnHover=True,
-        withTableBorder=False,
-        withColumnBorders=False,
-        withRowBorders=False,
-        className="fade-in-chart",
-        h=300,
+    return dmc.TableScrollContainer(
+        dmc.Table(
+            [head, body],
+            verticalSpacing="sm",
+            horizontalSpacing="sm",
+            highlightOnHover=True,
+            withTableBorder=False,
+            withColumnBorders=False,
+            withRowBorders=False,
+            className="fade-in-chart",
+            stickyHeader=True
+        ),
+        maxHeight=350,
+        minWidth=200,
+        
+        w={"xs": 350, "xxs": 350, "xxl": "700", "xl": "100%"},
+        type="scrollarea",
     )
 
 

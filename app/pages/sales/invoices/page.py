@@ -23,7 +23,8 @@ async def layout(children: ChildContainer, overview: SlotContainer = None, **kwa
         style={
             "maxHeight": "calc(85dvh)",
             "overflowY": "auto",
-            "paddingLeft": "var(--mantine-spacing-xs)"
+            "overflowX": "hidden"
+            # "paddingLeft": "var(--mantine-spacing-xs)"
         },
         children=[
             dmc.Stack(
@@ -47,7 +48,7 @@ async def layout(children: ChildContainer, overview: SlotContainer = None, **kwa
                     InvoicePagination(page)
                 ]
             ),
-            children,
+            dmc.Box(children, mih=300),
             # dmc.Stack(
             #     [
             #         children,
