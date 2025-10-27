@@ -16,10 +16,10 @@ def layout(
     params = QueryParams(**kwargs)
     return dmc.Stack(
         gap="0.25rem",
-        miw="45vw",
+        w="50%",
         children=[
             ActionBar(params),
-            dmc.Group([slot_31, slot_32], grow=True),
+            dmc.SimpleGrid([slot_31, slot_32], cols=2),
             dmc.Tabs(
                 [
                     dmc.TabsList(

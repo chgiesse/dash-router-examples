@@ -5,7 +5,7 @@ from dash_router import SlotContainer, ChildContainer
 from dash import dcc
 
 
-async def layout(children: ChildContainer, overview: SlotContainer = None, **kwargs):
+async def layout(children: ChildContainer, overview: SlotContainer, **kwargs):
 
     page = int(kwargs.get("page", 1))
 
@@ -19,14 +19,7 @@ async def layout(children: ChildContainer, overview: SlotContainer = None, **kwa
     ]
 
     return dmc.SimpleGrid(
-        cols={"xl": 2, "lg": 2, "md": 1, "sm": 1, "xs": 1},
-        style={
-            "maxHeight": "calc(85dvh)",
-            "overflowY": "auto",
-            "overflowX": "hidden"
-            # "paddingLeft": "var(--mantine-spacing-xs)"
-        },
-        children=[
+        [
             dmc.Stack(
                 [
                     dmc.Title("Top Vendors", order=3),
@@ -37,7 +30,7 @@ async def layout(children: ChildContainer, overview: SlotContainer = None, **kwa
                             dataKey="month",
                             data=bar_data,
                             orientation="vertical",
-                            yAxisProps={"width": 80},
+                            yAxisProps={"width": 70},
                             series=[{"name": "Smartphones", "color": "violet.4"}],
                             barProps={"isAnimationActive": True, "radius": 50},
                             gridAxis="none",
@@ -49,15 +42,13 @@ async def layout(children: ChildContainer, overview: SlotContainer = None, **kwa
                 ]
             ),
             dmc.Box(children, mih=300),
-            # dmc.Stack(
-            #     [
-            #         children,
-            #         dmc.Alert(
-            #             "This is still the invoices section",
-            #             title="Invoices section!",
-            #             mt="auto",
-            #         ),
-            #     ]
-            # ),
         ],
+        cols={
+            "xl": 2,
+            "lg": 2,
+            "md": 1,
+            "sm": 1,
+            "xs": 1
+        }, # type: ignore
+        m=0, p=0
     )

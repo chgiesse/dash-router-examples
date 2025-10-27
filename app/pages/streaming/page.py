@@ -1,49 +1,42 @@
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
 from dash_router import ChildContainer, RouteConfig
+from global_components.tabs import PageTabs
 
 config = RouteConfig(default_child="live-dashboard")
 
 
 async def layout(children: ChildContainer, **kwargs):
-    print("streaming layout", kwargs, flush=True)
-    create_navlink = lambda href, icon, label: dmc.NavLink(
-        label=label,
-        href=href,
-        active="exact",
-        variant="filled",
-        leftSection=DashIconify(icon=icon, height=20).to_plotly_json(),
-        fw=700,
-        w="fit-content",
-        h=35,
-    )
-
-    return dmc.Stack(
-        children=[
-            dmc.Paper(
-                radius="xl",
-                withBorder=True,
-                p=5,
-                w="fit-content",
-                mx="auto",
-                children=dmc.Group(
-                    [
-                        create_navlink(
-                            label="Live Dashboard",
-                            href="/streaming/live-dashboard",
-                            icon="fluent:stream-20-filled",
-                        ),
-                        create_navlink(
-                            label="Components",
-                            href="/streaming/live-components",
-                            icon="lucide:component",
-                        ),
-                    ],
-                    justify="center",
-                    gap="xs",
-                ),
-            ),
+    return [
+        PageTabs(
+            [
+                {"label": "Dashboard", "href": "/streaming/live-dashboard"},
+                {"label": "Components", "href": "/streaming/live-components"},
+                {"label": "Feed", "href": "/streaming/feed-component"},
+            ],
+            children.props.active,
+        ),
+        dmc.Box(
             children,
-        ],
-        # align="center",
-    )
+            w={
+                "xxl": "75%",
+                "xl": "85%",
+                "lg": "85%",
+                "md": "85%",
+                "sm": "90%",
+                "xs": "99%",
+                "xxs": "99%"
+            }, # type: ignore
+            px={
+                "xxl": 0,
+                "xl": 0,
+                "lg": 0,
+                "md": 0,
+                "sm": "md",
+                "xs": "sm",
+                "xxs": "xs"
+            }, # type: ignore
+            mx="auto", # type: ignore
+            mt="md"
+        )
+    ]

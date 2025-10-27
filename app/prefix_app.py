@@ -1,101 +1,120 @@
-from flash import Flash, Output
+# import time
 
-from utils.helpers import create_theme_callback, get_icon
-from global_components.notifications import NotificationsContainer
-from flash_router import RootContainer
-from dash_extensions.streaming import sse_message, sse_options
-from dash_extensions import SSE
-import json
-from quart import request, Response
+# from dash_extensions import SSE
+# from dash import dcc
+# from dash_extensions.enrich import DashProxy, Input, Output, html
+# from dash_extensions.streaming import sse_message, sse_options
+# from flask import Response, request
 
-import asyncio
-import random
-import time
-from datetime import datetime
+# # Create a small example app.
+# app = DashProxy(__name__)
+# app.layout = html.Div(
+#     [
+#         html.Button("Start streaming", id="btn"),
+#         SSE(id="sse", concat=True),
+#         dcc.Markdown(id="response", style={"whiteSpace": "pre-wrap"}),
+#     ]
+# )
+# # Render (concatenated, animated) text from the SSE component.
+# app.clientside_callback(
+#     "function(x){return x};",
+#     Output("response", "children"),
+#     Input("sse", "value"),
+# )
 
+
+# @app.callback(
+#     Output("sse", "url"),
+#     Output("sse", "options"),
+#     Input("btn", "n_clicks"),
+#     prevent_initial_call=True,
+# )
+# def start_streaming(_):
+#     return "/stream", sse_options("Hello, world!")
+
+
+# @app.server.post("/stream")
+# def stream():
+#     message = request.data.decode("utf-8")
+
+#     def eventStream():
+#         yield sse_message(message)
+#         yield sse_message("more text coming up...")
+#         # for char in message:
+#         #     time.sleep(0.1)
+#         #     yield sse_message(char)
+#         # yield sse_message()
+
+#     return Response(eventStream(), mimetype="text/event-stream")
+
+
+# app.run(debug=True, port=11111)
+from flash import Input, event_callback, stream_props, page_container
+# from utils.risklab import build_root_path, getPort, setProd, setPort
+from flash import Flash
 import dash_mantine_components as dmc
 import pandas as pd
-import plotly.graph_objects as go
-import plotly.io as pio
-from dash import dcc, html
-from flash import (
-    ALL,
-    Input,
-    event_callback,
-    stream_props,
-)
+import asyncio
+import plotly
+import dash_ag_grid as dag
 
+# setPort(8058)
+# setProd(False)
 
 app = Flash(
     __name__,
-    # requests_pathname_prefix="/dev/dash/",
-    # routes_pathname_prefix="/dev/dash/"
+    update_title="Updating...",
+    # requests_pathname_prefix=build_root_path(port=getPort()),
+    requests_pathname_prefix="/dev/",
+    routes_pathname_prefix="/dev/",
+    # use_pages=True,
+    # pages_folder="qpages",
+    # suppress_callback_exceptions=True,
 )
 
-payload = {"model": "GPT", "messages": [{'role':'user','content':'tell me a story'}]}
-
-app.layout = dmc.MantineProvider(dmc.Paper([
-    dmc.Button("Start Streaming", id="start-btn"),
-    SSE(
-        id="sse1",
-        # url="/stream-openai",
-        # options=sse_options(json.dumps(payload)),
-        concat=True,
-        animate_chunk=5,
-        animate_delay=10,
-    ),
-    dcc.Markdown(id="last_response",style={'font-size':15})
-]))
-
-def stream_text(model_name, hist):
-    # Simulate streaming text generation
-    responses = """
-    Once upon a time in a land far, far away,
-    there lived a wise old owl. The owl was known throughout \n\n
-    the land for its knowledge and kindness. Every day, animals from all over
-    would come to the owl to seek advice and learn new **things**. \n\n
-    One day, a young rabbit approached the owl with a question about courage. The **owl**
-    smiled and began to tell the rabbit a story about bravery and friendship...
-    """
-    yield responses
-    # for response in responses:
-    #     yield response + " "
-    #     time.sleep(1)  # Simulate delay for streaming effect
-
-@app.server.post("/stream-openai")
-async def stream_openai():
-    # Accept either raw text or JSON body (sse_options handles both)
-    data = await request.get_json()
-    print("DATA SSE", data, flush=True)
-    if data is None:
-        # fallback: raw text (not used here, but keeps parity with your example)
-        data = {"messages": [{"role": "user", "content": await request.get_data()}]}
-
-    messages = data.get("messages", [])
-    model = data.get("model")
-
-    async def eventStream():
-        for piece in stream_text(model_name=model, hist=[{'role':'user','content':'tell me a story'}]):
-
-            yield sse_message(piece)
-
-        yield sse_message("[DONE]")
-
-    return Response(eventStream(), mimetype="text/event-stream")
-
-app.clientside_callback(
-    "function(x){return x;}",
-    Output("last_response", "children"),
-    Input("sse1", "animation"),
+app.layout = dmc.MantineProvider(
+    [
+        dmc.Button("Start stream", id="start-stream-button"),
+        dmc.Button("Cancel stream", id="cancel-stream-button", display="None"),
+        dag.AgGrid(id="dash-ag-grid")
+    ]
 )
 
-@app.callback(
-    Output("sse1", "url"),
-    Output("sse1", "options"),
-    Input("start-btn", "n_clicks"),
-    prevent_initial_call=True,
-)
-def start_streaming(_):
-    return "/stream-openai", sse_options("Hello, world!")
+async def get_data(chunk_size: int):
+    df: pd.DataFrame = plotly.data.gapminder()
+    total_rows = df.shape[0]
 
-app.run(debug=True, port=11111)
+    while total_rows > 0:
+        await asyncio.sleep(2)
+        end = len(df) - total_rows + chunk_size
+        total_rows -= chunk_size
+        update_data = df[:end].to_dict("records") # type: ignore
+        df.drop(df.index[:end], inplace=True) # type: ignore
+        yield update_data, df.columns
+
+@event_callback(Input("start-stream-button", "n_clicks"))
+async def update_table(_):
+
+    yield stream_props([
+        ("start-stream-button", {"loading": True}),
+        ("cancel-stream-button", {"display": "flex"})
+    ])
+
+    progress = 0
+    chunk_size = 500
+    async for data_chunk, colnames in get_data(chunk_size):
+        if progress == 0:
+            columnDefs = [{"field": col} for col in colnames]
+            update = {"rowData": data_chunk, "columnDefs": columnDefs}
+        else:
+            update = {"rowTransaction": {"add": data_chunk}}
+
+        yield stream_props("dash-ag-grid", update)
+
+        progress += 1
+
+    yield stream_props("start-stream-button", {"loading": False, "children": "Reload"})
+    yield stream_props("reset-strea-button", {"display": "none"})
+
+if __name__ == "__main__":
+    app.run(port=8058, debug=True, dev_tools_hot_reload=False)

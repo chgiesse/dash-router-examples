@@ -45,7 +45,7 @@ layout = html.Div(
                         py="md",
                     ),
                     style={
-                        "height": "calc(100dvh - var(--app-shell-header-height))",
+                        "height": "calc(100dvh - var(--mantine-header-height, 60px))",
                         "overflowY": "auto",
                         "paddingLeft": "var(--mantine-spacing-xs)"
                     },

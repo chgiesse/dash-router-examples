@@ -1,0 +1,45 @@
+{
+  "users": [
+    {
+      "id": 53,
+      "name": "Alice Johnsons",
+      "email": "alice.johnson@email.com"
+    },
+    {
+      "id": 75,
+      "name": "Michael Browns",
+      "email": "michael.brown@example.com"
+    },
+    {
+      "id": 93,
+      "name": "Olivia Davis",
+      "email": "olivia.davis@example.com"
+    },
+    {
+      "id": 94,
+      "name": "David Wilson ",
+      "email": "david.wilson@email.com"
+    },
+    {
+      "id": 95,
+      "name": "Liam Nguyen ",
+      "email": "liam.nguyen@example.com"
+    },
+    {
+      "id": 97,
+      "name": "Bob Smith",
+      "email": "bob.smith@email.com"
+    },
+    {
+      "id": 98,
+      "name": "Emily Turner ",
+      "email": "emily.turner@email.com"
+    },
+    {
+      "id": 99,
+      "name": "Maja Malien",
+      "email": "maja.malien@email.com"
+    }
+  ],
+  "next_id": 100
+}

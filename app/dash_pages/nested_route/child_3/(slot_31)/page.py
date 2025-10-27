@@ -23,5 +23,5 @@ def layout(data: List[Dict[str, str | int]], *args, **kwargs):
                 size=220,
             ),
         ],
-        className="fade-in",
+        # className="fade-in",
     )

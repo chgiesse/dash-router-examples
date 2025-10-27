@@ -1,7 +1,7 @@
 from utils.helpers import get_icon
-from global_components.theme import ThemeComponent
+from global_components.theme import ThemeComponent, ThemeToggle, theme_store
 import dash_mantine_components as dmc
-from flash import clientside_callback, Input, Output, ALL, State
+from flash import clientside_callback, Input, Output, ALL, State, MATCH
 from flash_router import RootContainer
 from dash import html
 from dash_iconify import DashIconify
@@ -74,47 +74,44 @@ def nav_anchor(label, href):
 class MobileDrawer(dmc.Box):
 
     class ids:
-        drawer = "mobile-drawer"
-        burger = "navbar-burger"
+        drawer = lambda location: {"location": location, "type": "mobile-drawer"}
+        burger = lambda location: {"location": location, "type": "navbar-burger"}
 
     clientside_callback(
         """
         //js
-        function (burgerOpened, drawerOpened) {
+        function (burgerClicks, drawerOpened) {
             const triggered = window.dash_clientside.callback_context.triggered_id;
             if (triggered === undefined) {
                 return window.dash_clientside.no_update;
             }
 
-            if (triggered === 'navbar-burger') {
-                return [burgerOpened, window.dash_clientside.no_update];
+            if (triggered.type === 'navbar-burger') {
+                return !drawerOpened;
             }
 
-            if (triggered === 'mobile-drawer') {
-                if (drawerOpened === false) {
-                    return [window.dash_clientside.no_update, false];
-                }
-                return window.dash_clientside.no_update;
+            if (triggered.type === 'mobile-drawer') {
+                return false;
             }
 
             return window.dash_clientside.no_update;
         }
         ;//
         """,
-        [Output(ids.drawer, "opened"), Output(ids.burger, "opened", allow_duplicate=True)],
-        Input(ids.burger, "opened"),
-        Input(ids.drawer, "opened"),
+        Output(ids.drawer(MATCH), "opened"),
+        Input(ids.burger(MATCH), "n_clicks"),
+        Input(ids.drawer(MATCH), "opened"),
         prevent_initial_call=True,
     )
 
     clientside_callback(
-        "( pathChange ) => { console.log(pathChange); return false }",
-        Output(ids.drawer, "opened", allow_duplicate=True),
+        "( pathChange ) => { console.log(pathChange); return [false, false] }",
+        Output(ids.drawer(ALL), "opened", allow_duplicate=True),
         Input(RootContainer.ids.location, "pathname"),
         prevent_initial_call=True,
     )
 
-    def __init__(self):
+    def __init__(self, location="header", size="lg", bsize="sm"):
         drawer_items = []
         for item in header_links:
             drawer_items.append(
@@ -137,7 +134,7 @@ class MobileDrawer(dmc.Box):
             )
 
         drawer = dmc.Drawer(
-            id=self.ids.drawer,
+            id=self.ids.drawer(location),
             padding="md",
             position="bottom",
             withCloseButton=True,
@@ -149,28 +146,38 @@ class MobileDrawer(dmc.Box):
         )
 
         burger = dmc.ActionIcon(
-            dmc.Burger(
-                id="navbar-burger",
-                opened=False,
-                size="sm",
-            ),
-            size="lg",
+            get_icon("line-md:menu-unfold-left", height=30),
+            id=self.ids.burger(location),
+            size=size,
             color="dark",
             variant="default",
             className="main-button",
             h=36
+        ) if location == "header" else dmc.ActionIcon(
+            get_icon("line-md:menu-unfold-left", height=30),
+            id=self.ids.burger(location),
+            size="xl",
+            variant="transparent",
+            c="light-dark(var(--mantine-color-dark-9), var(--mantine-color-white))", # type: ignore
         )
 
         super().__init__(
             [drawer, burger],
-            display={"xxs": "flex", "xs": "flex", "sm": "none", "md": "none", "lg": "none", "xl": "none"},
+            display={
+                "xxs": "flex",
+                "xs": "flex",
+                "sm": "none",
+                "md": "none",
+                "lg": "none",
+                "xl": "none"
+            }, # type: ignore
         )
 
 class SearchModal(dmc.Modal):
 
     class ids:
         search_input = "splotlight-search-input"
-        modal = "test-search-modal"
+        modal = "test-search-modal-lp"
         item_card = lambda index: {"index": index, "type": "search-card"}
         item_link = lambda index: {"index": index, "type": "search-link"}
 
@@ -364,8 +371,8 @@ class SearchModal(dmc.Modal):
         )
 
 class ids:
-    search_button = "search-input-trigger"
-    search_icon_button = "search-icon-trigger"
+    search_button = lambda location: {"location": location, "type": "search-button"}
+    search_icon_button = lambda location: {"location": location, "type": "search-icon-button"}
 
 clientside_callback(
     """
@@ -373,18 +380,131 @@ clientside_callback(
     function ( nClicksInput, nClicksIcon, opened ) {
         // If neither has been clicked yet, do nothing
         if ((nClicksInput || 0) + (nClicksIcon || 0) === 0) {
-            return
+            return window.dash_clientside.no_update;
         }
         // Toggle modal state
-        return !opened
+        return !opened;
     }
     ;//
     """,
-    Output(SearchModal.ids.modal, "opened"),
-    Input(ids.search_button, "n_clicks"),
-    Input(ids.search_icon_button, "n_clicks"),
+    Output(SearchModal.ids.modal, "opened", allow_duplicate=True),
+    Input(ids.search_button(ALL), "n_clicks"),
+    Input(ids.search_icon_button(ALL), "n_clicks"),
     State(SearchModal.ids.modal, "opened"),
+    prevent_initial_call=True,
 )
+
+class SearchBar:
+    """
+    SearchBar component with pattern matching IDs for reusability.
+    Can be instantiated multiple times with different locations (e.g., "header", "footer").
+    """
+
+    class ids:
+        search_button = lambda location: {"location": location, "type": "search-button"}
+        search_icon_button = lambda location: {"location": location, "type": "search-icon-button"}
+
+    @staticmethod
+    def create_search_input(location="header"):
+        """Create the desktop search input component"""
+        return dmc.Box(
+            html.Div(
+                className="search-input-trigger",
+                id=SearchBar.ids.search_button(location),
+                style={"cursor": "pointer"},
+                children=dmc.TextInput(
+                    className="search-input-trigger",
+                    variant="default",
+                    placeholder="Search",
+                    w=250,
+                    radius="md",
+                    leftSection=DashIconify(
+                        icon="material-symbols:input-circle-rounded",
+                        height=20,
+                        rotate=1,
+                    ),
+                    readOnly=True,
+                    rightSection=DashIconify(
+                        icon="line-md:search", height=20
+                    ),
+                ),
+            ),
+            display={
+                "xxs": "none",
+                "xs": "none",
+                "sm": "none",
+                "md": "none",
+                "lg": "flex",
+                "xl": "flex"
+            }, # type: ignore
+        )
+
+    @staticmethod
+    def create_search_button(location="header", icon_height=25, size="lg"):
+        """Create the mobile search icon button"""
+        icon = DashIconify(
+            icon="line-md:search",
+            height=icon_height,
+            flip="horizontal",
+        )
+
+        return dmc.ActionIcon(
+            icon,
+            id=SearchBar.ids.search_icon_button(location),
+            size=size, # type: ignore
+            className="main-button",
+            color="dark",
+            variant="default",
+            display={
+                "xxs": "flex",
+                "xs": "flex",
+                "sm": "flex",
+                "md": "flex",
+                "lg": "none",
+                "xl": "none"
+            }, # type: ignore
+        ) if location == "header" else dmc.ActionIcon(
+            icon,
+            id=SearchBar.ids.search_icon_button(location),
+            size=size, # type: ignore
+            variant="transparent",
+            color="light-dark(var(--mantine-color-dark-9), var(--mantine-color-white))", # type: ignore
+        )
+
+    @staticmethod
+    def register_modal_toggle_callback(location="header", modal_id=None):
+        """
+        Register a callback to toggle the modal when search components are clicked.
+
+        Args:
+            location: The location identifier (e.g., "header", "footer")
+            modal_id: The ID of the modal to toggle. If None, uses SearchModal.ids.modal
+        """
+        if modal_id is None:
+            modal_id = SearchModal.ids.modal
+
+        clientside_callback(
+            """
+            //js
+            function ( nClicksInput, nClicksIcon, opened ) {
+                // If neither has been clicked yet, do nothing
+                if ((nClicksInput || 0) + (nClicksIcon || 0) === 0) {
+                    return
+                }
+                // Toggle modal state
+                return !opened
+            }
+            ;//
+            """,
+            Output(modal_id, "opened"),
+            Input(SearchBar.ids.search_button(location), "n_clicks"),
+            Input(SearchBar.ids.search_icon_button(location), "n_clicks"),
+            State(modal_id, "opened"),
+        )
+
+# Create header search components using the SearchBar class
+search_input_header = SearchBar.create_search_input("header")
+search_button_header = SearchBar.create_search_button("header")
 
 logo = dmc.Anchor(
     dmc.Group(
@@ -448,46 +568,6 @@ version_badge = dmc.Anchor(
     display={"xxs": "none", "xs": "none", "sm": "none", "md": "flex", "lg": "flex", "xl": "flex"},
 )
 
-search_input = dmc.Box(
-    html.Div(
-        className="search-input-trigger",
-        id=ids.search_button,
-        style={"cursor": "pointer"},
-        children=dmc.TextInput(
-            className="search-input-trigger",
-            variant="default",
-            placeholder="Search",
-            w=250,
-            radius="md",
-            leftSection=DashIconify(
-                icon="material-symbols:input-circle-rounded",
-                height=20,
-                rotate=1,
-            ),
-            readOnly=True,
-            rightSection=DashIconify(
-                icon="material-symbols:search-rounded", height=20
-            ),
-        ),
-    ),
-    display={"xxs": "none", "xs": "none", "sm": "none", "md": "none", "lg": "flex", "xl": "flex"},
-)
-
-search_button = dmc.ActionIcon(
-    DashIconify(
-        icon="material-symbols:search-rounded",
-        height=25,
-        rotate=1,
-    ),
-    size="lg",
-    className="main-button",
-    color="dark",
-    variant="default",
-    display={"xxs": "flex", "xs": "flex", "sm": "flex", "md": "flex", "lg": "none", "xl": "none"},
-    id=ids.search_icon_button,
-    h=36
-)
-
 github_button = dmc.Anchor(
     dmc.ActionIcon(
         get_icon("line-md:github", height=25),
@@ -502,33 +582,6 @@ github_button = dmc.Anchor(
     target="_blank",
 )
 
-# github_button = dmc.ActionIcon(
-#     get_icon("line-md:github", height=25),
-#     size="lg",
-#     className="main-button",
-#     variant="default",
-#     h=36,
-# )
-
-# theme_button = dmc.ActionIcon(
-#     [
-#         dmc.Box(
-#             get_icon("line-md:moon-to-sunny-outline-transition", height=25),
-#             darkHidden=True,
-#         ),
-#         dmc.Box(
-#             get_icon("line-md:moon-twotone", height=25),
-#             lightHidden=True,
-#         ),
-#     ],
-#     size="lg",
-#     color="dark",
-#     variant="default",
-#     id="color-scheme-toggle",
-#     className="main-button",
-#     h=36
-# )
-
 header_links_component = dmc.Group(
     [nav_anchor(item["label"], item["href"]) for item in header_links],
     gap="sm",
@@ -537,10 +590,12 @@ header_links_component = dmc.Group(
 
 header = dmc.AppShellHeader(
     withBorder=False,
+    visibleFrom="xs",  # Show header on screens sm and larger (desktop), hide on mobile
     children=dmc.Group(
         align="center",
         justify="flex-start",
         mx="auto",
+        display={"xxl": "flex", "xl": "flex", "lg": "flex", "md": "flex", "sm": "flex", "xs": "flex", "xxs": "none"},
         w={"xxl": "75%", "xl": "85%", "lg": "85%", "md": "85%", "sm": "90%", "xs": "95%", "xxs": "95%"},
         gap="sm",
         h=55,
@@ -555,10 +610,10 @@ header = dmc.AppShellHeader(
                 children=[
                     SearchModal(),
                     version_badge,
-                    search_input,
-                    search_button,
+                    search_input_header,
+                    search_button_header,
                     github_button,
-                    ThemeComponent(),
+                    ThemeComponent(),  # Legacy theme component (backward compatible)
                     MobileDrawer()
                 ],
             ),

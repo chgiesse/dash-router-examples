@@ -1,7 +1,5 @@
 from .components import SSEGraph, StreamButtons
-
 import dash_mantine_components as dmc
-from dash import dcc
 
 
 async def layout(*args, **kwargs):
@@ -11,11 +9,9 @@ async def layout(*args, **kwargs):
     return [
         StreamButtons(),
         dmc.SimpleGrid(
-            w="80%",
-            cols=2,
+            cols={"xxl": 2, "xl": 2, "lg": 2, "md": 1, "sm": 1, "xs": 1, "xxs": 1}, # type: ignore
             id="graphs-grid",
             children=[
-                dcc.Markdown(id="graphs-box"),
                 SSEGraph("google", template),
                 SSEGraph("amazon", template),
                 SSEGraph("microsoft", template),

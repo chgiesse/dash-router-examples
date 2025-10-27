@@ -10,25 +10,10 @@ class ActionSideBar(dmc.Stack):
         chipgroup = "chipgroup-multi"
         output = "output-div"
 
-    @callback(
-        Input(ids.date_picker, "value"),
-        Input(ids.multiselect, "value"),
-        Input(ids.chipgroup, "value"),
-    )
-    @classmethod
-    def display_output(cls, date_range, multiselect_values, chipgroup_values):
-         set_props(cls.ids.output, {"children": [
-            dmc.Text(f"Date Range: {date_range}"),
-            dmc.Text(f"Multiselect Values: {multiselect_values}"),
-            dmc.Text(f"Chipgroup Values: {chipgroup_values}"),
-        ]})
-
     def __init__(self):
         super().__init__(
             gap="lg",
-            pr="lg",
             children=[
-                dmc.Box(id=self.ids.output),
                 dmc.DatePickerInput(
                     id=self.ids.date_picker,
                     label="Date Range",

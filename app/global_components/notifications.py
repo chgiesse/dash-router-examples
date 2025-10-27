@@ -1,7 +1,7 @@
 from dash import html
 import dash_mantine_components as dmc
 from flash import stream_props
-from dash_event_callback import stream_props as sync_stream_props
+# from dash_event_callback import stream_props as sync_stream_props
 import random
 
 class NotificationsContainer(dmc.Box):

@@ -16,7 +16,7 @@ hero_section = dmc.Group(
     children=[
         dmc.Card(
             withBorder=True,
-            className="hero-cta-glass hero-glass fade-in-bottom",
+            className="hero-cta-glass hero-glass",
             children=[
                 html.Ul(className="hero-features hero-features-cta", children=[
                     html.Li("Async First"),
@@ -69,7 +69,6 @@ hero_header = dmc.Center(
                         ],
                         gap="sm",
                         align="center",
-                        className="fade-in"
                     ),
                     fluid=True,
                     px="md",

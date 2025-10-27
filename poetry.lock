@@ -556,14 +556,14 @@ tests = ["pytest", "pytest-cov", "pytest-xdist"]
 
 [[package]]
 name = "dash"
-version = "3.2.0"
+version = "3.3.0rc0"
 description = "A Python framework for building reactive web-apps. Developed by Plotly."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "dash-3.2.0-py3-none-any.whl", hash = "sha256:4c1819588d83bed2cbcf5807daa5c2380c8c85789a6935a733f018f04ad8a6a2"},
-    {file = "dash-3.2.0.tar.gz", hash = "sha256:93300b9b99498f8b8ed267e61c455b4ee1282c7e4d4b518600eec87ce6ddea55"},
+    {file = "dash-3.3.0rc0-py3-none-any.whl", hash = "sha256:23dc73768d141240d61f5b2bf878fdb0171f28306afab401a37f09f1ffa6bc1d"},
+    {file = "dash-3.3.0rc0.tar.gz", hash = "sha256:215e49de88730fc0e2bdb9e6f0732381d515770667771cecf1de2de2e8d6c1d0"},
 ]
 
 [package.dependencies]
@@ -574,7 +574,7 @@ plotly = ">=5.0.0"
 requests = "*"
 retrying = "*"
 setuptools = "*"
-typing-extensions = ">=4.1.1"
+typing_extensions = ">=4.1.1"
 Werkzeug = "<3.2"
 
 [package.extras]
@@ -584,7 +584,7 @@ ci = ["black (==22.3.0)", "flake8 (==7.0.0)", "flaky (==3.8.1)", "flask-talisman
 compress = ["flask-compress"]
 dev = ["PyYAML (>=5.4.1)", "coloredlogs (>=15.0.1)", "fire (>=0.4.0)"]
 diskcache = ["diskcache (>=5.2.1)", "multiprocess (>=0.70.12)", "psutil (>=5.8.0)"]
-testing = ["beautifulsoup4 (>=4.8.2)", "cryptography", "dash-testing-stub (>=0.0.2)", "lxml (>=4.6.2)", "multiprocess (>=0.70.12)", "percy (>=2.0.2)", "psutil (>=5.8.0)", "pytest (>=6.0.2)", "requests[security] (>=2.21.0)", "selenium (>=3.141.0,<=4.2.0)", "waitress (>=1.4.4)"]
+testing = ["beautifulsoup4 (>=4.8.2)", "cryptography", "dash_testing_stub (>=0.0.2)", "lxml (>=4.6.2)", "multiprocess (>=0.70.12)", "percy (>=2.0.2)", "psutil (>=5.8.0)", "pytest (>=6.0.2)", "requests[security] (>=2.21.0)", "selenium (>=3.141.0,<=4.2.0)", "waitress (>=1.4.4)"]
 
 [[package]]
 name = "dash-ag-grid"
@@ -604,21 +604,6 @@ dash = ">=2"
 [package.extras]
 dev = ["dash[ci,dev,testing] (>=2.0)", "dash_mantine_components (==0.12.1)", "pytest (<8.1.0)", "pyyaml (>=5.0)", "selenium (>=4.0.0,<4.3.0)", "wheel"]
 docs = ["colorlover", "dash (>=2.9.0)", "dash-bootstrap-components (>=1.0.0)", "dash-iconify", "dash-mantine-components", "gunicorn (>=19.9.0)", "pandas (>=1.2.3)", "pyyaml (>=6.0)", "statsmodels", "yfinance"]
-
-[[package]]
-name = "dash-event-callback"
-version = "1.2.0"
-description = "Streaming callback for Dash"
-optional = false
-python-versions = ">=3.12"
-groups = ["main"]
-files = [
-    {file = "dash_event_callback-1.2.0-py3-none-any.whl", hash = "sha256:852f052d1f31bbdaacdf9a9317b11e876279c6c5a80d05cd18164baec2f79c71"},
-    {file = "dash_event_callback-1.2.0.tar.gz", hash = "sha256:d843928a6409ff6483c1efa6a399fb423b38d722f54ee57e6fd3d48fd32ad8db"},
-]
-
-[package.dependencies]
-dash = "3.2.0"
 
 [[package]]
 name = "dash-extensions"
@@ -642,20 +627,23 @@ pydantic = ">=2.10.6"
 
 [[package]]
 name = "dash-flash"
-version = "1.3.0rc1"
+version = "1.3.0"
 description = "Flash - async port of the Dash framework"
 optional = false
-python-versions = "<4.0,>=3.12"
+python-versions = ">=3.12,<4.0"
 groups = ["main"]
 files = [
-    {file = "dash_flash-1.3.0rc1-py3-none-any.whl", hash = "sha256:c31ebfd452b8db449896d6f8037f07a76e1ce80d5544d5ec61654872a9f2640b"},
-    {file = "dash_flash-1.3.0rc1.tar.gz", hash = "sha256:5f0a3cbcb2c894a60c65ae202d490ff1ff0055ec72dc444950ec036fbb34a522"},
+    {file = "dash_flash-1.3.0.tar.gz", hash = "sha256:1c537206ba832068a70ee5eb4798d4581ca6e2d77bfa8cd4ac8f6ee347b91f9d"},
 ]
 
 [package.dependencies]
 dash = ">=3.0.0rc1,<4.0.0"
 Quart = ">=0.20.0,<0.21.0"
 quart-compress = ">=0.2.1,<0.3.0"
+
+[package.source]
+type = "file"
+url = "../../flash/flash-package/dist/dash_flash-1.3.0.tar.gz"
 
 [[package]]
 name = "dash-html-components"
@@ -682,15 +670,14 @@ files = [
 ]
 
 [[package]]
-name = "dash-mantine-components"
-version = "2.2.0"
+name = "dash_mantine_components"
+version = "2.3.0"
 description = "Plotly Dash Components based on Mantine"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "dash_mantine_components-2.2.0-py3-none-any.whl", hash = "sha256:28e8edfbcde1673a4824ced4fcd9c5511ec5f4456beeb8ee87569016f45a9160"},
-    {file = "dash_mantine_components-2.2.0.tar.gz", hash = "sha256:5e6869eee61af3ad994dc0153f7c712d9661168b1c9ecb65cec46cafaf16bd0a"},
+    {file = "dash_mantine_components-2.3.0.tar.gz", hash = "sha256:c062d158aa42d96adb4a4927ca13dc054109ea0fd25cdbb785c1080e7035d040"},
 ]
 
 [package.dependencies]
@@ -698,6 +685,10 @@ dash = ">=2"
 
 [package.extras]
 dev = ["black", "build", "dash-iconify", "dash[ci,dev,testing] (>=2)", "pytest (<8.1.0)", "pyyaml (>=5.0)", "selenium (<4.3.0)", "wheel"]
+
+[package.source]
+type = "file"
+url = "../../ComplianceTool/dash_mantine_components-2.3.0.tar.gz"
 
 [[package]]
 name = "dash-snap-grid"
@@ -2967,4 +2958,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "bd644e95636f87d437b99b522db3ca4ff9ec2c8575324caa1e9a35e8d97f0f7e"
+content-hash = "67911139a10c1ed55c4c858d67bba45a0fa62224339ac46580696fb4b5f5f1e5"

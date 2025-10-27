@@ -15,6 +15,7 @@ from monitoring.metrics import setup_metrics
 app = Flash(
     __name__,
     suppress_callback_exceptions=True,
+    prevent_initial_callbacks=True,
     pages_folder="pages",
     use_pages=False,
     update_title=None,  # type: ignore[arg-type]

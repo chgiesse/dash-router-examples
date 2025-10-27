@@ -50,6 +50,104 @@ mantine_dark = [
 theme_type = Literal["plotly_dark", "plotly"]
 
 
+# Global theme store - single instance for the entire app
+theme_store = dcc.Store(id="color-theme-store", storage_type="local")
+
+
+class ThemeToggle:
+    """
+    ThemeToggle button with pattern matching IDs for reusability.
+    Can be instantiated multiple times with different locations (e.g., "header", "footer").
+    The store remains a single global instance.
+    """
+
+    class ids:
+        button = lambda location: {"location": location, "type": "theme-toggle-button"}
+        store = "color-theme-store"  # Global store ID (no pattern matching)
+
+    @staticmethod
+    def create_button(location="header", size="lg", icon_height=25):
+        """Create a theme toggle button for the specified location"""
+        icon = [
+            dmc.Box(
+                get_icon("line-md:moon-to-sunny-outline-transition", height=icon_height),
+                darkHidden=True,
+            ),
+            dmc.Box(
+                get_icon("line-md:moon-twotone", height=icon_height),
+                lightHidden=True,
+            ),
+        ]
+        return dmc.ActionIcon(
+            icon,
+            size=size,
+            color="dark",
+            variant="default",
+            id=ThemeToggle.ids.button(location),
+            className="main-button",
+            h=36
+        ) if location == "header" else dmc.ActionIcon(
+            icon,
+            size=size,
+            color="light-dark(var(--mantine-color-dark-9), var(--mantine-color-white))",
+            variant="transparent",
+            id=ThemeToggle.ids.button(location),
+            h=36,
+        )
+
+    @staticmethod
+    def register_theme_callback(location="header"):
+        """
+        Register a callback to toggle the theme when the button is clicked.
+
+        Args:
+            location: The location identifier (e.g., "header", "footer")
+        """
+        clientside_callback(
+            """
+            ( nClicks ) => {
+                // don't run on initial hydration
+                if (!window.dash_clientside.callback_context.triggered_id) {
+                    return window.dash_clientside.no_update;
+                }
+                const de = document.documentElement;
+                const currentAttr = de.getAttribute('data-mantine-color-scheme');
+                const attrIsDark = currentAttr === 'dark';
+                const newIsDark = !attrIsDark;
+
+                // apply to document and persist boolean to store
+                const newTheme = newIsDark ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-mantine-color-scheme', newTheme);
+                document.documentElement.style.backgroundColor = newIsDark ? '#1A1B1E' : '#FFFFFF';
+                localStorage.setItem('color-theme-store', JSON.stringify(newIsDark));
+                // const meta = document.querySelector('meta[name="color-scheme"]');
+                // if (meta) meta.content = newTheme;
+                return newIsDark;
+            }
+            """,
+            Output(ThemeToggle.ids.store, "data", allow_duplicate=True),
+            Input(ThemeToggle.ids.button(location), "n_clicks"),
+            prevent_initial_call=True,
+        )
+
+    @staticmethod
+    def graph_theme_callback(graph_id: str):
+        """Register a callback to update graph theme when store changes"""
+        @callback(
+            Output(graph_id, "figure", allow_duplicate=True),
+            Input(ThemeToggle.ids.store, "data"),
+            prevent_initial_call=True,
+        )
+        def update_graph_template(store_data):
+            # store_data is expected to be a boolean: True == dark, False == light
+            is_darkmode = bool(store_data) if store_data is not None else False
+            template = get_theme_template(is_darkmode)
+            figure = Patch()
+            figure.layout.template = template
+            return figure
+
+
+# Legacy ThemeComponent class for backward compatibility
 class ThemeComponent(dmc.ActionIcon):
 
     class ids:
@@ -129,7 +227,7 @@ class ThemeComponent(dmc.ActionIcon):
                     get_icon("line-md:moon-twotone", height=25),
                     lightHidden=True,
                 ),
-                dcc.Store(id=self.ids.store, storage_type="local"),
+                theme_store,  # Include the global store for backward compatibility
             ],
             size="lg",
             color="dark",
@@ -138,6 +236,15 @@ class ThemeComponent(dmc.ActionIcon):
             className="main-button",
             h=36
         )
+
+
+# For backward compatibility
+def ThemeButton(location="header"):
+    """
+    Create a theme toggle button.
+    Use ThemeToggle.create_button() for new code.
+    """
+    return ThemeToggle.create_button(location)
 
 
 vizro_dark = {

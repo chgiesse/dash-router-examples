@@ -11,8 +11,7 @@ from datetime import datetime
 import dash_mantine_components as dmc
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.io as pio
-from dash import dcc, html
+from dash import dcc
 from flash import (
     ALL,
     Input,
@@ -68,6 +67,7 @@ class StreamButtons(dmc.Group):
                 ),
             ],
             mb="md",
+            justify="flex-end",
         )
 
 class SSEGraph(dcc.Graph):
@@ -88,11 +88,10 @@ class SSEGraph(dcc.Graph):
             (StreamButtons.ids.start_btn, {"disabled": False, "children": "Start stream"}),
             (StreamButtons.ids.end_btn, {"display": "none"}),
         ],
+        prevent_initial_call=False
     )
-    async def update_graph(n_clicks, is_dark = None):
+    async def update_graph(n_clicks = None, is_dark = None):
         stock_ticks = ["google", "apple", "microsoft", "amazon"]
-
-        yield stream_props("graphs-box", {"children": "testest \n\n further text"})
 
         yield NotificationsContainer.send_notification(
             title="Starting stream!",
@@ -104,9 +103,15 @@ class SSEGraph(dcc.Graph):
             (
                 SSEGraph.ids.graph(tick),
                 {
-                    "figure": SSEGraph.create_figure("plotly_dark" if is_dark else "plotly", tick.capitalize()), "style": {"visibility": "visible"}
-                    })
-                    for tick in stock_ticks]
+                    "figure": SSEGraph.create_figure(
+                        "plotly_dark" if is_dark else "plotly",
+                        tick.capitalize()
+                    ),
+                    "style": {"visibility": "visible"}
+                }
+            )
+                for tick in stock_ticks
+        ]
 
         yield stream_props([
             (StreamButtons.ids.start_btn, {"disabled": True, "children": "Running"}),
@@ -167,6 +172,7 @@ class SSEGraph(dcc.Graph):
         super().__init__(
             id=self.ids.graph(chart_type),
             style={"height": 400, "visibility": "hidden"},
+            responsive=True,
         )
 
 create_theme_callback(SSEGraph.ids.graph(ALL))

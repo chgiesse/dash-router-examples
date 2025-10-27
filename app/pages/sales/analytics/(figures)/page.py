@@ -11,14 +11,22 @@ async def layout(
     figure_5: SlotContainer,
     **kwargs
 ):
-    basic_container = lambda children: dmc.Box(
-        children, h=450, p="md", className="fade-in-chart"
+    basic_container = lambda children, **kwargs: dmc.Card(
+        children, h=450, className="fade-in-chart", p=0, **kwargs
     )
 
-    return html.Div(
-        children=[
+    return dmc.Box(
+        [
             dmc.SimpleGrid(
-                cols=2,
+                cols={
+                    "xxl": 2,
+                    "xl": 2,
+                    "lg": 2,
+                    "md": 2,
+                    "sm": 1,
+                    "xs": 1,
+                    "xxs": 1
+                }, # type: ignore
                 children=[
                     basic_container(figure_1),
                     basic_container(figure_3),
@@ -26,6 +34,6 @@ async def layout(
                     basic_container(figure_4),
                 ],
             ),
-            basic_container(figure_2),
+            basic_container(figure_2, my="md"),
         ]
     )

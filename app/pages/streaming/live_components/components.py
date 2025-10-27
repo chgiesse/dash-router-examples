@@ -1,10 +1,9 @@
-from .api import get_data
 from global_components.notifications import NotificationsContainer
 from flash_router import RootContainer
-from flash import stream_props, event_callback
+from .api import get_data
 
+from flash import Input, stream_props, event_callback
 import dash_mantine_components as dmc
-from flash import clientside_callback, Input, Output
 from dash_iconify import DashIconify
 import dash_ag_grid as dag
 
@@ -17,7 +16,7 @@ class TestComponentStream(dmc.Stack):
         table = "stream-table"
 
     @event_callback(
-        Input(ids.start_btn, "n_clicks"),
+        Input(ids.start_btn, "n_clicks", allow_optional=True),
         cancel=[
             (Input(RootContainer.ids.location, "pathname"), "/streaming/live-components"),
             (Input(ids.cancel_btn, "n_clicks", allow_optional=True), 0)
@@ -26,21 +25,16 @@ class TestComponentStream(dmc.Stack):
             (ids.table, {"rowData": [], "columnDefs": []}),
             (ids.start_btn, {"children": "Download Data", "loading": False}),
             (ids.cancel_btn, {"display": "none"}),
-        ]
+        ],
+        prevent_initial_call=False
     )
-    async def update_table(n_clicks):
+    async def update_table(_ = None):
 
         # batch set loading on both buttons
         yield stream_props([
             (TestComponentStream.ids.start_btn, {"loading": True}),
             (TestComponentStream.ids.cancel_btn, {"display": "flex"}),
         ])
-
-        yield NotificationsContainer.send_notification(
-            title="Starting Download!",
-            message="Notifications in Dash, Awesome!",
-            color="lime",
-        )
 
         progress = 0
         chunck_size = 500
@@ -53,14 +47,6 @@ class TestComponentStream(dmc.Stack):
 
             # use batched stream_props (single-item list) for consistency
             yield stream_props([(TestComponentStream.ids.table, update)])
-
-            if len(data_chunk) == chunck_size:
-                yield NotificationsContainer.send_notification(
-                    title="Progress",
-                    message=f"Processed {chunck_size + (chunck_size * progress)} items",
-                    color="violet",
-                )
-
             progress += 1
 
         # batch reset both buttons
@@ -74,35 +60,37 @@ class TestComponentStream(dmc.Stack):
             message="Notifications in Dash, Awesome!",
             icon=DashIconify(icon="akar-icons:circle-check"),
             color="lime",
+            position="bottom-right",
         )
 
     def __init__(self):
+
+        download_button = dmc.Button(
+            "Download Data",
+            id=self.ids.start_btn,
+            leftSection=DashIconify(
+                icon="material-symbols:download-rounded", height=20
+            ),
+            fullWidth=False,
+            styles={"section": {"marginRight": "var(--mantine-spacing-md)"}},
+        )
+
+        cancel_button = dmc.Button(
+            "Cancel Download",
+            id=self.ids.cancel_btn,
+            leftSection=DashIconify(icon="mingcute:stop-circle-line", height=15),
+            fullWidth=False,
+            styles={"section": {"marginRight": "var(--mantine-spacing-md)"}},
+            color="red",
+            variant="outline",
+            display="none",
+        )
+
         super().__init__(
-            justify="flex-start",
-            align="flex-start",
-            children=[
+            [
                 dmc.Group(
-                    [
-                        dmc.Button(
-                            "Download Data",
-                            id=self.ids.start_btn,
-                            leftSection=DashIconify(
-                                icon="material-symbols:download-rounded", height=20
-                            ),
-                            fullWidth=False,
-                            styles={"section": {"marginRight": "var(--mantine-spacing-md)"}},
-                        ),
-                        dmc.Button(
-                            "Cancel Download",
-                            id=self.ids.cancel_btn,
-                            leftSection=DashIconify(icon="mingcute:stop-circle-line", height=15),
-                            fullWidth=False,
-                            styles={"section": {"marginRight": "var(--mantine-spacing-md)"}},
-                            color="red",
-                            variant="outline",
-                            display="none",
-                        ),
-                    ],
+                    [cancel_button, download_button],
+                    justify="flex-end",
                 ),
                 dag.AgGrid(
                     id=self.ids.table,
@@ -113,4 +101,5 @@ class TestComponentStream(dmc.Stack):
                     },
                 ),
             ],
+            justify="flex-end",
         )

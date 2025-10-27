@@ -5,6 +5,7 @@ from global_components.sidebar import navbar, theme_toggle
 from global_components.header import header
 from global_components.notifications import NotificationsContainer
 from global_components.location import Url
+from global_components.footer import footer
 
 shadcn_gray = [
     "#030712",
@@ -93,8 +94,8 @@ def create_appshell(content):
             "primareShade": "7",
             "defaultRadius": "md",
             "breakpoints": {
-                "xxs": '20em',             # custom breakpoint
-                "xs": '30em',              # customize breakpoints here
+                "xxs": '20em',
+                "xs": '30em',
                 "sm": '48em',
                 "md": '64em',
                 "lg": '74em',
@@ -105,30 +106,62 @@ def create_appshell(content):
             "focusRing": "never",
             "colors": {
                 "dark": mantine_dark,
-                # "dark": list(reversed(shadcn_gray)),
                 "slate": list(reversed(shadcn_slate)),
                 "shadc_gray": list(reversed(shadcn_gray)),
                 "blue": blue,
                 "pale_indigo": pale_indigo,
                 "light_blue": light_blue,
             },
-        },
+        }, # type: ignore
         children=dmc.AppShell(
             [
-                # Persistent store for theme or other global preferences
-                # dcc.Store(id="color-scheme-store", storage_type="local"),
-                # navbar,
-                # theme_toggle,
                 NotificationsContainer(),
                 Url(),
                 header,
                 dmc.AppShellMain(
-                    content
+                    content,
                 ),
+                footer,
             ],
-            id="app-shell",
             header={
-                "height": 55,
-            }
+                "height": {
+                    "base": 55,
+                    "xl": 55,
+                    "lg": 55,
+                    "md": 55,
+                    "sm": 55,
+                    "xs": 55,
+                    "xxs": 0
+                },
+                "offset": {
+                    "base": True,
+                    "xl": True,
+                    "lg": True,
+                    "md": True,
+                    "sm": True,
+                    "xs": True,
+                    "xxs": False,
+                }
+            }, # type: ignore
+            footer={
+                "height": {
+                    "base": 0,
+                    "xl": 0,
+                    "lg": 0,
+                    "md": 0,
+                    "sm": 0,
+                    "xs": 0,
+                    "xxs": 60,
+                },
+                "offset": {
+                    "base": False,
+                    "xl": False,
+                    "lg": False,
+                    "md": False,
+                    "sm": False,
+                    "xs": False,
+                    "xxs": True,
+                }
+            }, # type: ignore
         ),
     )

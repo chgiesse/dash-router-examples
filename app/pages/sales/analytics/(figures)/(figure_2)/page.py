@@ -50,6 +50,8 @@ async def layout(data: DataFrame, *args, **kwargs):
 
     fig.update_layout(
         xaxis_title=None,
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
         template=template,
         legend=dict(
             orientation="h",

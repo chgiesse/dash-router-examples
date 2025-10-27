@@ -32,19 +32,17 @@ def create_invoice_table(data = [], page: int = 1,  is_loading: bool = False):
                         if not is_loading
                         else create_td_skeleton()
                     ),
-                    w="20%",
                 ),
                 dmc.TableTd(
                     element.get("mass") if not is_loading else create_td_skeleton(),
-                    w="30%",
                 ),
                 dmc.TableTd(
                     element.get("symbol") if not is_loading else create_td_skeleton(),
-                    w="20%",
+                    # make no wrap and truncate with ellipsis
+                    # style={"whiteSpace": "nowrap", "overflow": "hidden", "textOverflow": "ellipsis"},
                 ),
                 dmc.TableTd(
                     element.get("amount") if not is_loading else create_td_skeleton(),
-                    w="15%",
                 ),
                 dmc.TableTd(
                     (
@@ -52,7 +50,6 @@ def create_invoice_table(data = [], page: int = 1,  is_loading: bool = False):
                         if not is_loading
                         else create_td_skeleton()
                     ),
-                    w="15%"
                 ),
             ],
             h=50
@@ -63,9 +60,9 @@ def create_invoice_table(data = [], page: int = 1,  is_loading: bool = False):
     head = dmc.TableThead(
         dmc.TableTr(
             [
-                dmc.TableTh("Invoice ID"),
+                dmc.TableTh("ID"),
                 dmc.TableTh("Vendor"),
-                dmc.TableTh("Issued Date"),
+                dmc.TableTh("Date"),
                 dmc.TableTh("Amount"),
                 dmc.TableTh("Action"),
             ]
@@ -81,14 +78,14 @@ def create_invoice_table(data = [], page: int = 1,  is_loading: bool = False):
             withTableBorder=False,
             withColumnBorders=False,
             withRowBorders=False,
-            className="fade-in-chart",
+            # className="fade-in-chart",
             stickyHeader=True
         ),
         maxHeight=350,
         minWidth=200,
-        
-        w={"xs": 350, "xxs": 350, "xxl": "700", "xl": "100%"},
+
         type="scrollarea",
+        scrollAreaProps={"offsetScrollbars": None},
     )
 
 
