@@ -3,7 +3,8 @@ from typing import Dict, Any, List
 from pydantic import BaseModel, Field
 import json
 
-USERS_FILE = Path("/Users/cgiessel/Documents/projects/dash-projects/dash-router-examples/app/assets/data/users.json")
+# Get the absolute path to the users.json file
+USERS_FILE = Path(__file__).parent.parent.parent.parent / "assets" / "data" / "users.json"
 
 
 class User(BaseModel):
@@ -13,12 +14,12 @@ class User(BaseModel):
 
 
 def _read_raw() -> Dict[str, Any]:
-    with open(USERS_FILE, "r") as f:
+    with open(str(USERS_FILE), "r") as f:
         return json.load(f)
 
 
 def _write_raw(data: Dict[str, Any]):
-    with open(USERS_FILE, "w") as f:
+    with open(str(USERS_FILE), "w") as f:
         json.dump(data, f, indent=2)
 
 

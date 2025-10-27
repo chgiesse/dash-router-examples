@@ -5,11 +5,13 @@ from flash_router import RootContainer, FlashRouter
 from flash import Flash, State
 
 from global_components.appshell import create_appshell
+from utils.helpers import bundle_css
 from theme import apply_vizro_theme
 from concurrent.futures import ProcessPoolExecutor
 import asyncio
 import random
 
+bundle_css("utils/style_modules")
 
 app = Flash(
     __name__,

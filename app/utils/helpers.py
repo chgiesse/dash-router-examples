@@ -1,6 +1,7 @@
 from dash_iconify import DashIconify
 from urllib.parse import parse_qs as base_parse_qs
 from flash import callback, Input, Output, Patch, ctx
+from pathlib import Path
 import plotly.io as pio
 
 
@@ -79,3 +80,28 @@ def generate_clientside_callback(input_ids, sse_callback_id):
     """
 
     return js_code
+
+
+def bundle_css(input_dir, output_file="bundled_styles.css"):
+    """
+    Concatenate all .css files from input_dir into one file in the assets folder.
+    Dash will automatically serve the bundled file from the assets folder.
+    """
+    css_dir = Path(input_dir)
+    print(f"Bundling CSS files from {css_dir} into {output_file}...", flush=True)
+    css_files = sorted(css_dir.glob("*.css"))  # sort for deterministic order
+
+    # Get the app directory relative to this file's location
+    app_dir = Path(__file__).parent.parent  # from app/utils/helper_functions.py -> app/
+    assets_dir = app_dir / "assets"
+    assets_dir.mkdir(parents=True, exist_ok=True)
+    output_path = assets_dir / output_file
+    print(f"Output path: {output_path}", flush=True)
+
+    with open(output_path, "w", encoding="utf-8") as outfile:
+        for css_file in css_files:
+            outfile.write(f"/* {css_file.name} */\n")
+            outfile.write(css_file.read_text(encoding="utf-8"))
+            outfile.write("\n\n")
+
+    print(f"Bundled {len(css_files)} CSS files into {output_path}")
