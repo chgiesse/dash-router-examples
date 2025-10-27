@@ -670,14 +670,15 @@ files = [
 ]
 
 [[package]]
-name = "dash_mantine_components"
+name = "dash-mantine-components"
 version = "2.3.0"
 description = "Plotly Dash Components based on Mantine"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "dash_mantine_components-2.3.0.tar.gz", hash = "sha256:c062d158aa42d96adb4a4927ca13dc054109ea0fd25cdbb785c1080e7035d040"},
+    {file = "dash_mantine_components-2.3.0-py3-none-any.whl", hash = "sha256:5e4995877bce9ee856002364d0975f924601511887263a12fd5aaa7d9f444cd5"},
+    {file = "dash_mantine_components-2.3.0.tar.gz", hash = "sha256:7400b75b1ca4e8b1bc8d8d1e07e5312c82770104791f0b8d12a832565e9eb628"},
 ]
 
 [package.dependencies]
@@ -685,10 +686,6 @@ dash = ">=2"
 
 [package.extras]
 dev = ["black", "build", "dash-iconify", "dash[ci,dev,testing] (>=2)", "pytest (<8.1.0)", "pyyaml (>=5.0)", "selenium (<4.3.0)", "wheel"]
-
-[package.source]
-type = "file"
-url = "../../ComplianceTool/dash_mantine_components-2.3.0.tar.gz"
 
 [[package]]
 name = "dash-snap-grid"
@@ -2958,4 +2955,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "67911139a10c1ed55c4c858d67bba45a0fa62224339ac46580696fb4b5f5f1e5"
+content-hash = "265e83bfec8ebab0169effe947aeade1496744d5d1c9ff1aaebd21bc9e235c4c"
